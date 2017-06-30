@@ -5,6 +5,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import GameStates.Fight;
+import GameStates.Menu;
+
 public class Main extends StateBasedGame{
 	public Main(String name) {
 		super(name);
@@ -25,7 +28,12 @@ public class Main extends StateBasedGame{
 
 	@Override
 	public void initStatesList(GameContainer arg0) throws SlickException {
-//		addState();
+		addState(new Menu());
+		addState(new Fight());
 		
+	}
+	public void changeState(int s, GameContainer gc){
+		gc.getInput().clearKeyPressedRecord();
+		enterState(s);
 	}
 }
