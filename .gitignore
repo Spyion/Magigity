@@ -3,3 +3,5 @@ Slick2D/
 bin/
 .project
 bin
+bin/*
+bin/**
