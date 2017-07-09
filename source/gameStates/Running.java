@@ -22,23 +22,19 @@ public class Running extends BasicGameState{
 	
 	Loader loader = new Loader();
 	Input input;
-	Entity enemy;
-	Entity enemy2;
 	ArrayList<Entity> entities = Entity.entities;
-	Image blackCircle;
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		input = new Input(Input.ANY_CONTROLLER);
-		blackCircle = loader.loadImage("BlackCircle");
-		enemy = new Player(blackCircle, new Circle(0,0,50), 100, 100, 0, 100, 100, 1);
-		enemy2 = new Entity(blackCircle, new Circle(0,0,50), 200, 100, 0, 100, 100, 10);
+		new Player(loader.loadImage("BlackCircle"), new Circle(0,0,50), 100, 100, 0, 100, 100, 1);
+		new Entity(loader.loadImage("BlackCircle"), new Circle(0,0,50), 200, 100, 0, 100, 100, 1).setMovable(false);
 	}
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		for(Entity entity:entities){
 			entity.update(input, delta);
 		}
-			entities.get(1).collide(entities.get(0), delta);
+			entities.get(0).collide(entities.get(1), delta);
 	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
