@@ -28,12 +28,8 @@ public class Game extends StateBasedGame{
 
 	@Override
 	public void initStatesList(GameContainer arg0) throws SlickException {
-		addState(new Menu());
+//		addState(new Menu());
 		addState(new Running());
 		
-	}
-	public void changeState(int s, GameContainer gc){
-		gc.getInput().clearKeyPressedRecord();
-		enterState(s);
 	}
 }

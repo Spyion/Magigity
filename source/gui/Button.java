@@ -69,6 +69,7 @@ public class Button {
 	}
 	
 	public void render(Graphics g){
+		g.setAntiAlias(true);
 		Image imageToDraw;
 		Color color;
 		if(isPressed)
