@@ -1,7 +1,10 @@
+Slick2D
 Slick2D/
+Slick2D/*
+Slick2D/**
 .settings
-bin/
 .project
 bin
+bin/
 bin/*
 bin/**
