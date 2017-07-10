@@ -7,7 +7,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 public class Player extends Entity {
 	
-	float movespeed;
+	float moveSpeed;
 	
 	public Player(Image basicImage, Shape hitbox, Vector2f position, float rotation, Vector2f size, float weight) {
 		super(basicImage, hitbox, position, rotation, size, weight);
@@ -18,23 +18,25 @@ public class Player extends Entity {
 	}
 	@Override
 	public void update(Input input, int delta){
-		
-		movespeed = input.isKeyDown(Input.KEY_LSHIFT) ? 150 : 100;
+		super.update(input, delta);
+//		super.addToRotation(delta/1000f);
+		Vector2f movingDirection = new Vector2f(0,0);
+		moveSpeed = input.isKeyDown(Input.KEY_LSHIFT) ? 500 : 100;
 		
 		if(input.isKeyDown(Input.KEY_W)){
-			super.addToPosition(0, movespeed*-delta/1000f);
+			movingDirection.y-=1;
 		}
 		if(input.isKeyDown(Input.KEY_S)){
-			super.addToPosition(0, movespeed*delta/1000f);
-
+			movingDirection.y+=1;
 		}
 		if(input.isKeyDown(Input.KEY_A)){
-			super.addToPosition(movespeed*-delta/1000f, 0);
-
+			movingDirection.x-=1;
 		}
 		if(input.isKeyDown(Input.KEY_D)){
-			super.addToPosition(movespeed*delta/1000f, 0);
-
+			movingDirection.x+=1;
 		}
+		movingDirection.normalise();
+		
+		super.addToPosition(movingDirection.x*moveSpeed*delta/1000f, movingDirection.y*moveSpeed*delta/1000f);
 	}
 }
