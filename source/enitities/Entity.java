@@ -359,9 +359,21 @@ public class Entity {
 		Vector2f distance2 = distance.copy();
 		distance.scale(circle.radius/distance.length()).sub(distance2);
 		
-		float denominator = weight+entity.weight;
-		Vector2f myDistance = new Vector2f(distance.x* weight/denominator, distance.y* weight/denominator);
-		Vector2f entityDistance = new Vector2f(-distance.x* entity.weight/denominator, -distance.y* entity.weight/denominator);		
+		Vector2f myDistance;
+		Vector2f entityDistance;		
+		if(movable){
+			if(entity.isMovable()){
+				float denominator = weight+entity.weight;
+				myDistance = new Vector2f(distance.x* weight/denominator, distance.y* weight/denominator);
+				entityDistance = new Vector2f(-distance.x* entity.weight/denominator, -distance.y* entity.weight/denominator);		
+			}else{
+				myDistance = distance;
+				entityDistance = new Vector2f(0, 0);		
+			}
+		}else{
+			myDistance = new Vector2f(0, 0);
+			entityDistance = distance;		
+		}
 		
 		entity.position.add(entityDistance);
 		position.add(myDistance);
@@ -388,6 +400,7 @@ public class Entity {
 	public void update(Input input, int delta){
 		hitbox.setCenterX(position.x);
 		hitbox.setCenterY(position.y);
+		rotation += 0.1f;
 	}
 	
 	public Entity addToPosition(float x, float y){

@@ -29,7 +29,7 @@ public class Running extends BasicGameState{
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		input = new Input(Input.ANY_CONTROLLER);
-		player = new Player(loader.loadImage("BlackCircle"), new Circle(0,0,50), 200, 200, 45, 100, 100, 1);
+		player = new Player(loader.loadImage("BlackCircle"), new Circle(0,0,50), 200, 200, 45, 100, 100, 100);
 		Random random = new Random();
 		for(int i = 0; i < 100; i++){
 			if((random.nextInt() & 1) == 0){
@@ -48,6 +48,8 @@ public class Running extends BasicGameState{
 						random.nextInt(Display.getHeight()), random.nextInt(Display.getWidth()), random.nextInt(360), width, width, random.nextFloat()*5);
 			}
 		}
+		new Entity(loader.loadImage("BlackCircle"), new Circle(0,0,200), 400, 400, 45, 400, 400, 1).setMovable(false);
+
 	}
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
@@ -62,7 +64,7 @@ public class Running extends BasicGameState{
 	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		g.setAntiAlias(true);
+//		g.setAntiAlias(true);
 		g.setColor(Color.green);
 		g.fillRect(0, 0, Display.getWidth(), Display.getHeight());		
 		for(Entity entity : entities){
