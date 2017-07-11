@@ -2,8 +2,6 @@ package enitities;
 
 import java.util.ArrayList;
 
-import javax.tools.Tool;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -22,7 +20,6 @@ public class Entity {
 	public static ArrayList<Entity> entities=new ArrayList<Entity>();
 	
 	private Vector2f position;
-	private Vector2f lastPosition;
 	private float rotation;
 	private Image basicImage;
 	public Shape hitbox;
@@ -34,7 +31,6 @@ public class Entity {
 	public Entity(Image basicImage, Shape hitbox, Vector2f position, float rotation, Vector2f size, float weight) {
 		super();
 		this.position = position;
-		this.lastPosition = position;
 		this.rotation = (float)Math.toRadians(rotation);
 		this.basicImage = basicImage;
 		this.hitbox = hitbox;
@@ -63,16 +59,17 @@ public class Entity {
 				//Rectangle collides with Rectangle
 				else if(entity.hitbox instanceof Rectangle && hitbox instanceof Rectangle){
 					
-					double entityWidth = entity.hitbox.getWidth()>entity.hitbox.getHeight()?entity.hitbox.getWidth():entity.hitbox.getHeight();
-					double myWidth = hitbox.getWidth()>hitbox.getHeight()?hitbox.getWidth():hitbox.getHeight();
-					double minDistance = Math.sqrt(2)*(entityWidth+myWidth);
+					Polygon entityRectangle = (Polygon) entity.getHitbox();
+					Polygon myRectangle = (Polygon) getHitbox();
+					
+					double minDistance = Toolbox.getDistance(new Vector2f(myRectangle.getCenter()), new Vector2f(myRectangle.getPoint(0)))+
+										Toolbox.getDistance(new Vector2f(entityRectangle.getCenter()), new Vector2f(entityRectangle.getPoint(0)));
 
 					
 					if(Toolbox.getDistance(entity.getHitbox().getCenterX(),entity.getHitbox().getCenterY(),
 							getHitbox().getCenterX(),getHitbox().getCenterY()) < minDistance){
 						
-						Polygon entityRectangle = (Polygon) entity.getHitbox();
-						Polygon myRectangle = (Polygon) getHitbox();
+						
 						Vector2f[] entityVertex = new Vector2f[4];
 						Vector2f[] myVertex = new Vector2f[4];
 						for(int i = 0; i < entityVertex.length; i++){
@@ -153,7 +150,8 @@ public class Entity {
 					
 					Vector2f circlePosition = new Vector2f(circle.getCenter());
 					
-					if(Toolbox.getDistance(circlePosition, new Vector2f(rect.getCenter()))<circle.radius+rect.getWidth()+rect.getHeight()){
+					if(Toolbox.getDistance(circlePosition, new Vector2f(rect.getCenter()))
+							<circle.radius+Toolbox.getDistance(new Vector2f(rect.getCenter()), new Vector2f(rect.getPoint(0)))){
 					
 						Vector2f[] rectVertex = new Vector2f[4];
 						for(int i = 0; i < rectVertex.length; i++){
@@ -379,13 +377,17 @@ public class Entity {
 		Image image = basicImage.getScaledCopy((int)size.x, (int)size.y);
 		image.rotate((float) Math.toDegrees(rotation));
 		image.drawCentered(position.x, position.y);
-		g.setColor(Color.red);
-		g.draw(getHitbox());
+		
+		
+		if(Debug.showHitbox){
+			g.setColor(Color.red);
+			g.draw(getHitbox());
+		}
 	}
 	
 	public void update(Input input, int delta){
-		if(!(this instanceof Player)){
-		}
+		hitbox.setCenterX(position.x);
+		hitbox.setCenterY(position.y);
 	}
 	
 	public Entity addToPosition(float x, float y){
@@ -419,8 +421,6 @@ public class Entity {
 		return this;
 		}
 	public Shape getHitbox() {
-		hitbox.setCenterX(position.x);
-		hitbox.setCenterY(position.y);
 		return hitbox.transform(Transform.createRotateTransform(rotation, hitbox.getCenterX(), hitbox.getCenterY()));
 	}
 	public Entity setHitbox(Vector2f location) {
