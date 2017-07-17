@@ -6,7 +6,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import gameStates.Running;
-import gameStates.Menu;
 
 public class Game extends StateBasedGame{
 	public Game(String name) {
@@ -21,7 +20,6 @@ public class Game extends StateBasedGame{
 			app.setAlwaysRender(true);
 			app.start();
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -31,5 +29,12 @@ public class Game extends StateBasedGame{
 //		addState(new Menu());
 		addState(new Running());
 		
+	}
+	@Override
+	public boolean closeRequested(){
+		//clean up
+		
+		//EntityShader.cleanUp();
+		return true;
 	}
 }

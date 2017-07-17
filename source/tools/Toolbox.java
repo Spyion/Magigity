@@ -1,7 +1,7 @@
 package tools;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
@@ -125,6 +125,10 @@ public class Toolbox {
 	}public static double getAngle(Vector2f point){
 		return getAngle(new Vector2f(0,0), point);
 	}
+	
+	
+//  Working way, but higher Performance cost
+	
 	public static boolean isPointInRectangle(Vector2f point, Rectangle rect, float rotation){
 		if(rotation == 0)
 			return rect.contains(point.x, point.y);
@@ -151,6 +155,29 @@ public class Toolbox {
 			}
 		}
 		return true;
+	}
+	
+	
+//	faster way but buggy
+	
+//	public static boolean isPointInRectangle(Vector2f point, Rectangle rect, float rotation){
+//		Vector2f myPoint = getDistanceVector(new Vector2f(rect.getCenter()),point).add(Math.toDegrees(rotation));
+//		if(Math.abs(myPoint.x)<=rect.getWidth()&&Math.abs(myPoint.y)<=rect.getHeight())
+//			return true;
+//		return false;
+//	}
+	
+	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f size, float rot){
+		return createTransformationMatrix(new Vector3f(translation.x, translation.y, 0),
+										  new Vector3f(size.x, size.y, 0), rot);
+	}
+	public static Matrix4f createTransformationMatrix(Vector3f translation, Vector3f size, float rot) {
+		Matrix4f m = new Matrix4f();
+		m.setIdentity();
+		Matrix4f.translate(translation, m, m);
+		Matrix4f.rotate((float) Math.toRadians(rot), new Vector3f(0,1,0), m, m);
+		Matrix4f.scale(new Vector3f(size.x,size.y,size.z), m, m);
+		return m;
 	}
 	
 }
