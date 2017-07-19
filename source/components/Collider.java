@@ -2,7 +2,6 @@ package components;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
@@ -10,6 +9,7 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
+import debug.Debug;
 import enitities.Camera;
 import enitities.Entity;
 import tools.Toolbox;
@@ -20,6 +20,7 @@ public class Collider {
 	public final Vector2f position;
 	private Shape hitbox;
 	private boolean enabled = true;
+	private boolean dynamicCollision = Debug.dynamicCollision;
 	public Collider(CollidingObject object, Shape hitbox){
 		this.object = object;
 		this.hitbox = hitbox;
@@ -222,10 +223,14 @@ public class Collider {
 		Vector2f myObjectAdd = new Vector2f((float)(Math.cos(angle)*myObjectDistance),
 				   						   (float)(Math.sin(angle)*myObjectDistance));
 		
-		
+		if(dynamicCollision){
+			object.speed.set(myObjectAdd);
+			collider.object.speed.set(objectAdd);
+
+		}else{
 		position.add(myObjectAdd);
 		collider.object.position.add(objectAdd);
-		
+		}
 	}
 	
 	private void collideRectRect(Collider collider, Vector2f point, Vector2f intersectingPoint1, Vector2f intersectingPoint2, Vector2f[] objectVertex, Vector2f[] myObjectVertex){
@@ -314,8 +319,14 @@ public class Collider {
 		}
 		
 		
-		collider.position.add(objectDistance);
+		if(dynamicCollision){
+			object.speed.set(myObjectDistance);
+			collider.object.speed.set(objectDistance);
+
+		}else{
 		position.add(myObjectDistance);
+		collider.object.position.add(objectDistance);
+		}
 		
 		
 		
@@ -374,9 +385,15 @@ public class Collider {
 			myObjectDistance = new Vector2f(0, 0);
 			objectDistance = distance;		
 		}
-		
-		collider.position.add(objectDistance);
+		if(dynamicCollision){
+			object.speed.set(myObjectDistance);
+			collider.object.speed.set(objectDistance);
+
+		}else{
 		position.add(myObjectDistance);
+		collider.object.position.add(objectDistance);
+		}
+
 	}
 	/**
 	 * gets the rotated hitbox, therefore it will always 

@@ -1,16 +1,22 @@
 package components;
 
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
 public class DrawableObject {
 	public final Vector2f position;
 	public final Vector2f size;
+	public final Image image;
 	float rotation;
-	public DrawableObject(Vector2f position, Vector2f size, float rotation) {
+	public DrawableObject(Image image, Vector2f position, Vector2f size, float rotation) {
 		super();
+		this.image = image;
 		this.position = position;
 		this.size = size;
-		this.rotation = (float) Math.toDegrees(rotation);
+		setRotationDegrees(rotation);
+	}
+	public DrawableObject( Vector2f position, Vector2f size, float rotation) {
+		this(null, position, size, rotation);
 	}
 	public DrawableObject(){
 		this(new Vector2f(0, 0), new Vector2f(1,1),0);
@@ -32,6 +38,9 @@ public class DrawableObject {
 	}
 	public void addToRotationRadians(float rotation) {
 		this.rotation += rotation;
+	}
+	public Image getImage() {
+		return image;
 	}
 
 	

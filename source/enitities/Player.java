@@ -12,8 +12,7 @@ public class Player extends Entity {
 	public Player(Image basicImage, Shape hitbox, float rotation, float weight) {
 		super(basicImage, hitbox, rotation, weight);
 	}
-	
-	public void update(Input input, int delta){
+	public void update(Input input,Camera camera ,int delta){
 		Vector2f movingDirection = new Vector2f(0,0);
 		moveSpeed = input.isKeyDown(Input.KEY_LSHIFT) ? 500 : 100;
 		
@@ -30,11 +29,10 @@ public class Player extends Entity {
 			movingDirection.x+=1;
 		}
 		movingDirection.normalise();
-		if(Math.abs(movingDirection.x) > 0 || Math.abs(movingDirection.y) > 0)
+		movingDirection.sub(camera.getRotationDegrees());
+		if(Math.abs(movingDirection.x) > 0 || Math.abs(movingDirection.y) > 0){
 			speed.set(new Vector2f(moveSpeed*movingDirection.x*delta/1000f, moveSpeed*movingDirection.y*delta/1000f));
-		System.out.print(speed.x+ " ");
-		super.update(input, delta);
-		System.out.println(speed.x);
+		}
 
 	}
 }

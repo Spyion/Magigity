@@ -1,5 +1,9 @@
 package components;
 
+import java.util.ArrayList;
+
+import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -12,12 +16,30 @@ public class CollidingObject extends DrawableObject{
 
 	protected boolean turnable;
 	
-	public CollidingObject(Vector2f position,Vector2f size, Shape hitbox, float rotation, float weight, boolean movable, boolean turnable){
-		super(position, size, rotation);
+	public final Vector2f speed = new Vector2f(0, 0);
+	
+	public CollidingObject(Image image, Vector2f position,Vector2f size, Shape hitbox, float rotation, float weight, boolean movable, boolean turnable){
+		super(image, position, size, rotation);
 		collider = new Collider(this, hitbox);
 		this.weight = weight;
 		this.movable = movable;
 		this.turnable = turnable;
+	}
+	public CollidingObject(Vector2f position,Vector2f size, Shape hitbox, float rotation, float weight, boolean movable, boolean turnable){
+		this(null, position, size, hitbox, rotation, weight, movable, turnable);
+	}
+	
+	public void update(Input input, int delta){
+		if(movable && (speed.x != 0 || speed.y != 0)){
+			position.add(speed);
+			speed.scale((float)Math.pow(0.99, delta));
+			if(Math.abs(speed.x) < 0.0001f){
+				speed.x = 0;
+			}
+			if(Math.abs(speed.y) < 0.0001f){
+				speed.y = 0;
+			}
+		}
 	}
 	
 	

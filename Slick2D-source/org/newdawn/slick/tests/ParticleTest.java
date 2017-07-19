@@ -39,7 +39,7 @@ public class ParticleTest extends BasicGame {
 		system.addEmitter(new FireEmitter(200,300,60));
 		system.addEmitter(new FireEmitter(600,300,30));
 		
-		//system.setUsePoints(true);
+//		system.setUsePoints(true);
 	}
 
 	/**

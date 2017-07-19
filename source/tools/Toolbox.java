@@ -1,7 +1,5 @@
 package tools;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
@@ -89,6 +87,10 @@ public class Toolbox {
 	public static Vector2f getLineHalfingPoint(float x1, float y1, float x2, float y2){
 		return getLineHalfingPoint(new Vector2f(x1, y1), new Vector2f(x2, y2));
 	}
+	public static Vector2f getLineDivision(Vector2f point1, float factor1, Vector2f point2, float factor2){
+		return new Vector2f((point1.x*factor1+point2.x*factor2)/(factor1+factor2),
+							(point1.y*factor1+point2.y*factor2)/(factor1+factor2));
+	}
 	public static Vector2f getOrthogonalPoint(Vector2f linePoint1, Vector2f linePoint2, Vector2f point){
 		
 		if(linePoint1.x > linePoint2.x)
@@ -167,17 +169,26 @@ public class Toolbox {
 //		return false;
 //	}
 	
-	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f size, float rot){
-		return createTransformationMatrix(new Vector3f(translation.x, translation.y, 0),
-										  new Vector3f(size.x, size.y, 0), rot);
+/**
+ * 
+ * @param approaching The approaching vector
+ * @param target the vector that is being approached
+ * @param factor the factor by which it is approached, 1 = never, 0 = instant, should be between 0.8 and 0.999
+ * @param delta  delta time
+ */
+	public static void approachVector(final Vector2f approaching, final Vector2f target, float factor,int delta){
+		Vector2f distance = Toolbox.getDistanceVector(target, approaching);
+		distance.scale((float) Math.pow(factor, delta));
+		approaching.set(new Vector2f(target.x-distance.x, target.y-distance.y));
 	}
-	public static Matrix4f createTransformationMatrix(Vector3f translation, Vector3f size, float rot) {
-		Matrix4f m = new Matrix4f();
-		m.setIdentity();
-		Matrix4f.translate(translation, m, m);
-		Matrix4f.rotate((float) Math.toRadians(rot), new Vector3f(0,1,0), m, m);
-		Matrix4f.scale(new Vector3f(size.x,size.y,size.z), m, m);
-		return m;
+	/**
+	 * 
+	 * @param approaching The approaching vector
+	 * @param target the vector that is being approached
+	 * @param delta  delta time
+	 */
+	public static void approachVector(final Vector2f approaching, final Vector2f target,int delta){
+		approachVector(approaching, target, 0.995f, delta);
 	}
 	
 }
