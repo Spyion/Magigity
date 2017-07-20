@@ -1,7 +1,5 @@
 package animations;
 
-import org.newdawn.slick.geom.Vector2f;
-
 public class ValueAnimationCurve {
 	public final ValueAnimationPoint point1;
 	public final ValueAnimationPoint point2;

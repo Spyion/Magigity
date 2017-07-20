@@ -9,38 +9,33 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
-import components.CollidingObject;
+import components.CollidableObject;
 import debug.Debug;
 import effects.Effect;
+import info.Information;
 
-public class Entity extends CollidingObject{
+public class Entity extends CollidableObject{
 	public static final ArrayList<Entity> entities=new ArrayList<Entity>();
 	public final ArrayList<Effect> effects = new ArrayList<Effect>();
 	
 	public Entity(Image image, Shape hitbox, Vector2f size, float rotation, float weight) {
-		super(image ,new Vector2f(hitbox.getCenter()),size, hitbox, (float)Math.toRadians(rotation), weight < 0 ? 0.01f : weight, true, false);
+		super(image ,new Vector2f(hitbox.getCenter()),size, hitbox, (float)Math.toRadians(rotation), weight < 0 ? 0.01f : weight, true, false, false);
 		entities.add(this);
 	}
 	public Entity(Image image, Shape hitbox, float rotation, float weight) {
 		this(image, hitbox, new Vector2f(hitbox.getWidth(), hitbox.getHeight()), rotation, weight);
 	}
-	public void render(Graphics g, Camera camera){
-		if(image != null){
-			Image toDraw = image.getScaledCopy((int)(size.x*camera.size.x), (int)(size.y*camera.size.y));
-			toDraw.rotate(getRotationDegrees());
-			toDraw.rotate(camera.getRotationDegrees());
-			Vector2f drawingPosition = camera.getWorldToScreenPoint(position);
-			toDraw.drawCentered(drawingPosition.x, drawingPosition.y);
-		}
+	public Entity(Shape hitbox, Vector2f size, float rotation, float weight) {
+		this(null, hitbox, size, rotation, weight);
+	}
+	public void render(Graphics g){
+		super.render(g, size);
 		for(Effect effect : effects){
 			effect.render(g);
 		}
-		if(Debug.showHitbox){
-			collider.render(g, camera);
-		}
 	}
 	@Override
-	public void update(Input input, int delta){
+	public void update(int delta){
 
 		Iterator<Effect> iter = effects.iterator();
 		while (iter.hasNext()) {
@@ -50,7 +45,7 @@ public class Entity extends CollidingObject{
 		        iter.remove();
 		}
 		
-		super.update(input, delta);
+		super.update(delta);
 	}
 
 	

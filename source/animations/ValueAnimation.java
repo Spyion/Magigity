@@ -17,7 +17,7 @@ public class ValueAnimation {
 		for(ArrayList<Float> l : list){
 			points.add(new ValueAnimationPoint(l.get(0), l.get(1), l.get(2)));
 		}
-		for(int i = 0; i < points.size()-2; i++){
+		for(int i = 0; i < points.size()-1; i++){
 			curves.add(new ValueAnimationCurve(points.get(i), points.get(i+1)));
 		}
 	}
@@ -58,7 +58,7 @@ public class ValueAnimation {
 					time-=2*(time-getLength());
 				}
 			}
-			if(loop){
+			else if(loop){
 				while(time > getLength()){
 					time-= getLength();
 				}
@@ -68,7 +68,7 @@ public class ValueAnimation {
 					return curve.getHeight(time);
 			}
 		}
-		return -0.111111f;
+		return 0;
 	}
 	public float getHeight(){
 		return getHeight(time);
@@ -100,7 +100,7 @@ public class ValueAnimation {
 				time-=2*(time-getLength());
 			}
 		}
-		if(loop){
+		else if(loop){
 			while(time > getLength()){
 				time-= getLength();
 			}
@@ -121,14 +121,16 @@ public class ValueAnimation {
 	public boolean isPingPong() {
 		return pingPong;
 	}
-	public void setPingPong(boolean pingPong) {
+	public ValueAnimation setPingPong(boolean pingPong) {
 		this.pingPong = pingPong;
+		return this;
 	}
 	public boolean isLoop() {
 		return loop;
 	}
-	public void setLoop(boolean loop) {
+	public ValueAnimation setLoop(boolean loop) {
 		this.loop = loop;
+		return this;
 	}
 	public boolean isCompleted(){
 		if(time > points.get(points.size()-1).position.x){

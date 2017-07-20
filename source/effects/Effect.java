@@ -8,7 +8,7 @@ import tools.Loader;
 public class Effect {
 	protected Loader loader = new Loader();
 	public final Entity entity;
-	private int lifeTime;
+	protected int lifeTime;
 	public Effect(Entity entity, int lifeTime){
 		this.entity = entity;
 		this.lifeTime = lifeTime;

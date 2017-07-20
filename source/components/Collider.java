@@ -10,28 +10,37 @@ import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
 import debug.Debug;
-import enitities.Camera;
 import enitities.Entity;
+import info.Collision;
 import tools.Toolbox;
 
 public class Collider {
 
-	public final CollidingObject object;
+	public final CollidableObject object;
 	public final Vector2f position;
 	private Shape hitbox;
 	private boolean enabled = true;
+	private boolean isTrigger;
 	private boolean dynamicCollision = Debug.dynamicCollision;
-	public Collider(CollidingObject object, Shape hitbox){
+	public Collider(CollidableObject object, Shape hitbox, boolean isTrigger){
 		this.object = object;
 		this.hitbox = hitbox;
 		this.position = object.position;
+		this.isTrigger = isTrigger;
+	}
+	public Collider(CollidableObject object, Shape hitbox){
+		this(object, hitbox, false);
 	}
 	public void collide(Entity e){
 		collide(e.collider);
 	}
+	public void collide(CollidableObject object){
+		collide(object.collider);
+	}
 	
 	public void collide(Collider collider){
 		if(collider.position!=null && position != null && (collider.object.isMovable() ||object.isMovable())&&collider.isEnabled()&& enabled){
+			boolean collided = false;
 				final Vector2f myObjectPosition = object.position;
 				final Vector2f objectPosition = collider.position;
 				if(collider.getHitboxType() instanceof Circle && getHitboxType() instanceof Circle){
@@ -40,10 +49,11 @@ public class Collider {
 					double currentDistance = Toolbox.getDistance(myObjectPosition, objectPosition);
 					double collidingDistance = objectCircle.radius+myObjectCircle.radius;
 					
-					if(currentDistance<collidingDistance)
-						this.collideCircleCircle(collider, currentDistance, collidingDistance, objectCircle, myObjectCircle);
-				
-			
+					if(currentDistance<collidingDistance){
+						if(!isTrigger)
+							this.collideCircleCircle(collider, currentDistance, collidingDistance, objectCircle, myObjectCircle);
+						collided = true;
+						}
 				}
 				
 				//Rectangle collides with Rectangle
@@ -113,14 +123,20 @@ public class Collider {
 						
 						if(objectNearestVertex != null && myObjectIntersectingPoint1 != null && myObjectIntersectingPoint2 != null && myObjectNearestVertex != null&&objectIntersectingPoint1 != null && objectIntersectingPoint2 != null)
 						{
-							collideRectRect(collider, myObjectNearestVertex, objectNearestVertex, myObjectIntersectingPoint1, myObjectIntersectingPoint2, objectIntersectingPoint1, objectIntersectingPoint2);
+							if(!isTrigger)
+								collideRectRect(collider, myObjectNearestVertex, objectNearestVertex, myObjectIntersectingPoint1, myObjectIntersectingPoint2, objectIntersectingPoint1, objectIntersectingPoint2);
+							collided = true;
 						}
 						else{
 						    if(objectNearestVertex != null && myObjectIntersectingPoint1 != null && myObjectIntersectingPoint2 != null){
-						    	collider.collideRectRect(this, objectNearestVertex, myObjectIntersectingPoint1, myObjectIntersectingPoint2, myObjectVertex, objectVertex);	
+								if(!isTrigger)
+									collider.collideRectRect(this, objectNearestVertex, myObjectIntersectingPoint1, myObjectIntersectingPoint2, myObjectVertex, objectVertex);	
+								collided = true;
 						    }
 						    if(myObjectNearestVertex != null&&objectIntersectingPoint1 != null && objectIntersectingPoint2 != null){
-						    	collideRectRect(collider, myObjectNearestVertex, objectIntersectingPoint1, objectIntersectingPoint2, objectVertex, myObjectVertex);
+								if(!isTrigger)
+									collideRectRect(collider, myObjectNearestVertex, objectIntersectingPoint1, objectIntersectingPoint2, objectVertex, myObjectVertex);
+								collided = true;
 						    }
 						}
 					}
@@ -167,10 +183,14 @@ public class Collider {
 						
 						if(intersectingPoint != null){
 							if(getHitboxType() instanceof Circle){
-								collider.collideRectangleCircle(this, intersectingPoint, circle);
+								if(!isTrigger)
+									collider.collideRectangleCircle(this, intersectingPoint, circle);
+								collided = true;
 							}
 							else{							
-								collideRectangleCircle(collider, intersectingPoint, circle);
+								if(!isTrigger)
+									collideRectangleCircle(collider, intersectingPoint, circle);
+								collided = true;
 							}
 						}
 						// check if circle collides with corners
@@ -184,15 +204,23 @@ public class Collider {
 							}
 							if(intersectingPoint != null){
 								if(getHitboxType() instanceof Circle){
-									collider.collideRectangleCircle(this, intersectingPoint, circle);
+									if(!isTrigger)
+										collider.collideRectangleCircle(this, intersectingPoint, circle);
+									collided = true;
 								}
 								else{
-									collideRectangleCircle(collider, intersectingPoint, circle);
+									if(!isTrigger)
+										collideRectangleCircle(collider, intersectingPoint, circle);
+									collided = true;
 								}
 							}
 						}
 					}
 				}
+				if(collided){
+					new Collision(object, collider.object);
+				}else
+					new Collision(object, collider.object, true);
 			}
 		}
 	
@@ -202,19 +230,18 @@ public class Collider {
 		double objectDistance;
 		double myObjectDistance;
 		
-		double sign = Math.signum(collider.position.x-object.position.x);	
 		if(collider.object.isMovable()){
 			if(object.isMovable()){
 					double denominator = collider.object.getWeight() + object.getWeight();
-					objectDistance = deltaDistance*object.getWeight()/denominator*sign;
-					myObjectDistance = deltaDistance*collider.object.getWeight()/denominator*-sign;
+					objectDistance = deltaDistance*object.getWeight()/denominator;
+					myObjectDistance = deltaDistance*collider.object.getWeight()/denominator*-1;
 			}else{
-				objectDistance = deltaDistance*sign;
+				objectDistance = deltaDistance;
 				myObjectDistance = 0;
 			}
 		}else{
 			objectDistance = 0;
-			myObjectDistance = deltaDistance*-sign;
+			myObjectDistance = deltaDistance*-1;
 		}
 		
 		
@@ -420,13 +447,12 @@ public class Collider {
 		this.enabled = enabled;
 		return this;
 	}
-	public void render(Graphics g, Camera camera){
+	public void render(Graphics g){
 		g.setColor(Color.red);
-		Polygon toDraw = (Polygon) getHitbox().transform(Transform.createScaleTransform(camera.size.x, camera.size.y)).
-				transform(Transform.createRotateTransform((float)(camera.getRotationRadians()),position.x, position.y));
-		Vector2f drawingPosition = camera.getWorldToScreenPoint(position);
-		toDraw.setCenterX(drawingPosition.x);
-		toDraw.setCenterY(drawingPosition.y);
+
+		Polygon toDraw = getHitbox();
+		toDraw.setCenterX(position.x);
+		toDraw.setCenterY(position.y);
 		g.draw(toDraw);
 	}
 	public boolean isMovable(){

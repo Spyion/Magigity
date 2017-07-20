@@ -192,19 +192,21 @@ public class ValueAnimationCreator extends BasicGame {
 
 	}
 	private void save(){
-		String s = JOptionPane.showInputDialog("Name:");
+		String s = JOptionPane.showInputDialog("Save Name:");
 		if(s != null && !s.equals("")){
 			try {
 				FileReader fr = new FileReader(root+s);
 				int override = JOptionPane.showConfirmDialog(new JPanel(), "File exist, Override?");
-				System.out.println(override);
+				if(override == 0){
+					csv.writeCSV(root+s, animation.getFloatArray());
+				}
 			} catch (FileNotFoundException e) {
 				csv.writeCSV(root+s, animation.getFloatArray());
 			}
 		}
 	}
 	private void load(){
-		String s = JOptionPane.showInputDialog("Name:");
+		String s = JOptionPane.showInputDialog("Load Name:");
 		if(s != null && !s.equals("")){
 			try {
 				FileReader fr = new FileReader(root+s);

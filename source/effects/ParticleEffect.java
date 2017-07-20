@@ -1,25 +1,21 @@
 package effects;
 
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleSystem;
-import org.newdawn.slick.particles.effects.FireEmitter;
 
 import enitities.Entity;
-import particles.ParticleSystems;
-import tools.Information;
+import tools.Loader;
 
 public class ParticleEffect extends Effect{
 	
 	private ParticleSystem system;
 	private ConfigurableEmitter emitter;
 	public ParticleEffect(String particleRef, String particleSystemRef,Entity entity, int lifeTime){
-		super(entity, lifeTime);
-		system = new ParticleSystem(loader.loadImage(particleRef));
-		emitter = loader.loadEmitter(particleSystemRef);
+		super(entity, lifeTime+1000);
+		system = new ParticleSystem(Loader.loadImage(particleRef));
+		emitter = Loader.loadEmitter(particleSystemRef);
 		system.addEmitter(emitter);
 		system.setBlendingMode(ParticleSystem.BLEND_COMBINE);
 	}
@@ -34,24 +30,23 @@ public class ParticleEffect extends Effect{
 		this(particleRef, particleSystemRef, entity, 5000);
 	}
 	@Override
-	public void update(int delta){		
+	public void update(int delta){	
+		
 		system.update(delta);
+		
+		if(super.getLifeTime() < 1000)
+			emitter.initialLife.setMax(0);
+			emitter.initialLife.setMin(0);
+		
 		super.update(delta);
 	}
-	private int i;
 
 	@Override
 	public void render(Graphics g){
-		
-		Vector2f position = Information.currentCamera.getWorldToScreenPoint(new Vector2f(0, 0));
 		Vector2f entityPosition = entity.position;
-		g.translate(position.x, position.y);
-		g.rotate(0, 0, Information.currentCamera.getRotationDegrees());
-		g.scale(Information.currentCamera.size.x, Information.currentCamera.size.y);
 		emitter.setPosition(entityPosition.x, entityPosition.y, false);
 		system.render(0, 0);
-		
-		g.resetTransform();
+
 	}
 
 }

@@ -4,6 +4,8 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
+import components.DrawableObject;
+
 public class Toolbox {
 	public static Vector2f getIntersectionPoint(Vector2f point1, Vector2f point2, Vector2f point3, Vector2f point4){
 		
@@ -122,7 +124,12 @@ public class Toolbox {
 		return getOrthogonalPoint(new Vector2f(x, y), new Vector2f(x1, y1), new Vector2f(x2, y2));
 	}
 	public static double getAngle(Vector2f start, Vector2f end){
-		double angle = Math.atan((end.y-start.y)/(end.x-start.x));
+		Vector2f distance; 
+			distance = end.copy().sub(start);
+			distance.x = Math.abs(distance.x);
+		double angle = Math.atan((distance.y)/(distance.x));
+		if(start.x > end.x)
+			angle = Math.PI-angle;
 		return angle;
 	}public static double getAngle(Vector2f point){
 		return getAngle(new Vector2f(0,0), point);
@@ -179,7 +186,10 @@ public class Toolbox {
 	public static void approachVector(final Vector2f approaching, final Vector2f target, float factor,int delta){
 		Vector2f distance = Toolbox.getDistanceVector(target, approaching);
 		distance.scale((float) Math.pow(factor, delta));
-		approaching.set(new Vector2f(target.x-distance.x, target.y-distance.y));
+		if(distance.length() > 0.001f)
+			approaching.set(new Vector2f(target.x-distance.x, target.y-distance.y));
+		else 
+			approaching.set(target);
 	}
 	/**
 	 * 
@@ -190,5 +200,23 @@ public class Toolbox {
 	public static void approachVector(final Vector2f approaching, final Vector2f target,int delta){
 		approachVector(approaching, target, 0.995f, delta);
 	}
+	public static float approachValue(float approaching, float target, float factor, int delta){
+		float distance = target - approaching;
+		distance *= Math.pow(factor, delta);
+		if(Math.abs(distance) > 0.00001f)
+			return target-distance;
+		return target;
+		
+	}
+	public static float approachValue(float approaching, float target, int delta){
+		return approachValue(approaching, target, 0.995f, delta);
+	}
+	public static Vector2f getWorldToParentPosition(Vector2f position, DrawableObject parent){
+		return getDistanceVector(position, parent.position).sub(parent.getRotationDegrees());
+	}
+	public static Vector2f getParentToWorldPosition(Vector2f position, DrawableObject parent){
+		return parent.position.copy().add(position.copy().add(parent.getRotationDegrees()));
+	}
+	
 	
 }

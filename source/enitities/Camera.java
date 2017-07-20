@@ -6,15 +6,13 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Vector2f;
 
 import components.DrawableObject;
-import debug.Debug;
-import tools.Information;
-import tools.Toolbox;
 
 public class Camera extends DrawableObject{
 	
-	public final Vector2f zoom = new Vector2f(0.5f,0.5f);
+	public final Vector2f zoom = new Vector2f();
 	public final Vector2f targetPosition = new Vector2f(1,1);
-	private float scroll = 1;
+	private float targetRotation = 0;
+	private float scroll = -1f;
 	private boolean workCamera = false;
 	public Camera(){
 		
@@ -22,7 +20,24 @@ public class Camera extends DrawableObject{
 	public Camera(boolean workCamera){
 		this.workCamera = workCamera;
 	}
-	
+	public void addToTargetRotationDegrees(float rotation){
+		targetRotation += Math.toRadians(rotation);
+	}
+	public void addToTargetRotationRadians(float rotation){
+		targetRotation += rotation;
+	}
+	public void setTargetRotationDegrees(float rotation){
+		targetRotation = (float) Math.toRadians(rotation);
+	}
+	public void setTargetRotationRadians(float rotation){
+		targetRotation = rotation;
+	}
+	public float getTargetRotationDegress(){
+		return (float) Math.toDegrees(targetRotation);
+	}
+	public float getTargetRotationRadians(){
+		return targetRotation;
+	}
 	public Vector2f getScreenToWorldPoint(Vector2f point){
 
 		point = new Vector2f((point.x-Display.getWidth()/2)/size.x, (point.y-Display.getHeight()/2)/size.y);
@@ -45,11 +60,6 @@ public class Camera extends DrawableObject{
 				position.add(new Vector2f(0, -delta/size.x));
 			if(input.isKeyDown(Input.KEY_DOWN))
 				position.add(new Vector2f(0, delta/size.x));
-		}else{
-			if(input.isKeyDown(Input.KEY_LEFT))
-				addToRotationDegrees(delta/10f);
-			if(input.isKeyDown(Input.KEY_RIGHT))
-				addToRotationDegrees(delta/-10f);
 		}
 		float mouseWheel = Mouse.getDWheel();
 		scroll += mouseWheel/1000f;
@@ -59,7 +69,6 @@ public class Camera extends DrawableObject{
 				scroll = 2f;
 			if(scroll < 0.1f)
 				scroll = 0.1f;
-			System.out.println(scroll);
 			if(scroll<0){
 				scale = (float) (Math.pow(Math.E, scroll)+0.0);
 			}else{

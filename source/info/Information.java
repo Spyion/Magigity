@@ -1,4 +1,4 @@
-package tools;
+package info;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -35,10 +35,10 @@ public class Information {
 		}
 		lastMouse = currentMouse;
 	}
-	public static float getInactiveTime() {
+	public static float getInactiveMouseTime() {
 		return inactiveTime;
 	}
-	public static boolean isInactive() {
-		return inactiveTime > 100000;
+	public static boolean isMouseInactive() {
+		return inactiveTime > 5000;
 	}
 }
