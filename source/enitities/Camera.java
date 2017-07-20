@@ -81,9 +81,9 @@ public class Camera extends DrawableObject{
 				scroll = -4f;
 			
 			if(scroll<0){
-				scale = (float) (Math.pow(Math.E, scroll)+0.2);
+				scale = (float) (Math.pow(Math.E, scroll)+0.05);
 			}else{
-				scale = (float) (Math.pow(Math.E, -scroll)*-1+2.2);	
+				scale = (float) (Math.pow(Math.E, -scroll)*-1+2.05);	
 			}
 		}
 		zoom.set(new Vector2f(scale, scale));

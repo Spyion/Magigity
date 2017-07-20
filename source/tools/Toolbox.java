@@ -1,8 +1,11 @@
 package tools;
 
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.font.effects.ConfigurableEffect;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.particles.ConfigurableEmitter;
 
 import components.DrawableObject;
 
@@ -217,6 +220,27 @@ public class Toolbox {
 	public static Vector2f getParentToWorldPosition(Vector2f position, DrawableObject parent){
 		return parent.position.copy().add(position.copy().add(parent.getRotationDegrees()));
 	}
-	
+	public static void setGraphicsToParent(Graphics g, DrawableObject parent){
+		g.translate(parent.position.x, parent.position.y);
+		g.rotate(0, 0, parent.getRotationDegrees());
+		g.scale(parent.size.x, parent.size.y);
+	}
+	public static void scaleEmitter(ConfigurableEmitter emitter, float scale){
+		emitter.growthFactor.setValue(emitter.growthFactor.getValue(0)*scale);
+		emitter.initialDistance.setMax(emitter.initialDistance.getMax()*scale);
+		emitter.initialSize.setMax(emitter.initialSize.getMax()*scale);
+		emitter.size.setMax((int) (emitter.size.getMax()*scale));
+		emitter.speed.setMax(emitter.speed.getMax()*scale);
+		emitter.xOffset.setMax(emitter.xOffset.getMax()*scale);
+		emitter.yOffset.setMax(emitter.yOffset.getMax()*scale);
+		
+		emitter.growthFactor.setValue(emitter.growthFactor.getValue(0)*scale);
+		emitter.initialDistance.setMin(emitter.initialDistance.getMin()*scale);
+		emitter.initialSize.setMin(emitter.initialSize.getMin()*scale);
+		emitter.size.setMin((int) (emitter.size.getMin()*scale));
+		emitter.speed.setMin(emitter.speed.getMin()*scale);
+		emitter.xOffset.setMin(emitter.xOffset.getMin()*scale);
+		emitter.yOffset.setMin(emitter.yOffset.getMin()*scale);
+	}
 	
 }

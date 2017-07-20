@@ -4,9 +4,15 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
 
 import components.DrawableObject;
+import info.Information;
 import tools.Loader;
+import tools.Toolbox;
 
 public class CharacterImagePack {
+	private final int M = Information.METER;
+	private final float CM = Information.CENTIMETER;
+	
+	
 	public DrawableObject	leftShoulder,
 							rightShoulder,
 							head,
@@ -15,7 +21,7 @@ public class CharacterImagePack {
 							rightShoe;
 	public HandImagePack 	rightHand,
 							leftHand;
-	public WeaponImagePack  weapon;
+//	public WeaponImagePack  weapon;
 		
 	public CharacterImagePack(  String hat, 		String head,
 								String shoulders, 	String hands, 
@@ -42,26 +48,76 @@ public class CharacterImagePack {
 	}
 	
 	
-	private final int FOOT_DISTANCE = 25;
+	private final float FOOT_DISTANCE = 15*CM;
+	private final float HAND_DISTANCE = 25*CM;
 	public void render(Graphics g, DrawableObject parent){
 		g.pushTransform();
-		g.translate(parent.position.x, parent.position.y);
-		g.rotate(0, 0, parent.getRotationDegrees());
-		g.scale(parent.size.x, parent.size.y);
+		Toolbox.setGraphicsToParent(g, parent);
 		
 		g.translate(-FOOT_DISTANCE, 0);
 		leftShoe.render(g, leftShoe.size);
 		g.translate(2*FOOT_DISTANCE, 0);
 		rightShoe.render(g, rightShoe.size);
 		g.translate(-FOOT_DISTANCE, 0);
-		rightHand.render(g, rightHand.size);
+		
+//		if(!weapon.isDrawn()){
+			
+		g.translate(-HAND_DISTANCE, 0);
 		leftHand.render(g, leftHand.size);
+		g.translate(2*HAND_DISTANCE, 0);
+		rightHand.render(g, rightHand.size);
+		g.translate(-HAND_DISTANCE, 0);
+		
+//		}
 		leftShoulder.render(g, leftShoulder.size);
 		rightShoulder.render(g, rightShoulder.size);
+		
+//		if(!weapon.isDrawn()){
+//			weapon.render(g, weapon.size);
+//		}
+		
+		
 		head.render(g, head.size);
 		hat.render(g, hat.size);
+		
+//		if(weapon.isDrawn()){
+			
+//			if(weapon.isFlipped()){
+//				rightHand.position.set(0,
+//						weapon.getUpperHandPosition()+
+//						rightHand.handDown.getHeight()*
+//						rightHand.size.y/2);
+//				leftHand.position.set(0, weapon.getLowerHandPosition());
+//				
+//				leftHand.up = true;
+//				rightHand.up = false;
+//			}else{
+//				leftHand.position.set(0, weapon.getUpperHandPosition()+leftHand.handDown.getHeight()*leftHand.size.y/2);
+//				rightHand.position.set(0, weapon.getLowerHandPosition());
+//				
+//				rightHand.up = true;
+//				leftHand.up = false;
+//			}
+//			
+//			g.pushTransform();
+//			g.translate(weapon.position.x, weapon.position.y);
+//			g.rotate(0, 0, weapon.rotation);
+//			g.scale(weapon.size.x, weapon.size.y);
+//			
+//			rightHand.renderLower(g, rightHand.size);
+//			leftHand.renderLower(g, leftHand.size);
+//			
+//			g.popTransform();
+//			weapon.render(g, weapon.size);
+//			
+//			g.translate(weapon.position.x, weapon.position.y);
+//			g.rotate(0, 0, weapon.rotation);
+//			g.scale(weapon.size.x, weapon.size.y);
+//			rightHand.renderUpper(g, rightHand.size);
+//			leftHand.renderUpper(g, leftHand.size);
+//			
+//		}
 		g.popTransform();
-		weapon.render(g, weapon.size);
 	}
 	
 	
@@ -79,8 +135,8 @@ public class CharacterImagePack {
 		this.hat.image = Loader.loadCharacterImage(set, "hat");
 	}
 	public void setShoes(String set) {
-		this.leftShoe.image = Loader.loadCharacterImage(set, "leftShoe", new Vector2f(0.5f, 0.5f));
-		this.rightShoe.image = Loader.loadCharacterImage(set, "rightShoe",  new Vector2f(0.5f, 0.5f));
+		this.leftShoe.image = Loader.loadCharacterImage(set, "leftShoe", new Vector2f(25*CM, 25*CM));
+		this.rightShoe.image = Loader.loadCharacterImage(set, "rightShoe",  new Vector2f(25*CM, 25*CM));
 	}
 
 	public void setHands(String set) {
@@ -88,7 +144,7 @@ public class CharacterImagePack {
 		this.leftHand = Loader.loadHand(set, "leftHand");
 	}
 	public void setWeapon(String set){
-		this.weapon = Loader.loadWeapon(set);
+//		this.weapon = Loader.loadWeapon(set);
 	}
 	
 }

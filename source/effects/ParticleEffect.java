@@ -6,9 +6,14 @@ import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleSystem;
 
 import enitities.Entity;
+import info.Information;
 import tools.Loader;
+import tools.Toolbox;
 
 public class ParticleEffect extends Effect{
+	
+	private static final int M = Information.METER;
+	private static final float CM = Information.CENTIMETER;
 	
 	private ParticleSystem system;
 	private ConfigurableEmitter emitter;
@@ -16,6 +21,8 @@ public class ParticleEffect extends Effect{
 		super(entity, lifeTime+1000);
 		system = new ParticleSystem(Loader.loadImage(particleRef));
 		emitter = Loader.loadEmitter(particleSystemRef);
+		Toolbox.scaleEmitter(emitter, CM);
+		
 		system.addEmitter(emitter);
 		system.setBlendingMode(ParticleSystem.BLEND_COMBINE);
 	}
@@ -46,7 +53,6 @@ public class ParticleEffect extends Effect{
 		Vector2f entityPosition = entity.position;
 		emitter.setPosition(entityPosition.x, entityPosition.y, false);
 		system.render(0, 0);
-
 	}
 
 }

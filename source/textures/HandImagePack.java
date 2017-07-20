@@ -7,11 +7,11 @@ import org.newdawn.slick.geom.Vector2f;
 import components.DrawableObject;
 
 public class HandImagePack extends DrawableObject{
-	private Image		 	handDown,
+	public Image		 	handDown,
 							thumbDown,
 							handUp,
 							thumbUp;
-	public Image currentImage = handDown;
+	public boolean up = true;
 	public HandImagePack(Image handDown, Image thumbDown, Image handUp, Image thumbUp) {
 		super();
 		this.handDown = handDown;
@@ -21,17 +21,28 @@ public class HandImagePack extends DrawableObject{
 	}
 	@Override
 	public void render(Graphics g, Vector2f size){
-		super.render(g, currentImage, size);
-		if(currentImage == handDown)
-			super.render(g, thumbDown, size);
-		else
+		renderLower(g, size);
+		renderUpper(g, size);
+	}
+	public void renderUpper(Graphics g, Vector2f size){
+		if(up){
 			super.render(g, thumbUp, size);
+		}else{
+			super.render(g, handDown, size);
+		}
+	}
+	public void renderLower(Graphics g, Vector2f size){
+		if(up){
+			super.render(g, handUp, size);
+		}else{
+			super.render(g, thumbDown, size);
+		}
 	}
 	public void turnUp(){
-		currentImage = handUp;
+		up = true;
 	}
 	public void turnDown(){
-		currentImage = handDown;
+		up = false;
 	}
 
 }

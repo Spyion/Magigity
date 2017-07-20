@@ -67,8 +67,9 @@ public class ValueAnimation {
 				if(curve.isInRange(time))
 					return curve.getHeight(time);
 			}
+			return points.get(0).position.y;
 		}
-		return 0;
+		return -0.111f;
 	}
 	public float getHeight(){
 		return getHeight(time);

@@ -35,15 +35,16 @@ public class Running extends BasicGameState{
 	Player player;
 	Camera camera = new Camera();
 	//EntityShader entityShader = new EntityShader();
-	
+	private final int M = Information.METER;
+	private final float CM = Information.CENTIMETER;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
-		player = new Player(new Circle(0,0,25),new Rectangle(0,0,75, 25), new Vector2f(1,1), 0, 1);
+		player = new Player(new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
 		for(int i = 1; i < 10; i++){
-			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle"), new Circle(100*i,100*i,25), new Vector2f(1f, 0.5f), 0, 1), 1000);
+			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle"), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 		}
 		new ParticleEffect("torch",player, 1000000);
 	}
@@ -73,6 +74,7 @@ public class Running extends BasicGameState{
 		}else{
 			camera.targetPosition.set(Toolbox.getLineDivision(player.position, 3, camera.getScreenToWorldPoint(Information.getMouse()), 1));
 		}
+		camera.targetPosition.add(player.pack.leftShoulder.position.copy().add(player.getRotationDegrees()).add(90));
 		Toolbox.approachVector(camera.position, camera.targetPosition, delta);
 		Toolbox.approachVector(camera.size, camera.zoom, delta);
 		camera.setRotationRadians(Toolbox.approachValue(camera.getRotationRadians(), camera.getTargetRotationRadians(), delta));
