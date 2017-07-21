@@ -9,15 +9,19 @@ import org.newdawn.slick.geom.Vector2f;
 
 import animations.ValueAnimation;
 import components.CollidableObject;
+import components.Collider;
 import components.DrawableObject;
+import debug.Debug;
+import info.Information;
+import textures.HandImagePack;
 import tools.Toolbox;
 
 public class Weapon extends CollidableObject{
 	public Image sheathed,
 				 drawn;
 	public Image currentImage;
-	public final Vector2f position = new Vector2f();
-	public float rotation=0;
+	public final Vector2f relativePosition = new Vector2f();
+	public float relativeRotation=0;
 	
 	public ArrayList<ArrayList<ValueAnimation>> animations;
 	
@@ -25,10 +29,14 @@ public class Weapon extends CollidableObject{
 	protected final Vector2f upperHandPosition;
 	protected final Vector2f lowerHandPosition;
 	protected final Vector2f hitboxOffset; 
-	protected final float upperHandRotation;
-	protected final float lowerHandRotation;
-	protected final Vector2f anchor;
+	public final float upperHandRotation;
+	public final float lowerHandRotation;
+	public final Vector2f anchor;
+	
 	public final int TYPE;
+	
+	
+	
 	public static final int LONGSWING = 0;
 	public static final int SHORTSWING = 1;
 	public static final int BLUNT = 2;
@@ -36,17 +44,13 @@ public class Weapon extends CollidableObject{
 	public static final int THROW = 4;
 	public static final int STAFF = 5;
 	public static final int BOW = 6;
-
-
-//	public final Shape handle;
-//	public Weapon(Image sheathed, Image drawn, Shape hitbox, Shape handle) {
-//		super(new Vector2f(0, 0), new Vector2f(1, 1), hitbox, 0, 1, true, false, true);
-//		this.sheathed = sheathed;
-//		this.drawn = drawn;
-//		this.handle = handle;
-//	}
+	
+	public float testr = 0;
+	private final int M = Information.METER;
+	private final float CM = Information.CENTIMETER;
+	
 	public Weapon(int type, Image drawn, Image sheathed, Shape hitbox, Vector2f anchor,Vector2f upperHandPosition, Vector2f lowerHandPosition, float upperHandRotation, float lowerHandRotation, ArrayList<ArrayList<ValueAnimation>> animations){
-		super(null, new Vector2f(), new Vector2f(1, 1), hitbox, 0, 0, false, false, true);
+		super(null, new Vector2f(),new Vector2f(1, 1), hitbox, 0, 0, false ,false, true);
 		this.TYPE = type;
 		this.upperHandPosition  = upperHandPosition;
 		this.lowerHandPosition = lowerHandPosition;
@@ -61,42 +65,88 @@ public class Weapon extends CollidableObject{
 	@Override
 	public void render(Graphics g, Vector2f size){
 		if(isFlipped() && doesFlip)
-			super.render(g, currentImage.getFlippedCopy(true, false), size);
+			render(g, currentImage.getFlippedCopy(true, false), size, relativeRotation);
 		else
-			super.render(g, currentImage, size);
+			render(g, currentImage, size, relativeRotation);
 	}
 	public void update(int delta, DrawableObject parent){
-		if(parent != null){
-			super.setRotationRadians(parent.getRotationRadians());
-			super.position.set(Toolbox.getParentToWorldPosition(position, parent).add(hitboxOffset));
+		if(parent != null && isDrawn()){
+			collider.setEnabled(true);
+			setRotationRadians(parent.getRotationRadians()+relativeRotation);
+			
+			Shape hitbox = collider.getHitboxType();
+			Vector2f hitboxOff = new Vector2f(hitbox.getWidth()/2,hitbox.getHeight()/2);
+
+			Vector2f pos = Toolbox.getParentToWorldPosition(relativePosition, parent);
+			Vector2f pos2 = pos.copy().sub(anchor).add(hitboxOffset);
+			pos2.add(hitboxOff);
+			Toolbox.rotateVectorAroundPosition(pos2, pos, (float)(180+Math.toDegrees(relativeRotation+parent.getRotationRadians())));
+			position.set(pos2);
+		}else{
+			collider.setEnabled(false);
 		}
+		
 	}
 	@Override
 	public void render(Graphics g, Image image, Vector2f size, float rotation){
 		if(image != null){
-			Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
-			toDraw.setCenterOfRotation(anchor.x, anchor.y);
-			toDraw.rotate(rotation+90);
-			toDraw.draw(position.x-anchor.x, position.y-anchor.y);
-			System.out.println(position+" "+ hitboxOffset);
+			if(isDrawn()){
+				Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
+				toDraw.setCenterOfRotation(anchor.x, anchor.y);
+				toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
+				toDraw.draw(relativePosition.x-anchor.x, relativePosition.y-anchor.y);
+			}else{
+				Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
+				toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
+				toDraw.drawCentered(relativePosition.x, relativePosition.y);
+			}
 		}
 	}
-	public Vector2f getUpperHandPosition(){
-		return upperHandPosition;
+	public void renderHandUpper(Graphics g, HandImagePack hand, Vector2f size){
+		if(hand.up){
+			render(g, hand.thumbUp, size, upperHandPosition, upperHandRotation);
+		}else{
+			render(g, hand.handDown, size, upperHandPosition, upperHandRotation);
+		}
 	}
-	public Vector2f getLowerHandPosition(){
-		return lowerHandPosition;
+	public void renderHandLower(Graphics g, HandImagePack hand, Vector2f size){
+		if(hand.up){
+			render(g, hand.handUp, size, lowerHandPosition, lowerHandRotation);
+		}else{
+			render(g, hand.thumbDown, size, lowerHandPosition, lowerHandRotation);
+		}
 	}
+	private void render(Graphics g, Image image, Vector2f size, Vector2f pos, float rotation){
+		Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
+		toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
+		Vector2f fpos = Toolbox.getDistanceVector(pos, anchor).add(relativePosition);
+		Toolbox.rotateVectorAroundPosition(fpos, relativePosition, (float)Math.toDegrees(relativeRotation+Math.PI));
+		toDraw.drawCentered(fpos.x, fpos.y);
+		Debug.debugPoints.add(pos);
+		Debug.debugPoints.add(new Vector2f());
+		Debug.debugPoints.add(fpos);
+		Debug.debugPoints.add(relativePosition);
+		System.out.println(relativeRotation);
+
+	}
+
+
 	public void setSheathed(){
 		currentImage = sheathed;
 	}
 	public void setDrawn(){
 		currentImage = drawn;
 	}
+	public void toggleDrawn(){
+		if(isDrawn())
+			currentImage = sheathed;
+		else
+			currentImage = drawn;
+	}
 	public boolean isDrawn(){
 		return drawn == currentImage;
 	}
 	public boolean isFlipped(){
-		return Math.abs(rotation%(2*Math.PI))<Math.PI && isDrawn();
+		return Math.abs(relativeRotation%(2*Math.PI))<Math.PI && isDrawn();
 	}
 }

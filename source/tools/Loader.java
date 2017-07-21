@@ -68,7 +68,8 @@ public class Loader {
 	}
 	public static HandImagePack loadHand(String set, String dirType, Vector2f size){
 		set += "/"+dirType+"/";
-		HandImagePack pack = new HandImagePack(	loadCharacterImage(set, "handDown", size),
+		HandImagePack pack = new HandImagePack(	loadCharacterImage(set, "side", size),
+												loadCharacterImage(set, "handDown", size),
 												loadCharacterImage(set, "thumbDown", size),
 												loadCharacterImage(set, "handUp", size),
 												loadCharacterImage(set, "thumbDown", size));
@@ -80,10 +81,7 @@ public class Loader {
 	}
 	public static Weapon loadWeapon(String set){
 		set+="/weapon/";
-//		System.out.println("/resources/images/character/"+set+"type");
-//		System.out.println("resources/images/character/basic/weapon/type");
 		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/"+set+"type");
-//		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/basic/weapon/type");
 		for(ArrayList<String> list : specs)
 			for(int i = 0; i < list.size()-1; i++)
 				list.set(i, list.get(i).toLowerCase());
@@ -156,9 +154,9 @@ public class Loader {
 		return null;
 	}
 	private static ArrayList<ArrayList<ValueAnimation>> loadAnimations(String ref){
-		ref = "data/ValueAnimations/weapon/"+ref;
+		ref = "weapon/"+ref;
 		ArrayList<ArrayList<ValueAnimation>> animations = new ArrayList<ArrayList<ValueAnimation>>();
-		File[] folders = new File(ref).listFiles();
+		File[] folders = new File("data/ValueAnimations/"+ref).listFiles();
 		for(File folder : folders){
 			animations.add(new ArrayList<ValueAnimation>());
 			File[] files = folder.listFiles();

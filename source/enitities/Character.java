@@ -1,5 +1,7 @@
 package enitities;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -28,6 +30,14 @@ public class Character extends Entity{
 		collider = new Collider(this, hitbox2);
 		this.pack = pack;
 		this.pack.setWeapon("basic");
+		this.pack.weapon.setSheathed();
+		if(pack.weapon.animations != null){
+			animations = pack.weapon.animations;
+			idleAnimation = animations.get(0);
+			setAnimationPingPong(idleAnimation);
+		}
+		else 
+			play = false;
 	}
 	public Character(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
 		this(new CharacterImagePack(), hitbox, hitbox2, size, rotation, weight);
@@ -39,13 +49,17 @@ public class Character extends Entity{
 		
 		if(Debug.showHitbox){
 			g.draw(collider.getHitbox());
+			pack.weapon.collider.render(g);
 		}
 	}
 	@Override
 	public void update(int delta){
 		
-//		pack.weapon.update(delta, this);
-//		CollidableObject object = Collision.getCollidedObject(pack.weapon);
+		pack.weapon.update(delta, this);
+		CollidableObject object = Collision.getCollidedObject(pack.weapon);
+		if(object != null){
+			System.out.println("hit");
+		}
 		
 		setRotationRadians(Toolbox.approachValue(getRotationRadians(), targetRotation, delta)); 
 		targetRotation = (float) (Toolbox.getAngle(position, Information.currentCamera.getScreenToWorldPoint(Information.getMouse()))+Math.PI/2);
@@ -61,28 +75,100 @@ public class Character extends Entity{
 		animateHead(delta);
 		animateShoulders(delta);
 
-//		if(!pack.weapon.isDrawn())
+		if(!pack.weapon.isDrawn())
 			animateHands(delta);
 		
-//		animateWeapon(delta);
+		animateWeapon(delta);
 	}
 	
 	private void animateHands(int delta){
 		
 		Vector2f position = pack.rightShoe.position.copy();
 		position.set(position.x*0.0f, position.y*0.5f);
-		pack.rightHand.position.set(position);
 		pack.leftHand.position.set(position);
 		
 		position = pack.leftShoe.position.copy();
 		position.set(position.x*0.0f, position.y*0.5f);
 		pack.rightHand.position.set(position);
-		
-	}
-	private void animateWeapon(int delta){
-		
+
 	}
 	
+	
+	
+	
+	// initialized above
+	ArrayList<ArrayList<ValueAnimation>> animations;
+	ArrayList<ValueAnimation> idleAnimation;
+	boolean play = true;
+	// initialized above
+	
+	public boolean isAttacking = false;
+	int currentAnimation;
+	
+	private void animateWeapon(int delta){
+		if(play && !animations.isEmpty()){
+			
+			Vector2f targetPosition = new Vector2f();
+			float targetRotation = 0;
+			float toTurn = 0;
+			float toScale = 0;
+			if(isAttacking){
+				
+				updateAnimation(animations.get(currentAnimation), delta);
+				
+				if(animations.get(currentAnimation).get(0).isCompleted()){
+					setAnimationTime(animations.get(currentAnimation), 0);
+					isAttacking = false;
+					if(++currentAnimation>animations.size()-1){
+						currentAnimation = 2;
+					}
+					setAnimationTime(idleAnimation, 0);
+	
+					}
+				
+			}else{
+				updateAnimation(idleAnimation, delta);
+			}
+			for(ValueAnimation anim : animations.get(currentAnimation)){
+				if(anim.name.contains("x")){
+					targetPosition.x = anim.getHeight()*CM;
+				}else if(anim.name.contains("y")){
+					targetPosition.y = anim.getHeight()*CM;
+				}else if(anim.name.contains("rot")){
+					targetRotation = (float) Math.toRadians(anim.getHeight());
+				
+				}else if(anim.name.contains("dis")||anim.name.contains("rad")){
+					toScale = anim.getHeight()*CM;
+				}else if(anim.name.contains("ang")){
+					toTurn = (float) Math.toRadians(anim.getHeight());
+				}
+			}
+			if(toTurn != 0 && toScale != 0){
+				targetPosition.set(0, toScale);
+				targetPosition.add(toTurn);
+			}
+			Toolbox.approachVector(pack.weapon.relativePosition, targetPosition, 0.99f, delta);
+			pack.weapon.relativeRotation = Toolbox.approachValue(pack.weapon.relativeRotation, targetRotation, delta);
+		}
+	}
+	private void updateAnimation(ArrayList<ValueAnimation> anim, int delta){
+		for(ValueAnimation ani : anim){
+			ani.update(delta);
+		}
+	}	private void setAnimationTime(ArrayList<ValueAnimation> anim, int time){
+		for(ValueAnimation ani : anim){
+			ani.setTime(time);
+		}
+	}
+	private void setAnimationPingPong(ArrayList<ValueAnimation> anim){
+		for(ValueAnimation ani : anim){
+			ani.setPingPong(true);
+		}
+	}
+	
+	public void Attack(){
+		isAttacking = true;
+	}
 	
 	float shoulderDistance;
 	public final ValueAnimation breathing =Loader.loadValueAnimation("breathing").setPingPong(true);
@@ -106,11 +192,11 @@ public class Character extends Entity{
 		pack.leftShoulder.setRotationRadians((float) Toolbox.getAngle(pack.leftShoulder.position.copy().scale(-1)));
 	
 		
-//		if(!pack.weapon.isDrawn()){
-//			pack.weapon.position.set(0, 20);
-//			pack.weapon.position.add(pack.rightShoulder.getRotationDegrees());
-//			pack.weapon.rotation = pack.rightShoulder.getRotationRadians();
-//		}
+		if(!pack.weapon.isDrawn()){
+			pack.weapon.relativePosition.set(0, 15*CM);
+			pack.weapon.relativePosition.add(pack.rightShoulder.getRotationDegrees());
+			pack.weapon.relativeRotation = pack.rightShoulder.getRotationRadians();
+		}
 	}
 	
 	
@@ -173,7 +259,7 @@ public class Character extends Entity{
 	public void collide(CollidableObject object){
 		super.collide(object);
 		collider.collide(object);
-//		pack.weapon.collide(object);
+		pack.weapon.collide(object);
 	}
 	public void addToTargetRotationDegrees(float rotation){
 		targetRotation += Math.toRadians(rotation);

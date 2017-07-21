@@ -7,7 +7,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 public class Debug {
 	public static ArrayList<Vector2f> debugPoints = new ArrayList<Vector2f>();
-	public static Circle debugPoint = new Circle(0, 0, 3);
+	public static Circle debugPoint = new Circle(0, 0, 30);
 	public static boolean showHitbox = true;
 	
 	/**

@@ -454,6 +454,7 @@ public class Collider {
 		toDraw.setCenterX(position.x);
 		toDraw.setCenterY(position.y);
 		g.draw(toDraw);
+
 	}
 	public boolean isMovable(){
 		return object.isMovable();

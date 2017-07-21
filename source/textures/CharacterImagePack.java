@@ -84,36 +84,21 @@ public class CharacterImagePack {
 		if(weapon.isDrawn()){
 			
 			if(weapon.isFlipped()){
-				rightHand.position.set(weapon.getUpperHandPosition());
-				leftHand.position.set(weapon.getLowerHandPosition());
-				
 				leftHand.up = true;
 				rightHand.up = false;
 			}else{
-				leftHand.position.set(weapon.getUpperHandPosition());
-				rightHand.position.set(weapon.getLowerHandPosition());
-				
 				rightHand.up = true;
 				leftHand.up = false;
 			}
 			
-			g.pushTransform();
-			g.translate(weapon.position.x, weapon.position.y);
-			g.rotate(0, 0, weapon.rotation);
-			g.scale(weapon.size.x, weapon.size.y);
+			weapon.renderHandLower(g, rightHand, rightHand.size);
+			weapon.renderHandLower(g, leftHand, leftHand.size);
 			
-			rightHand.renderLower(g, rightHand.size);
-			leftHand.renderLower(g, leftHand.size);
-			
-			g.popTransform();
 			weapon.render(g, weapon.size);
 			
-			g.translate(weapon.position.x, weapon.position.y);
-			g.rotate(0, 0, weapon.rotation);
-			g.scale(weapon.size.x, weapon.size.y);
-			rightHand.renderUpper(g, rightHand.size);
-			leftHand.renderUpper(g, leftHand.size);
-			
+			weapon.renderHandUpper(g, rightHand, rightHand.size);
+			weapon.renderHandUpper(g, leftHand, leftHand.size);
+
 		}
 		g.popTransform();
 	}
