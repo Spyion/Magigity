@@ -56,9 +56,8 @@ public class Menu extends BasicGameState{
 		submit.update(input);
 		if(submit.isPressedAndReleased()) {
 			
-			boolean pass = mysqlconn.checkPw(name.getText(),pw.getText());
-			System.out.println(pass);
-			if(pass == true) {
+			String pass = mysqlconn.checkPw(name.getText(),pw.getText());
+			if(pass.equals("true")) {
 				
 				sbg.enterState(States.running);
 				
