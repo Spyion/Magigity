@@ -28,7 +28,6 @@ public class Character extends Entity{
 		collider = new Collider(this, hitbox2);
 		this.pack = pack;
 		this.pack.setWeapon("basic");
-		
 	}
 	public Character(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
 		this(new CharacterImagePack(), hitbox, hitbox2, size, rotation, weight);

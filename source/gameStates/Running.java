@@ -44,7 +44,7 @@ public class Running extends BasicGameState{
 		input = new Input(Input.ANY_CONTROLLER);
 		player = new Player(new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
 		for(int i = 1; i < 10; i++){
-			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle"), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
+			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 		}
 		new ParticleEffect("torch",player, 1000000);
 	}

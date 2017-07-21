@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class CSVHandler {
 	
-	public ArrayList<ArrayList<Float>> readCSV(String ref){
-		ArrayList<ArrayList<Float>> csv = new ArrayList<ArrayList<Float>>();
+	public ArrayList<ArrayList<String>> readCSV(String ref){
+		ArrayList<ArrayList<String>> csv = new ArrayList<ArrayList<String>>();
 		FileReader fr = null;
 		try {
 			fr = new FileReader(ref);
@@ -25,11 +25,11 @@ public class CSVHandler {
 				currentLine = br.readLine();
 				if(currentLine == null)
 					break;
-				String [] values = currentLine.split(", ");
-				csv.add(new ArrayList<Float>());
+				String [] values = currentLine.split(",");
+				csv.add(new ArrayList<String>());
 				for(String str : values){
 					str = str.trim();
-					csv.get(line).add(Float.parseFloat(str));
+					csv.get(line).add(str);
 				}
 				line++;
 			} catch (IOException e) {
@@ -40,7 +40,7 @@ public class CSVHandler {
 		
 		return csv;
 	}
-	public void writeCSV(String ref, ArrayList<ArrayList<Float>> lists){
+	public void writeCSV(String ref, ArrayList<ArrayList<String>> lists){
 			PrintWriter writer;
 			try {
 				writer = new PrintWriter(ref);
@@ -58,8 +58,8 @@ public class CSVHandler {
 					return;
 				}
 			}
-			for(ArrayList<Float> list : lists){
-				for(Float value : list){
+			for(ArrayList<String> list : lists){
+				for(Object value : list){
 					writer.print(value.toString()+", ");
 				}
 				writer.println();

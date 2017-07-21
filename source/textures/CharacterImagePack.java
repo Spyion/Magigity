@@ -7,6 +7,7 @@ import components.DrawableObject;
 import info.Information;
 import tools.Loader;
 import tools.Toolbox;
+import weapons.Weapon;
 
 public class CharacterImagePack {
 	private final int M = Information.METER;
@@ -21,7 +22,7 @@ public class CharacterImagePack {
 							rightShoe;
 	public HandImagePack 	rightHand,
 							leftHand;
-//	public WeaponImagePack  weapon;
+	public Weapon  weapon;
 		
 	public CharacterImagePack(  String hat, 		String head,
 								String shoulders, 	String hands, 
@@ -60,7 +61,7 @@ public class CharacterImagePack {
 		rightShoe.render(g, rightShoe.size);
 		g.translate(-FOOT_DISTANCE, 0);
 		
-//		if(!weapon.isDrawn()){
+		if(!weapon.isDrawn()){
 			
 		g.translate(-HAND_DISTANCE, 0);
 		leftHand.render(g, leftHand.size);
@@ -68,55 +69,52 @@ public class CharacterImagePack {
 		rightHand.render(g, rightHand.size);
 		g.translate(-HAND_DISTANCE, 0);
 		
-//		}
+		}
 		leftShoulder.render(g, leftShoulder.size);
 		rightShoulder.render(g, rightShoulder.size);
 		
-//		if(!weapon.isDrawn()){
-//			weapon.render(g, weapon.size);
-//		}
+		if(!weapon.isDrawn()){
+			weapon.render(g, weapon.size);
+		}
 		
 		
 		head.render(g, head.size);
 		hat.render(g, hat.size);
 		
-//		if(weapon.isDrawn()){
+		if(weapon.isDrawn()){
 			
-//			if(weapon.isFlipped()){
-//				rightHand.position.set(0,
-//						weapon.getUpperHandPosition()+
-//						rightHand.handDown.getHeight()*
-//						rightHand.size.y/2);
-//				leftHand.position.set(0, weapon.getLowerHandPosition());
-//				
-//				leftHand.up = true;
-//				rightHand.up = false;
-//			}else{
-//				leftHand.position.set(0, weapon.getUpperHandPosition()+leftHand.handDown.getHeight()*leftHand.size.y/2);
-//				rightHand.position.set(0, weapon.getLowerHandPosition());
-//				
-//				rightHand.up = true;
-//				leftHand.up = false;
-//			}
-//			
-//			g.pushTransform();
-//			g.translate(weapon.position.x, weapon.position.y);
-//			g.rotate(0, 0, weapon.rotation);
-//			g.scale(weapon.size.x, weapon.size.y);
-//			
-//			rightHand.renderLower(g, rightHand.size);
-//			leftHand.renderLower(g, leftHand.size);
-//			
-//			g.popTransform();
-//			weapon.render(g, weapon.size);
-//			
-//			g.translate(weapon.position.x, weapon.position.y);
-//			g.rotate(0, 0, weapon.rotation);
-//			g.scale(weapon.size.x, weapon.size.y);
-//			rightHand.renderUpper(g, rightHand.size);
-//			leftHand.renderUpper(g, leftHand.size);
-//			
-//		}
+			if(weapon.isFlipped()){
+				rightHand.position.set(weapon.getUpperHandPosition());
+				leftHand.position.set(weapon.getLowerHandPosition());
+				
+				leftHand.up = true;
+				rightHand.up = false;
+			}else{
+				leftHand.position.set(weapon.getUpperHandPosition());
+				rightHand.position.set(weapon.getLowerHandPosition());
+				
+				rightHand.up = true;
+				leftHand.up = false;
+			}
+			
+			g.pushTransform();
+			g.translate(weapon.position.x, weapon.position.y);
+			g.rotate(0, 0, weapon.rotation);
+			g.scale(weapon.size.x, weapon.size.y);
+			
+			rightHand.renderLower(g, rightHand.size);
+			leftHand.renderLower(g, leftHand.size);
+			
+			g.popTransform();
+			weapon.render(g, weapon.size);
+			
+			g.translate(weapon.position.x, weapon.position.y);
+			g.rotate(0, 0, weapon.rotation);
+			g.scale(weapon.size.x, weapon.size.y);
+			rightHand.renderUpper(g, rightHand.size);
+			leftHand.renderUpper(g, leftHand.size);
+			
+		}
 		g.popTransform();
 	}
 	
@@ -125,8 +123,8 @@ public class CharacterImagePack {
 		return leftShoulder;
 	}
 	public void setShoulders(String set) {
-		this.leftShoulder.image = Loader.loadCharacterImage(set, "leftShoulder");
-		this.rightShoulder.image = Loader.loadCharacterImage(set, "rightShoulder");
+		this.leftShoulder.image = Loader.loadCharacterImage(set, "leftShoulder", new Vector2f(26*CM, 26*CM));
+		this.rightShoulder.image = Loader.loadCharacterImage(set, "rightShoulder", new Vector2f(26*CM, 26*CM));
 	}
 	public void setHead(String set) {
 		this.head.image = Loader.loadCharacterImage(set, "head");
@@ -144,7 +142,7 @@ public class CharacterImagePack {
 		this.leftHand = Loader.loadHand(set, "leftHand");
 	}
 	public void setWeapon(String set){
-//		this.weapon = Loader.loadWeapon(set);
+		this.weapon = Loader.loadWeapon(set);
 	}
 	
 }

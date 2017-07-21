@@ -198,10 +198,10 @@ public class ValueAnimationCreator extends BasicGame {
 				FileReader fr = new FileReader(root+s);
 				int override = JOptionPane.showConfirmDialog(new JPanel(), "File exist, Override?");
 				if(override == 0){
-					csv.writeCSV(root+s, animation.getFloatArray());
+					csv.writeCSV(root+s, animation.getStringArray());
 				}
 			} catch (FileNotFoundException e) {
-				csv.writeCSV(root+s, animation.getFloatArray());
+				csv.writeCSV(root+s, animation.getStringArray());
 			}
 		}
 	}

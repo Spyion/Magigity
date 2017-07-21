@@ -7,21 +7,25 @@ import tools.CSVHandler;
 
 public class ValueAnimation {
 	private static CSVHandler csv = new CSVHandler();
-	
+	public final String name;
 	private int time = 0;
 	public final ArrayList<ValueAnimationPoint> points = new ArrayList<ValueAnimationPoint>();
 	public final ArrayList<ValueAnimationCurve> curves = new ArrayList<ValueAnimationCurve>();
 	private boolean pingPong, loop;
 	public ValueAnimation(String ref){
-		ArrayList<ArrayList<Float>> list = csv.readCSV(ref);
-		for(ArrayList<Float> l : list){
-			points.add(new ValueAnimationPoint(l.get(0), l.get(1), l.get(2)));
+		name = ref.split("/")[ref.split("/").length-1];
+		ArrayList<ArrayList<String>> list = csv.readCSV(ref);
+		for(ArrayList<String> l : list){
+			points.add(new ValueAnimationPoint( Float.parseFloat(l.get(0)),
+												Float.parseFloat(l.get(1)),
+												Float.parseFloat(l.get(2))));
 		}
 		for(int i = 0; i < points.size()-1; i++){
 			curves.add(new ValueAnimationCurve(points.get(i), points.get(i+1)));
 		}
 	}
 	public ValueAnimation(){
+		name = "";
 	}
 	
 	/**
@@ -80,13 +84,13 @@ public class ValueAnimation {
 		else
 			return 0;
 	}
-	public ArrayList<ArrayList<Float>> getFloatArray(){
-		ArrayList<ArrayList<Float>> array= new ArrayList<ArrayList<Float>>();
+	public ArrayList<ArrayList<String>> getStringArray(){
+		ArrayList<ArrayList<String>> array= new ArrayList<ArrayList<String>>();
 		for(ValueAnimationPoint point : points){
-			ArrayList<Float> list = new ArrayList<Float>();
-			list.add(point.position.x);
-			list.add(point.position.y);
-			list.add(point.pitch);
+			ArrayList<String> list = new ArrayList<String>();
+			list.add(Float.toString(point.position.x));
+			list.add(Float.toString(point.position.y));
+			list.add(Float.toString(point.pitch));
 			array.add(list);
 		}
 		return array;
