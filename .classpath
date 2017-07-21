@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="Slick2D/natives-mac.jar"/>
 	<classpathentry kind="lib" path="Slick2D/natives-windows.jar"/>
 	<classpathentry kind="lib" path="Slick2D/tinylinepp.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.42-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
