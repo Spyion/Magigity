@@ -22,7 +22,6 @@ public class Collision {
 		}
 		if(add){
 			collisions.add(this);
-			System.out.println(this.objects.get(0).position.x+" "+this.objects.get(1).position.x);
 		}
 	}
 	public Collision(CollidableObject object1, CollidableObject object2, boolean remove) {

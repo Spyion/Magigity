@@ -114,7 +114,7 @@ public class Running extends BasicGameState{
 		g.setColor(Color.red);
 		for(Vector2f point : Debug.debugPoints){
 			Debug.setDebugPoint(point.x, point.y);
-			g.draw(Debug.debugPoint);
+			g.fillOval(point.x, point.y, 10, 10);
 			}
 		Debug.debugPoints.clear();
 		g.resetTransform();
@@ -125,6 +125,9 @@ public class Running extends BasicGameState{
 			camera.addToTargetRotationDegrees(-90);
 		if(key == Input.KEY_RIGHT)
 			camera.addToTargetRotationDegrees(90);
+		if(key == Input.KEY_R){
+			player.pack.weapon.toggleDrawn();
+		}
 		super.keyPressed(key, c);
 	}
 	

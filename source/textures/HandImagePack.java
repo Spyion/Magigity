@@ -12,8 +12,8 @@ public class HandImagePack extends DrawableObject{
 							handUp,
 							thumbUp;
 	public boolean up = true;
-	public HandImagePack(Image handDown, Image thumbDown, Image handUp, Image thumbUp) {
-		super();
+	public HandImagePack(Image side, Image handDown, Image thumbDown, Image handUp, Image thumbUp) {
+		super(side, new Vector2f(), new Vector2f(1, 1), 0);
 		this.handDown = handDown;
 		this.thumbDown = thumbDown;
 		this.handUp = handUp;
@@ -21,23 +21,9 @@ public class HandImagePack extends DrawableObject{
 	}
 	@Override
 	public void render(Graphics g, Vector2f size){
-		renderLower(g, size);
-		renderUpper(g, size);
+		super.render(g, size);
 	}
-	public void renderUpper(Graphics g, Vector2f size){
-		if(up){
-			super.render(g, thumbUp, size);
-		}else{
-			super.render(g, handDown, size);
-		}
-	}
-	public void renderLower(Graphics g, Vector2f size){
-		if(up){
-			super.render(g, handUp, size);
-		}else{
-			super.render(g, thumbDown, size);
-		}
-	}
+
 	public void turnUp(){
 		up = true;
 	}
