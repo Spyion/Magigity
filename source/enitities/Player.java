@@ -45,22 +45,20 @@ public class Player extends SimulatedCharacter {
 		booleanUpdateTime += delta;
 		positionUpdateTime += delta;
 		
-		if(booleanUpdateTime > booleanUpdateRate){
-			booleanUpdateTime -= booleanUpdateRate;
-//			mysqlconn.setUp(ID, isMovingUp);
-//			mysqlconn.setDown(ID, isMovingDown);
-//			mysqlconn.setLeft(ID, isMovingLeft);
-//			mysqlconn.setRight(ID, isMovingRight);
-//			mysqlconn.setSprinting(ID, isSprinting);
-//			mysqlconn.setRotation(ID, rotation);
-//			mysqlconn.setCameraRotation(ID, camera.getRotationRadians());
-
+		if(booleanUpdateTime>booleanUpdateTime){
+			booleanUpdateTime-=booleanUpdateRate;
+			mysqlconn.setData(ID, "upBool" , Toolbox.booleanToString(isMovingUp));
+			mysqlconn.setData(ID, "downBool" , Toolbox.booleanToString(isMovingDown));
+			mysqlconn.setData(ID, "leftBool" , Toolbox.booleanToString(isMovingLeft));
+			mysqlconn.setData(ID, "rightBool" , Toolbox.booleanToString(isMovingRight));
+			mysqlconn.setData(ID, "isSprinting" , Toolbox.booleanToString(isSprinting));
+			mysqlconn.setData(ID, "cameraRotation" , Float.toString(camera.getRotationRadians()));
 		}
 		if(positionUpdateTime > positionUpdateRate){
 			positionUpdateTime -= positionUpdateRate;
-//			mysqlconn.setPosX(ID, position.x);
-//			mysqlconn.setPosY(ID, position.y);
-			}
+			mysqlconn.setData(ID, "posX", Float.toString(position.x));
+			mysqlconn.setData(ID, "posY", Float.toString(position.y));
+		}
 		
 		
 		

@@ -246,5 +246,10 @@ public class Toolbox {
 	public static void rotateVectorAroundPosition(final Vector2f Vector, Vector2f position, float rotation){
 		Vector.set(position.copy().sub(getDistanceVector(Vector, position).add(rotation)));
 	}
-//	public static void 
+	public static boolean parseBoolean(String bool){
+		return bool.equals("0") ? false : true;
+	}
+	public static String booleanToString(boolean bool){
+		return bool == false ? "0" : "1";
+	}
 }

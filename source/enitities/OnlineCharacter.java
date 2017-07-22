@@ -1,9 +1,12 @@
 package enitities;
 
+import javax.tools.Tool;
+
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import connections.mysqlconn;
+import tools.Toolbox;
 
 public class OnlineCharacter extends SimulatedCharacter{
 
@@ -25,16 +28,18 @@ public class OnlineCharacter extends SimulatedCharacter{
 		
 		if(booleanUpdateTime>booleanUpdateTime){
 			booleanUpdateTime-=booleanUpdateRate;
-//			isMovingUp = mysqlconn.getData(ID, "up");
-//			isMovingDown = mysqlconn.getDown(ID);
-//			isMovingLeft = mysqlconn.getLeft(ID);
-//			isMovingRight = mysqlconn.getRight(ID);
-//			isSprinting = mysqlconn.getSprinting(ID);
+			isMovingUp = Toolbox.parseBoolean(mysqlconn.getData(ID, "upBool"));
+			isMovingDown = Toolbox.parseBoolean(mysqlconn.getData(ID, "downBool"));
+			isMovingLeft = Toolbox.parseBoolean(mysqlconn.getData(ID, "leftBool"));
+			isMovingRight = Toolbox.parseBoolean(mysqlconn.getData(ID, "rightBool"));
+			isSprinting =Toolbox.parseBoolean( mysqlconn.getData(ID, "isSprinting"));
+			cameraRotation=Float.parseFloat(mysqlconn.getData(ID, "cameraRotation"));
 		}
 		if(positionUpdateTime > positionUpdateRate){
 			positionUpdateTime -= positionUpdateRate;
-//			position.set(mysqlconn.getPosX(ID), mysqlconn.getPosY(ID);
-			}
+			position.set(Float.parseFloat(mysqlconn.getData(ID, "posX")),
+						 Float.parseFloat(mysqlconn.getData(ID, "posY")));
+		}
 
 		
 		
