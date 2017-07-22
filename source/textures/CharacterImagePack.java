@@ -10,10 +10,9 @@ import tools.Toolbox;
 import weapons.Weapon;
 
 public class CharacterImagePack {
-	private final int M = Information.METER;
-	private final float CM = Information.CENTIMETER;
 	
-	
+	protected final int M = Information.METER;
+	protected final float CM = Information.CENTIMETER;
 	public DrawableObject	leftShoulder,
 							rightShoulder,
 							head,

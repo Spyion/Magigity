@@ -4,11 +4,15 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
+import info.Information;
+
 public class DrawableObject {
 	public final Vector2f position;
 	public final Vector2f size;
 	public Image image;
 	protected float rotation;
+	protected final int M = Information.METER;
+	protected final float CM = Information.CENTIMETER;
 	public DrawableObject(Image image, Vector2f position, Vector2f size, float rotation) {
 		super();
 		this.image = image;

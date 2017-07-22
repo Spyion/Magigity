@@ -4,41 +4,70 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
+import connections.mysqlconn;
 import info.Information;
 import tools.Toolbox;
 
-public class Player extends Character {
-	
-	float moveSpeed;	
-	private final int M = Information.METER;
-	private final float CM = Information.CENTIMETER;
-	
-	public Player(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
+public class Player extends SimulatedCharacter {
+
+	public final String ID;
+	public Player(String ID,Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
 		super(hitbox, hitbox2, size, rotation, weight);
+		this.ID = ID;
 	}
-
-
-	public void update(Input input,Camera camera ,int delta){
-		Vector2f movingDirection = new Vector2f(0,0);
-		moveSpeed = input.isKeyDown(Input.KEY_LSHIFT) ? 10*M : 5*M;
+	
+	private int booleanUpdateTime;
+	private int positionUpdateTime;
+	
+	private final int booleanUpdateRate = 100;
+	private final int positionUpdateRate = 1000;
+	public void update(Input input, Camera camera, int delta){
+		if(input.isKeyDown(Input.KEY_W))
+			isMovingUp = true;
+		else
+			isMovingUp = false;
+		if(input.isKeyDown(Input.KEY_S))
+			isMovingDown = true;
+		else
+			isMovingDown = false;
+		if(input.isKeyDown(Input.KEY_A))
+			isMovingLeft = true;
+		else
+			isMovingLeft = false;
+		if(input.isKeyDown(Input.KEY_D))
+			isMovingRight = true;
+		else
+			isMovingRight = false;
+		if(input.isKeyDown(Input.KEY_LSHIFT))
+			isSprinting = true;
+		else
+			isSprinting = false;
+		booleanUpdateTime += delta;
+		positionUpdateTime += delta;
 		
-		if(input.isKeyDown(Input.KEY_W)){
-			movingDirection.y-=1;
-		}
-		if(input.isKeyDown(Input.KEY_S)){
-			movingDirection.y+=1;
-		}
-		if(input.isKeyDown(Input.KEY_A)){
-			movingDirection.x-=1;
-		}
-		if(input.isKeyDown(Input.KEY_D)){
-			movingDirection.x+=1;
-		}
-		movingDirection.normalise();
-		movingDirection.sub(camera.getRotationDegrees());
-		if(Math.abs(movingDirection.x) > 0 || Math.abs(movingDirection.y) > 0){
-			Toolbox.approachVector(speed, new Vector2f(moveSpeed*movingDirection.x, moveSpeed*movingDirection.y), delta);
-		}
+		if(booleanUpdateTime > booleanUpdateRate){
+			booleanUpdateTime -= booleanUpdateRate;
+//			mysqlconn.setUp(ID, isMovingUp);
+//			mysqlconn.setDown(ID, isMovingDown);
+//			mysqlconn.setLeft(ID, isMovingLeft);
+//			mysqlconn.setRight(ID, isMovingRight);
+//			mysqlconn.setSprinting(ID, isSprinting);
+//			mysqlconn.setRotation(ID, rotation);
+//			mysqlconn.setCameraRotation(ID, camera.getRotationRadians());
 
+		}
+		if(positionUpdateTime > positionUpdateRate){
+			positionUpdateTime -= positionUpdateRate;
+//			mysqlconn.setPosX(ID, position.x);
+//			mysqlconn.setPosY(ID, position.y);
+			}
+		
+		
+		
+		
+		
+		
+		super.update(camera.getRotationRadians(), delta);
+		
 	}
 }

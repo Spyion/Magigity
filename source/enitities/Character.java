@@ -21,8 +21,6 @@ public class Character extends Entity{
 	public CharacterImagePack pack;
 	private float targetRotation = 0;
 	public final Collider collider;
-	private final int M = Information.METER;
-	private final float CM = Information.CENTIMETER;
 	
 	public Character(CharacterImagePack pack, Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
 		super(hitbox, size, rotation, weight);
@@ -33,6 +31,7 @@ public class Character extends Entity{
 		if(pack.weapon.animations != null){
 			animations = pack.weapon.animations;
 			idleAnimation = animations.get(0);
+			blockAnimation = animations.get(1);
 			setAnimationPingPong(idleAnimation);
 		}
 		else 
@@ -98,35 +97,61 @@ public class Character extends Entity{
 	// initialized above
 	ArrayList<ArrayList<ValueAnimation>> animations;
 	ArrayList<ValueAnimation> idleAnimation;
+	ArrayList<ValueAnimation> blockAnimation;
 	boolean play = true;
 	// initialized above
 	
-	public boolean isAttacking = false;
+	private boolean isAttacking = false;
+	private boolean isBlocking = false;
+	public void setAttacking(){
+		if(!isBlocking){
+			isAttacking =true;
+		}
+	}
+	public void setBlocking(){
+		if(!isAttacking){
+			isBlocking =true;
+		}
+	}
+	int currentAttackAnimation = 2;
 	int currentAnimation;
 	
 	private void animateWeapon(int delta){
+		System.out.println(isBlocking+" "+isAttacking);
 		if(play && !animations.isEmpty()){
 			
 			Vector2f targetPosition = new Vector2f();
 			float targetRotation = 0;
 			float toTurn = 0;
 			float toScale = 0;
+
 			if(isAttacking){
+				currentAnimation = currentAttackAnimation;
+				updateAnimation(animations.get(currentAttackAnimation), delta);
 				
-				updateAnimation(animations.get(currentAnimation), delta);
-				
-				if(animations.get(currentAnimation).get(0).isCompleted()){
-					setAnimationTime(animations.get(currentAnimation), 0);
+				if(animations.get(currentAttackAnimation).get(0).isCompleted()){
+					setAnimationTime(animations.get(currentAttackAnimation), 0);
 					isAttacking = false;
-					if(++currentAnimation>animations.size()-1){
-						currentAnimation = 2;
+					if(++currentAttackAnimation>animations.size()-1){
+						currentAttackAnimation = 2;
 					}
 					setAnimationTime(idleAnimation, 0);
 	
 					}
 				
+			}else if(isBlocking){
+				currentAnimation = 1;
+				updateAnimation(blockAnimation, delta);
+				if(blockAnimation.get(0).isCompleted()){
+					setAnimationTime(blockAnimation, 0);
+					isBlocking = false;
+					setAnimationTime(idleAnimation, 0);
+	
+					}
 			}else{
+				currentAnimation = 0;
 				updateAnimation(idleAnimation, delta);
+
 			}
 			for(ValueAnimation anim : animations.get(currentAnimation)){
 				if(anim.name.contains("x")){

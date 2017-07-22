@@ -42,7 +42,7 @@ public class Running extends BasicGameState{
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
-		player = new Player(new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
+		player = new Player("0",new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
 		for(int i = 1; i < 10; i++){
 			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 		}
@@ -118,6 +118,15 @@ public class Running extends BasicGameState{
 			}
 		Debug.debugPoints.clear();
 		g.resetTransform();
+	}
+	@Override
+	public void mouseClicked(int button, int x, int y, int clickCount) {
+		if(button == Input.MOUSE_LEFT_BUTTON)
+			player.setAttacking();
+		if(button == Input.MOUSE_RIGHT_BUTTON){
+			player.setBlocking();
+		}
+		super.mouseClicked(button, x, y, clickCount);
 	}
 	@Override
 	public void keyPressed(int key, char c) {
