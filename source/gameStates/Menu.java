@@ -52,7 +52,7 @@ public class Menu extends BasicGameState{
 		//if(start.isPressedAndReleased())
 			//sbg.enterState(States.running);
 		
-		mysqlconn.setData("Xaphier", "left","0");
+		mysqlconn.setData("Xaphier", "leftBool","0");
 		/*submit.update(input);
 		if(submit.isPressedAndReleased()) {
 			
