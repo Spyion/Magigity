@@ -1,16 +1,17 @@
 package gameStates;
 
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import connections.mysqlconn;
 import gui.Button;
 import tools.Loader;
 import tools.States;
@@ -30,11 +31,11 @@ public class Menu extends BasicGameState{
 		
 		Button.defaultPressSound = loader.loadSound("clap");
 		Button.defaultReleaseSound = loader.loadSound("knock");
-		
+
 		input = new Input(Input.ANY_CONTROLLER);
 		start = new Button("Start", loader.loadImage("basicbutton_pressed"), loader.loadImage("basicbutton_released"),
 							Display.getWidth()/2-100,Display.getHeight()/2-50,200,100);
-		magigity = loader.loadImage("Magigity");
+		magigity = loader.loadImage("Magigity","png",358,105);
 		background = loader.loadImage("MenuBackground");
 		
         name = new TextField(gc, gc.getDefaultFont(), Display.getWidth()/2-50, Display.getHeight()/2-40, 100, 30);
@@ -52,7 +53,7 @@ public class Menu extends BasicGameState{
 		//if(start.isPressedAndReleased())
 			//sbg.enterState(States.running);
 		
-		mysqlconn.setData("Xaphier", "leftBool","0");
+
 		/*submit.update(input);
 		if(submit.isPressedAndReleased()) {
 			
@@ -82,6 +83,7 @@ public class Menu extends BasicGameState{
 		name.render(gc, g);
 		pw.render(gc, g);
 		submit.render(g);
+		g.setBackground(new Color(230,0,0));
 	}
 
 	@Override
