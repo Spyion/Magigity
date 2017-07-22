@@ -107,7 +107,6 @@ public class Running extends BasicGameState{
 //			building.render(g);
 		}
 		
-		
 		//entityShader.stop();
 
 		//Debug

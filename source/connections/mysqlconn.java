@@ -11,6 +11,8 @@ public class mysqlconn {
 	static String pw;
 	static String b;
 	
+	
+	
 	static public String checkPw(String qname, String qpw) {
 		
 		name = qname;

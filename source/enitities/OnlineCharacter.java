@@ -25,7 +25,7 @@ public class OnlineCharacter extends SimulatedCharacter{
 		
 		if(booleanUpdateTime>booleanUpdateTime){
 			booleanUpdateTime-=booleanUpdateRate;
-//			isMovingUp = mysqlconn.getUp(ID);
+//			isMovingUp = mysqlconn.getData(ID, "up");
 //			isMovingDown = mysqlconn.getDown(ID);
 //			isMovingLeft = mysqlconn.getLeft(ID);
 //			isMovingRight = mysqlconn.getRight(ID);
