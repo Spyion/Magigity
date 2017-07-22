@@ -7,9 +7,8 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import animations.ValueAnimation;
-import components.Collider;
-import components.DrawableObject;
 import components.CollidableObject;
+import components.Collider;
 import debug.Debug;
 import info.Collision;
 import info.Information;
@@ -84,11 +83,11 @@ public class Character extends Entity{
 	private void animateHands(int delta){
 		
 		Vector2f position = pack.rightShoe.position.copy();
-		position.set(position.x*0.0f, position.y*0.5f);
+		position.set(position.x*0.0f, position.y*0.7f);
 		pack.leftHand.position.set(position);
 		
 		position = pack.leftShoe.position.copy();
-		position.set(position.x*0.0f, position.y*0.5f);
+		position.set(position.x*0.0f, position.y*0.7f);
 		pack.rightHand.position.set(position);
 
 	}
@@ -140,7 +139,7 @@ public class Character extends Entity{
 				}else if(anim.name.contains("dis")||anim.name.contains("rad")){
 					toScale = anim.getHeight()*CM;
 				}else if(anim.name.contains("ang")){
-					toTurn = (float) Math.toRadians(anim.getHeight());
+					toTurn = anim.getHeight();
 				}
 			}
 			if(toTurn != 0 && toScale != 0){
