@@ -51,6 +51,8 @@ public class CharacterImagePack {
 	
 	private final float FOOT_DISTANCE = 15*CM;
 	private final float HAND_DISTANCE = 25*CM;
+	private final float HAND_DISTANCEY = -10*CM;
+
 	public void render(Graphics g, DrawableObject parent){
 		g.pushTransform();
 		Toolbox.setGraphicsToParent(g, parent);
@@ -63,25 +65,13 @@ public class CharacterImagePack {
 		
 		if(!weapon.isDrawn()){
 			
-		g.translate(-HAND_DISTANCE, 0);
+		g.translate(-HAND_DISTANCE, HAND_DISTANCEY);
 		leftHand.render(g, leftHand.size);
 		g.translate(2*HAND_DISTANCE, 0);
 		rightHand.render(g, rightHand.size);
-		g.translate(-HAND_DISTANCE, 0);
+		g.translate(-HAND_DISTANCE, -HAND_DISTANCEY);
 		
-		}
-		leftShoulder.render(g, leftShoulder.size);
-		rightShoulder.render(g, rightShoulder.size);
-		
-		if(!weapon.isDrawn()){
-			weapon.render(g, weapon.size);
-		}
-		
-		
-		head.render(g, head.size);
-		hat.render(g, hat.size);
-		
-		if(weapon.isDrawn()){
+		}else{
 			
 			if(weapon.isFlipped()){
 				leftHand.up = true;
@@ -100,6 +90,17 @@ public class CharacterImagePack {
 			weapon.renderHandUpper(g, leftHand, leftHand.size);
 
 		}
+		leftShoulder.render(g, leftShoulder.size);
+		rightShoulder.render(g, rightShoulder.size);
+		
+		if(!weapon.isDrawn()){
+			weapon.render(g, weapon.size);
+		}
+		
+		
+		head.render(g, head.size);
+		hat.render(g, hat.size);
+		
 		g.popTransform();
 	}
 	

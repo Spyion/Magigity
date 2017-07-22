@@ -122,12 +122,6 @@ public class Weapon extends CollidableObject{
 		Vector2f fpos = Toolbox.getDistanceVector(pos, anchor).add(relativePosition);
 		Toolbox.rotateVectorAroundPosition(fpos, relativePosition, (float)Math.toDegrees(relativeRotation+Math.PI));
 		toDraw.drawCentered(fpos.x, fpos.y);
-		Debug.debugPoints.add(pos);
-		Debug.debugPoints.add(new Vector2f());
-		Debug.debugPoints.add(fpos);
-		Debug.debugPoints.add(relativePosition);
-		System.out.println(relativeRotation);
-
 	}
 
 
