@@ -52,8 +52,8 @@ public class Menu extends BasicGameState{
 		//if(start.isPressedAndReleased())
 			//sbg.enterState(States.running);
 		
-		
-		submit.update(input);
+		mysqlconn.setData("Xaphier", "left","0");
+		/*submit.update(input);
 		if(submit.isPressedAndReleased()) {
 			
 			String pass = mysqlconn.checkPw(name.getText(),pw.getText());
@@ -68,7 +68,7 @@ public class Menu extends BasicGameState{
 				
 			}
 			
-		}
+		}*/
 		
 		background.rotate(0.01f*delta);
 	}
