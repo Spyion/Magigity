@@ -51,7 +51,7 @@ public class CharacterImagePack {
 	
 	private final float FOOT_DISTANCE = 15*CM;
 	private final float HAND_DISTANCE = 25*CM;
-	private final float HAND_DISTANCEY = -10*CM;
+	private final float HAND_DISTANCEY = 0*CM;
 
 	public void render(Graphics g, DrawableObject parent){
 		g.pushTransform();

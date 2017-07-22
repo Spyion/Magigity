@@ -122,7 +122,11 @@ public class Button {
 		return isPressed;
 	}
 	public boolean isPressedAndReleased(){
-		return isPressedAndReleased;
+		if(isPressedAndReleased){
+			isPressedAndReleased = false;
+			return true;
+		}else
+			return false;
 	}
 	
 }
