@@ -119,15 +119,26 @@ public class Running extends BasicGameState{
 		Debug.debugPoints.clear();
 		g.resetTransform();
 	}
+	private boolean actionPerformed = false;
 	@Override
-	public void mouseClicked(int button, int x, int y, int clickCount) {
-		if(button == Input.MOUSE_LEFT_BUTTON)
-			player.setAttacking();
-		if(button == Input.MOUSE_RIGHT_BUTTON){
-			player.setBlocking();
+	public void mousePressed(int button, int x, int y) {
+		if(!actionPerformed){
+			if(button == Input.MOUSE_LEFT_BUTTON){
+				player.setAttacking();
+			}else if(button == Input.MOUSE_RIGHT_BUTTON){
+				player.setBlocking();
+
+			}
+			actionPerformed = true;
 		}
-		super.mouseClicked(button, x, y, clickCount);
+		super.mousePressed(button, x, y);
 	}
+	@Override
+	public void mouseReleased(int button, int x, int y) {
+		actionPerformed = false;
+		super.mouseReleased(button, x, y);
+	}
+
 	@Override
 	public void keyPressed(int key, char c) {
 		if(key == Input.KEY_LEFT)
