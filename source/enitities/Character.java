@@ -101,8 +101,8 @@ public class Character extends Entity{
 	boolean play = true;
 	// initialized above
 	
-	private boolean isAttacking = false;
-	private boolean isBlocking = false;
+	protected boolean isAttacking = false;
+	protected boolean isBlocking = false;
 	public void setAttacking(){
 		if(!isBlocking){
 			isAttacking =true;
@@ -295,6 +295,12 @@ public class Character extends Entity{
 	}
 	public void setTargetRotationRadians(float rotation){
 		targetRotation = rotation;
+	}
+	public boolean isAttacking() {
+		return isAttacking;
+	}
+	public boolean isBlocking() {
+		return isBlocking;
 	}
 	private void fixTargetRotation(){
 		if(rotation-targetRotation>Math.PI){

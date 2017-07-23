@@ -14,6 +14,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import connections.ConnectionHandler;
 import debug.Debug;
 import effects.ParticleEffect;
 import enitities.Camera;
@@ -41,7 +42,7 @@ public class Running extends BasicGameState{
 	private final float CM = Information.CENTIMETER;
 	
 	@Override
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
 		player = new Player("Spyion",new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
@@ -51,6 +52,12 @@ public class Running extends BasicGameState{
 			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 		}
 		new ParticleEffect("torch",player, 1000000);
+		
+		
+		
+		
+		new Thread(new ConnectionHandler(player, "localhost", 6564)).start();
+
 	}
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
