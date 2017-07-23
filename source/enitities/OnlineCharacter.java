@@ -52,5 +52,11 @@ public class OnlineCharacter extends SimulatedCharacter{
 		
 		super.update(rotation, delta);
 	}
+	public void setAttacking(boolean attacking){
+		super.isAttacking = attacking;
+	}
+	public void setBlocking(boolean blocking){
+		super.isBlocking = blocking;
+	}
 	
 }

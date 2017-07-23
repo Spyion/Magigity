@@ -10,11 +10,11 @@ import tools.Toolbox;
 public class SimulatedCharacter extends Character{
 	float moveSpeed;	
 	
-	public boolean isMovingUp;
-	public boolean isMovingDown;
-	public boolean isMovingLeft;
-	public boolean isMovingRight;
-	public boolean isSprinting;
+	public boolean isMovingUp = false;
+	public boolean isMovingDown = false;
+	public boolean isMovingLeft = false;
+	public boolean isMovingRight = false;
+	public boolean isSprinting = false;
 	
 	public float cameraRotation;
 	
