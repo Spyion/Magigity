@@ -37,6 +37,17 @@ public class Loader {
 		}
 		return null;
 	}
+	public static Image loadImage(String name, String type, float x, float y){
+		try {
+			
+				return new Image("/resources/images/"+name+"."+type).getScaledCopy((int)x, (int)y);
+				
+		} catch (SlickException e) {
+			System.out.println("Could not load Image");
+			e.printStackTrace();
+		}
+		return null;
+	}
 	public static Image loadImage(String name, Vector2f size){
 		return loadImage(name,"png", size);
 	}
