@@ -12,12 +12,16 @@ public class HandImagePack extends DrawableObject{
 							handUp,
 							thumbUp;
 	public boolean up = true;
-	public HandImagePack(Image side, Image handDown, Image thumbDown, Image handUp, Image thumbUp) {
+	public final Vector2f downAnchor, upAnchor;
+	
+	public HandImagePack(Image side, Image handDown, Image thumbDown, Vector2f downAnchor, Image handUp, Image thumbUp, Vector2f upAnchor) {
 		super(side, new Vector2f(), new Vector2f(1, 1), 0);
 		this.handDown = handDown;
 		this.thumbDown = thumbDown;
 		this.handUp = handUp;
 		this.thumbUp = thumbUp;
+		this.upAnchor = upAnchor;
+		this.downAnchor = downAnchor;
 	}
 	@Override
 	public void render(Graphics g, Vector2f size){

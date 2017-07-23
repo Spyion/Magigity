@@ -18,6 +18,7 @@ import debug.Debug;
 import effects.ParticleEffect;
 import enitities.Camera;
 import enitities.Entity;
+import enitities.OnlineCharacter;
 import enitities.Player;
 import info.Collision;
 import info.Information;
@@ -33,6 +34,7 @@ public class Running extends BasicGameState{
 	ArrayList<Entity> entities = Entity.entities;
 	ArrayList<Building> buildings = Building.buildings;
 	Player player;
+	OnlineCharacter test;
 	Camera camera = new Camera();
 	//EntityShader entityShader = new EntityShader();
 	private final int M = Information.METER;
@@ -42,7 +44,9 @@ public class Running extends BasicGameState{
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
-		player = new Player("0",new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
+		player = new Player("Spyion",new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
+		player.position.add(new Vector2f(-100, 100));
+//		test = new OnlineCharacter("Spyion",new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
 		for(int i = 1; i < 10; i++){
 			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 		}
@@ -62,6 +66,7 @@ public class Running extends BasicGameState{
 		}
 		
 		player.update(input, camera, delta);
+//		test.update(delta);
 		for(Entity entity:entities){
 			entity.update(delta);
 		}

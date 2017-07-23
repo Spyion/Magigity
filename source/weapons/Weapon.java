@@ -104,23 +104,28 @@ public class Weapon extends CollidableObject{
 	}
 	public void renderHandUpper(Graphics g, HandImagePack hand, Vector2f size){
 		if(hand.up){
-			render(g, hand.thumbUp, size, upperHandPosition, upperHandRotation);
+			render(g, hand.thumbUp, size, upperHandPosition, upperHandRotation, hand.upAnchor);
+
 		}else{
-			render(g, hand.handDown, size, upperHandPosition, upperHandRotation);
+			render(g, hand.handDown, size, lowerHandPosition, lowerHandRotation, hand.downAnchor);
 		}
 	}
 	public void renderHandLower(Graphics g, HandImagePack hand, Vector2f size){
+		
 		if(hand.up){
-			render(g, hand.handUp, size, lowerHandPosition, lowerHandRotation);
+			render(g, hand.handUp, size, upperHandPosition, upperHandRotation, hand.upAnchor);
 		}else{
-			render(g, hand.thumbDown, size, lowerHandPosition, lowerHandRotation);
+			render(g, hand.thumbDown, size, lowerHandPosition, lowerHandRotation, hand.downAnchor);
 		}
 	}
-	private void render(Graphics g, Image image, Vector2f size, Vector2f pos, float rotation){
+	private void render(Graphics g, Image image, Vector2f size, Vector2f pos, float rotation, Vector2f anchor){
+		relativeRotation = 0;
 		Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
 		toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
-		Vector2f fpos = Toolbox.getDistanceVector(pos, anchor).add(relativePosition);
-		Toolbox.rotateVectorAroundPosition(fpos, relativePosition, (float)Math.toDegrees(relativeRotation+Math.PI));
+		Vector2f fpos = Toolbox.getDistanceVector(pos, this.anchor).add(relativePosition);
+		float rot = (float) (relativeRotation+Math.PI);
+		Toolbox.rotateVectorAroundPosition(fpos, relativePosition, rot);
+		toDraw.
 		toDraw.drawCentered(fpos.x, fpos.y);
 	}
 

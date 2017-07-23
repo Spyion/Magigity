@@ -66,13 +66,25 @@ public class Loader {
 		}
 		return null;
 	}
+	
 	public static HandImagePack loadHand(String set, String dirType, Vector2f size){
 		set += "/"+dirType+"/";
+		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/"+set+"type");
+		for(ArrayList<String> list : specs)
+			for(int i = 0; i < list.size()-1; i++)
+				list.set(i, list.get(i).toLowerCase());
+		ArrayList<String> list;
+		list = getVar("upanchor", specs);
+		Vector2f upAnchor = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
+		list = getVar("downanchor", specs);
+		Vector2f downAnchor = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
 		HandImagePack pack = new HandImagePack(	loadCharacterImage(set, "side", size),
 												loadCharacterImage(set, "handDown", size),
 												loadCharacterImage(set, "thumbDown", size),
+												downAnchor,
 												loadCharacterImage(set, "handUp", size),
-												loadCharacterImage(set, "thumbDown", size));
+												loadCharacterImage(set, "thumbUp", size),
+												upAnchor);
 		pack.turnDown();
 		return pack;
 	}

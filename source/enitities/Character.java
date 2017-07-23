@@ -117,7 +117,6 @@ public class Character extends Entity{
 	int currentAnimation;
 	
 	private void animateWeapon(int delta){
-		System.out.println(isBlocking+" "+isAttacking);
 		if(play && !animations.isEmpty()){
 			
 			Vector2f targetPosition = new Vector2f();

@@ -26,7 +26,7 @@ public class OnlineCharacter extends SimulatedCharacter{
 		booleanUpdateTime += delta;
 		positionUpdateTime += delta;
 		
-		if(booleanUpdateTime>booleanUpdateTime){
+		if(booleanUpdateTime>booleanUpdateRate){
 			booleanUpdateTime-=booleanUpdateRate;
 			isMovingUp = Toolbox.parseBoolean(mysqlconn.getData(ID, "upBool"));
 			isMovingDown = Toolbox.parseBoolean(mysqlconn.getData(ID, "downBool"));
@@ -34,11 +34,12 @@ public class OnlineCharacter extends SimulatedCharacter{
 			isMovingRight = Toolbox.parseBoolean(mysqlconn.getData(ID, "rightBool"));
 			isSprinting =Toolbox.parseBoolean( mysqlconn.getData(ID, "isSprinting"));
 			cameraRotation=Float.parseFloat(mysqlconn.getData(ID, "cameraRotation"));
+			System.out.println(isMovingDown);
 		}
 		if(positionUpdateTime > positionUpdateRate){
 			positionUpdateTime -= positionUpdateRate;
-			position.set(Float.parseFloat(mysqlconn.getData(ID, "posX")),
-						 Float.parseFloat(mysqlconn.getData(ID, "posY")));
+//			position.set(Float.parseFloat(mysqlconn.getData(ID, "posX")),
+//						 Float.parseFloat(mysqlconn.getData(ID, "posY")));
 		}
 
 		

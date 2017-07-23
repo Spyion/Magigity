@@ -50,7 +50,7 @@ public class CharacterImagePack {
 	
 	private final float FOOT_DISTANCE = 15*CM;
 	private final float HAND_DISTANCE = 25*CM;
-	private final float HAND_DISTANCEY = 0*CM;
+	private final float HAND_DISTANCEY = -10*CM;
 
 	public void render(Graphics g, DrawableObject parent){
 		g.pushTransform();
@@ -72,21 +72,21 @@ public class CharacterImagePack {
 		
 		}else{
 			
-			if(weapon.isFlipped()){
-				leftHand.up = true;
-				rightHand.up = false;
-			}else{
+//			if(weapon.isFlipped()){
+//				leftHand.up = false;
+//				rightHand.up = true;
+//			}else{
 				rightHand.up = true;
-				leftHand.up = false;
-			}
+				leftHand.up = true;
+//			}
 			
 			weapon.renderHandLower(g, rightHand, rightHand.size);
-			weapon.renderHandLower(g, leftHand, leftHand.size);
+//			weapon.renderHandLower(g, leftHand, leftHand.size);
 			
 			weapon.render(g, weapon.size);
 			
 			weapon.renderHandUpper(g, rightHand, rightHand.size);
-			weapon.renderHandUpper(g, leftHand, leftHand.size);
+//			weapon.renderHandUpper(g, leftHand, leftHand.size);
 
 		}
 		leftShoulder.render(g, leftShoulder.size);
