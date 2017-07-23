@@ -21,7 +21,6 @@ import enitities.Camera;
 import enitities.Entity;
 import enitities.OnlineCharacter;
 import enitities.Player;
-import info.Collision;
 import info.Information;
 import terrain.Building;
 //import shaders.EntityShader;
@@ -47,20 +46,20 @@ public class Running extends BasicGameState{
 		input = new Input(Input.ANY_CONTROLLER);
 		player = new Player("Spyion",new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
 		player.position.add(new Vector2f(-100, 100));
-//		test = new OnlineCharacter("Spyion",new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
 		for(int i = 1; i < 10; i++){
 			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 		}
 		new ParticleEffect("torch",player, 1000000);
 		
-		
-		
-		
+
 		new Thread(new ConnectionHandler(player, "localhost", 6564)).start();
 
 	}
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		Entity.add();
+		Entity.remove();
+		
 		for(int i = 0; i < entities.size()-1; i++)
 		{
 			for(int j = i+1; j < entities.size(); j++)

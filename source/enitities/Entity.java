@@ -13,11 +13,13 @@ import effects.Effect;
 
 public class Entity extends CollidableObject{
 	public static final ArrayList<Entity> entities=new ArrayList<Entity>();
+	public static final ArrayList<Entity> toAdd=new ArrayList<Entity>();
+	public static final ArrayList<Entity> toRemove=new ArrayList<Entity>();
 	public final ArrayList<Effect> effects = new ArrayList<Effect>();
 	
 	public Entity(Image image, Shape hitbox, Vector2f size, float rotation, float weight) {
 		super(image ,new Vector2f(hitbox.getCenter()),size, hitbox, (float)Math.toRadians(rotation), weight < 0 ? 0.01f : weight, true, false, false);
-		entities.add(this);
+		toAdd.add(this);
 	}
 	public Entity(Image image, Shape hitbox, float rotation, float weight) {
 		this(image, hitbox, new Vector2f(hitbox.getWidth(), hitbox.getHeight()), rotation, weight);
@@ -44,6 +46,17 @@ public class Entity extends CollidableObject{
 		
 		super.update(delta);
 	}
-
+	public static synchronized void add(){
+		for(Entity entity:toAdd){
+			entities.add(entity);
+		}
+		toAdd.clear();
+	}
+	public static synchronized void remove(){
+		for(Entity entity:toRemove){
+			entities.add(entity);
+		}
+		toRemove.clear();
+	}
 	
 }
