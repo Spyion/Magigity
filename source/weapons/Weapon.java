@@ -52,8 +52,8 @@ public class Weapon extends CollidableObject{
 	public Weapon(int type, Image drawn, Image sheathed, Shape hitbox, Vector2f anchor,Vector2f upperHandPosition, Vector2f lowerHandPosition, float upperHandRotation, float lowerHandRotation, ArrayList<ArrayList<ValueAnimation>> animations){
 		super(null, new Vector2f(),new Vector2f(1, 1), hitbox, 0, 0, false ,false, true);
 		this.TYPE = type;
-		this.upperHandPosition  = upperHandPosition;
-		this.lowerHandPosition = lowerHandPosition;
+		this.upperHandPosition  = upperHandPosition.sub(anchor);
+		this.lowerHandPosition = lowerHandPosition.sub(anchor);
 		this.animations = animations;
 		this.anchor = anchor;
 		this.upperHandRotation = upperHandRotation;
@@ -102,29 +102,20 @@ public class Weapon extends CollidableObject{
 			}
 		}
 	}
-	public void renderHandUpper(Graphics g, HandImagePack hand, Vector2f size){
-		if(hand.up){
-			render(g, hand.thumbUp, size, upperHandPosition, upperHandRotation);
-		}else{
-			render(g, hand.handDown, size, upperHandPosition, upperHandRotation);
-		}
+	
+	
+	public Vector2f getUpperHandPosition() {
+		return upperHandPosition;
 	}
-	public void renderHandLower(Graphics g, HandImagePack hand, Vector2f size){
-		if(hand.up){
-			render(g, hand.handUp, size, lowerHandPosition, lowerHandRotation);
-		}else{
-			render(g, hand.thumbDown, size, lowerHandPosition, lowerHandRotation);
-		}
+	public Vector2f getLowerHandPosition() {
+		return lowerHandPosition;
 	}
-	private void render(Graphics g, Image image, Vector2f size, Vector2f pos, float rotation){
-		Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
-		toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
-		Vector2f fpos = Toolbox.getDistanceVector(pos, anchor).add(relativePosition);
-		Toolbox.rotateVectorAroundPosition(fpos, relativePosition, (float)Math.toDegrees(relativeRotation+Math.PI));
-		toDraw.drawCentered(fpos.x, fpos.y);
+	public float getUpperHandRotation() {
+		return upperHandRotation;
 	}
-
-
+	public float getLowerHandRotation() {
+		return lowerHandRotation;
+	}
 	public void setSheathed(){
 		currentImage = sheathed;
 	}

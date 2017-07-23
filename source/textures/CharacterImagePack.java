@@ -50,7 +50,7 @@ public class CharacterImagePack {
 	
 	private final float FOOT_DISTANCE = 15*CM;
 	private final float HAND_DISTANCE = 25*CM;
-	private final float HAND_DISTANCEY = 0*CM;
+	private final float HAND_DISTANCEY = -10*CM;
 
 	public void render(Graphics g, DrawableObject parent){
 		g.pushTransform();
@@ -72,33 +72,57 @@ public class CharacterImagePack {
 		
 		}else{
 			
-			if(weapon.isFlipped()){
-				leftHand.up = true;
-				rightHand.up = false;
-			}else{
+//			if(weapon.isFlipped()){
+//				leftHand.up = true;
+//				rightHand.up = false;
+//			}else{
+//				rightHand.up = true;
+//				leftHand.up = false;
+//			}
+				
 				rightHand.up = true;
 				leftHand.up = false;
+				
+			g.pushTransform();
+			g.translate(weapon.relativePosition.x, weapon.relativePosition.y);
+			g.rotate(0, 0, (float)Math.toDegrees(weapon.relativeRotation));
+			
+			if(rightHand.up){
+				rightHand.renderLower(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getUpperHandRotation());
+				leftHand.renderLower(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getLowerHandRotation());
+			}else{				
+				leftHand.renderLower(g, leftHand.size, weapon.getUpperHandPosition(), weapon.getLowerHandRotation());
+				rightHand.renderLower(g, rightHand.size, weapon.getLowerHandPosition(), weapon.getUpperHandRotation());
 			}
 			
-			weapon.renderHandLower(g, rightHand, rightHand.size);
-			weapon.renderHandLower(g, leftHand, leftHand.size);
 			
+			g.popTransform();
 			weapon.render(g, weapon.size);
 			
-			weapon.renderHandUpper(g, rightHand, rightHand.size);
-			weapon.renderHandUpper(g, leftHand, leftHand.size);
+			g.pushTransform();
+			g.translate(weapon.relativePosition.x, weapon.relativePosition.y);
+			g.rotate(0, 0, (float)Math.toDegrees(weapon.relativeRotation));
+			if(rightHand.up){
+				rightHand.renderUpper(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getUpperHandRotation());
+				leftHand.renderUpper(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getLowerHandRotation());
+			}else{				
+				leftHand.renderUpper(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getLowerHandRotation());
+				rightHand.renderUpper(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getUpperHandRotation());
+			}
+//			weapon.renderHandUpper(g, leftHand, leftHand.size);
+			g.popTransform();
 
 		}
-		leftShoulder.render(g, leftShoulder.size);
-		rightShoulder.render(g, rightShoulder.size);
+//		leftShoulder.render(g, leftShoulder.size);
+//		rightShoulder.render(g, rightShoulder.size);
 		
 		if(!weapon.isDrawn()){
 			weapon.render(g, weapon.size);
 		}
 		
 		
-		head.render(g, head.size);
-		hat.render(g, hat.size);
+//		head.render(g, head.size);
+//		hat.render(g, hat.size);
 		
 		g.popTransform();
 	}

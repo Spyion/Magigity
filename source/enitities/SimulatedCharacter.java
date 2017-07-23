@@ -50,6 +50,6 @@ public class SimulatedCharacter extends Character{
 		if(Math.abs(movingDirection.x) > 0 || Math.abs(movingDirection.y) > 0){
 			Toolbox.approachVector(speed, new Vector2f(moveSpeed*movingDirection.x, moveSpeed*movingDirection.y), delta);
 		}
-
+		super.update(delta);
 	}
 }
