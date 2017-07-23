@@ -72,16 +72,13 @@ public class CharacterImagePack {
 		
 		}else{
 			
-//			if(weapon.isFlipped()){
-//				leftHand.up = true;
-//				rightHand.up = false;
-//			}else{
-//				rightHand.up = true;
-//				leftHand.up = false;
-//			}
-				
-				rightHand.up = true;
+			if(weapon.isFlipped()){
 				leftHand.up = false;
+				rightHand.up = true;
+			}else{
+				rightHand.up = false;
+				leftHand.up = true;
+			}
 				
 			g.pushTransform();
 			g.translate(weapon.relativePosition.x, weapon.relativePosition.y);
@@ -109,20 +106,19 @@ public class CharacterImagePack {
 				leftHand.renderUpper(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getLowerHandRotation());
 				rightHand.renderUpper(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getUpperHandRotation());
 			}
-//			weapon.renderHandUpper(g, leftHand, leftHand.size);
 			g.popTransform();
 
 		}
-//		leftShoulder.render(g, leftShoulder.size);
-//		rightShoulder.render(g, rightShoulder.size);
+		leftShoulder.render(g, leftShoulder.size);
+		rightShoulder.render(g, rightShoulder.size);
 		
 		if(!weapon.isDrawn()){
 			weapon.render(g, weapon.size);
 		}
 		
 		
-//		head.render(g, head.size);
-//		hat.render(g, hat.size);
+		head.render(g, head.size);
+		hat.render(g, hat.size);
 		
 		g.popTransform();
 	}
