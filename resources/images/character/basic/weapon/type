@@ -1,7 +1,7 @@
 longswing,
 anchor, 128, 370,
 upperHandPosition, 128, 400,
-lowerHandPosition, 128, 440,
+lowerHandPosition, 128, 560,
 upperHandRotation, -90,
 lowerHandRotation, 90,
 hitbox, rectangle, 117, 0, 138, 345,

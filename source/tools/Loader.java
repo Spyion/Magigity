@@ -37,6 +37,7 @@ public class Loader {
 		}
 		return null;
 	}
+	
 	public static Image loadImage(String name, String type, float x, float y){
 		try {
 			
@@ -86,6 +87,12 @@ public class Loader {
 				list.set(i, list.get(i).toLowerCase());
 		ArrayList<String> list;
 		list = getVar("upanchor", specs);
+		Image ref = null;
+		try {
+			ref = new Image("resources/images/character/"+set+"handUp.png");
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 		Vector2f upAnchor = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
 		list = getVar("downanchor", specs);
 		Vector2f downAnchor = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
@@ -95,7 +102,8 @@ public class Loader {
 												downAnchor,
 												loadCharacterImage(set, "handUp", size),
 												loadCharacterImage(set, "thumbUp", size),
-												upAnchor);
+												upAnchor,
+												new Vector2f(size.x / ref.getWidth(), size.y / ref.getHeight()));
 		pack.turnDown();
 		return pack;
 	}

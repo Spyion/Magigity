@@ -73,32 +73,56 @@ public class CharacterImagePack {
 		}else{
 			
 //			if(weapon.isFlipped()){
-//				leftHand.up = false;
-//				rightHand.up = true;
+//				leftHand.up = true;
+//				rightHand.up = false;
 //			}else{
-				rightHand.up = true;
-				leftHand.up = true;
+//				rightHand.up = true;
+//				leftHand.up = false;
 //			}
+				
+				rightHand.up = true;
+				leftHand.up = false;
+				
+			g.pushTransform();
+			g.translate(weapon.relativePosition.x, weapon.relativePosition.y);
+			g.rotate(0, 0, (float)Math.toDegrees(weapon.relativeRotation));
 			
-			weapon.renderHandLower(g, rightHand, rightHand.size);
-//			weapon.renderHandLower(g, leftHand, leftHand.size);
+			if(rightHand.up){
+				rightHand.renderLower(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getUpperHandRotation());
+				leftHand.renderLower(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getLowerHandRotation());
+			}else{				
+				leftHand.renderLower(g, leftHand.size, weapon.getUpperHandPosition(), weapon.getLowerHandRotation());
+				rightHand.renderLower(g, rightHand.size, weapon.getLowerHandPosition(), weapon.getUpperHandRotation());
+			}
 			
+			
+			g.popTransform();
 			weapon.render(g, weapon.size);
 			
-			weapon.renderHandUpper(g, rightHand, rightHand.size);
+			g.pushTransform();
+			g.translate(weapon.relativePosition.x, weapon.relativePosition.y);
+			g.rotate(0, 0, (float)Math.toDegrees(weapon.relativeRotation));
+			if(rightHand.up){
+				rightHand.renderUpper(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getUpperHandRotation());
+				leftHand.renderUpper(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getLowerHandRotation());
+			}else{				
+				leftHand.renderUpper(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getLowerHandRotation());
+				rightHand.renderUpper(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getUpperHandRotation());
+			}
 //			weapon.renderHandUpper(g, leftHand, leftHand.size);
+			g.popTransform();
 
 		}
-		leftShoulder.render(g, leftShoulder.size);
-		rightShoulder.render(g, rightShoulder.size);
+//		leftShoulder.render(g, leftShoulder.size);
+//		rightShoulder.render(g, rightShoulder.size);
 		
 		if(!weapon.isDrawn()){
 			weapon.render(g, weapon.size);
 		}
 		
 		
-		head.render(g, head.size);
-		hat.render(g, hat.size);
+//		head.render(g, head.size);
+//		hat.render(g, hat.size);
 		
 		g.popTransform();
 	}
