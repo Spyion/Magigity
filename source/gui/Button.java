@@ -11,10 +11,12 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Vector2f;
 
+import tools.Loader;
+
 public class Button {
 	
 	final Image pressed;
-	final Image released;
+	final Sound hit = Loader.loadSound("clap");
 	final Sound pressSound;
 	final Sound releaseSound;
 	public static Sound defaultPressSound = null;
@@ -26,65 +28,80 @@ public class Button {
 	boolean soundPlayed = false;
 	boolean isPressedAndReleased = false;
 	boolean entered = false;
+	boolean isPlaying = false;
 	
-	public Button(String content, Image pressed, Image released, Sound pressSound, Sound releaseSound, Vector2f position, Dimension size) {
+	public Button(String content, Image pressed, Sound pressSound, Sound releaseSound, Vector2f position, Dimension size) {
 		super();
 		this.content = content;
 		this.pressSound = pressSound;
 		this.releaseSound = releaseSound;
 		this.pressed = pressed;
-		this.released = released;
 		this.size = size;
 		this.position = position;
+
 	}
-	public Button(Image pressed, Image released, Sound pressSound, Sound releaseSound, Vector2f position, Dimension size) {
-		this("", pressed, released, pressSound, releaseSound, position, size);
+	public Button(Image pressed, Sound pressSound, Sound releaseSound, Vector2f position, Dimension size) {
+		this("", pressed, pressSound, releaseSound, position, size);
 	}
-	public Button(Image pressed, Image released, Vector2f position, Dimension size) {
-		this(pressed, released, defaultPressSound, defaultReleaseSound, position, size);
+	public Button(Image pressed, Vector2f position, Dimension size) {
+		this(pressed, defaultPressSound, defaultReleaseSound, position, size);
 	}
-	public Button(Image pressed, Image released, Sound pressSound, Sound releaseSound, float x, float y, int w, int h) {
-		this(pressed, released, pressSound, releaseSound, new Vector2f(x, y), new Dimension(w, h));
+	public Button(Image pressed, Sound pressSound, Sound releaseSound, float x, float y, int w, int h) {
+		this(pressed, pressSound, releaseSound, new Vector2f(x, y), new Dimension(w, h));
 	}
-	public Button(Image pressed, Image released, float x, float y, int w, int h) {
-		this(pressed, released, defaultPressSound, defaultReleaseSound, x, y, w, h);
+	public Button(Image pressed, float x, float y, int w, int h) {
+		this(pressed, defaultPressSound, defaultReleaseSound, x, y, w, h);
 	}
-	public Button(Image pressed, Image released, Sound pressSound, Sound releaseSound, int x, int y, int w, int h) {
-		this(pressed, released, pressSound, releaseSound, new Vector2f(x, y), new Dimension(w, h));
+	public Button(Image pressed, Sound pressSound, Sound releaseSound, int x, int y, int w, int h) {
+		this(pressed, pressSound, releaseSound, new Vector2f(x, y), new Dimension(w, h));
 	}
-	public Button(Image pressed, Image released, int x, int y, int w, int h) {
-		this(pressed, released, defaultPressSound, defaultReleaseSound, x, y, w, h);
+	public Button(Image pressed, int x, int y, int w, int h) {
+		this(pressed, defaultPressSound, defaultReleaseSound, x, y, w, h);
 	}
-	public Button(String content, Image pressed, Image released, Sound pressSound, Sound releaseSound, float x, float y, int w, int h) {
-		this(content, pressed, released, pressSound, releaseSound, new Vector2f(x, y), new Dimension(w, h));
+	public Button(String content, Image pressed, Sound pressSound, Sound releaseSound, float x, float y, int w, int h) {
+		this(content, pressed, pressSound, releaseSound, new Vector2f(x, y), new Dimension(w, h));
 	}
-	public Button(String content, Image pressed, Image released, float x, float y, int w, int h) {
-		this(content, pressed, released, defaultPressSound, defaultReleaseSound, x, y, w, h);
+	public Button(String content, Image pressed, float x, float y, int w, int h) {
+		this(content, pressed, defaultPressSound, defaultReleaseSound, x, y, w, h);
 	}
-	public Button(String content, Image pressed, Image released, Sound pressSound, Sound releaseSound, int x, int y, int w, int h) {
-		this(content, pressed, released, pressSound, releaseSound, new Vector2f(x, y), new Dimension(w, h));
+	public Button(String content, Image pressed, Sound pressSound, Sound releaseSound, int x, int y, int w, int h) {
+		this(content, pressed, pressSound, releaseSound, new Vector2f(x, y), new Dimension(w, h));
 	}
-	public Button(String content, Image pressed, Image released, int x, int y, int w, int h) {
-		this(content, pressed, released, defaultPressSound, defaultReleaseSound, x, y, w, h);
+	public Button(String content, Image pressed, int x, int y, int w, int h) {
+		this(content, pressed, defaultPressSound, defaultReleaseSound, x, y, w, h);
 	}
 	
 	public void render(Graphics g){
 		g.setAntiAlias(true);
-		Image imageToDraw;
-		Color color;
-		if(isPressed)
-			imageToDraw = pressed;
-		else
-			imageToDraw = released;
-		if(entered)
-			color = Color.blue;
-		else
-			color = Color.white;
+		Image imageToDraw = pressed;
+		
+		if(isPressed) {
+			if(entered)
+				imageToDraw.draw(position.x, position.y, size.getWidth(), size.getHeight());
+			else
+				imageToDraw.draw(position.x, position.y, size.getWidth(), size.getHeight());
+		}
+		else {
+			if(entered) {
+				imageToDraw.draw(position.x-20, position.y-5, size.getWidth()+40, size.getHeight()+10);
+				if(isPlaying == false) {
+					
+					hit.play();
+					isPlaying = true;
+					
+				}
+				
+			}
+			else
+				imageToDraw.draw(position.x, position.y, size.getWidth(), size.getHeight());
+				isPlaying = false;
+		}
+
 			
-		imageToDraw.draw(position.x, position.y, size.getWidth(), size.getHeight(),color);
 		g.setColor(Color.black);
 		if(!content.isEmpty())
 			g.drawString(content, position.x+(size.getWidth()-g.getFont().getWidth(content))/2, position.y+size.getHeight()/2-g.getFont().getHeight(content)/2);
+
 	}
 	public void update(Input input){
 		int mouseY = Display.getHeight()-Mouse.getY();
@@ -127,6 +144,11 @@ public class Button {
 			return true;
 		}else
 			return false;
+	}
+	public void setSize() {
+		
+		
+		
 	}
 	
 }

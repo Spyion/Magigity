@@ -28,6 +28,8 @@ public class Menu extends BasicGameState{
 	Button submit;
 	int isText = 0;
 	Image text;
+	int y = 100;
+	Button quit;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -36,23 +38,25 @@ public class Menu extends BasicGameState{
 		Button.defaultReleaseSound = loader.loadSound("knock");
 
 		input = new Input(Input.ANY_CONTROLLER);
-		start = new Button("Start", loader.loadImage("basicbutton_pressed"), loader.loadImage("basicbutton_released"),
+		start = new Button("Start", loader.loadImage("btnstart"),
 							Display.getWidth()/2-100,Display.getHeight()/2-50,200,100);
 		magigity = loader.loadImage("Magigity","png",358,105);
 		background = loader.loadImage("MenuBackground");
 		
-        name = new TextField(gc, gc.getDefaultFont(), Display.getWidth()/2-50, Display.getHeight()/2-40, 100, 30);
-        pw = new TextField(gc, gc.getDefaultFont(), Display.getWidth()/2-50, Display.getHeight()/2, 100, 30);
+        name = new TextField(gc, gc.getDefaultFont(), 880-50, Display.getHeight()/2-40, 100, 30);
+        pw = new TextField(gc, gc.getDefaultFont(), 880-50, Display.getHeight()/2, 100, 30);
         name.setText("Gamename");
         pw.setText("Password");
         pw.setMaskEnabled(true);
-        submit = new Button("Submit", loader.loadImage("basicbutton_pressed"), loader.loadImage("basicbutton_released"),
-        					Display.getWidth()/2-100,Display.getHeight()/2+50,200,100);
+        submit = new Button(loader.loadImage("btnstart"),
+        					880-100,Display.getHeight()/2+50,200,50);
         String path = "/resources/images/magigityIcon16x16.png"; 
         gc.setIcon(path);
         
         text = loader.loadImage("Magigity", "png", 358, 105);
-
+        	
+        quit = new Button(loader.loadImage("btnquit"),780,480,200,50);
+        
 	}
 	
 	@Override
@@ -61,7 +65,7 @@ public class Menu extends BasicGameState{
 		//if(start.isPressedAndReleased())
 			//sbg.enterState(States.running);
 		
-
+		quit.update(input);
 		submit.update(input);
 		if(submit.isPressedAndReleased()) {
 			
@@ -88,17 +92,25 @@ public class Menu extends BasicGameState{
 			
 		}
 		
+		if(quit.isPressedAndReleased()) {
+			
+			System.exit(0);
+			
+		}
+		
 	}
 	
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		background.drawCentered(Display.getWidth()/2, Display.getHeight()/2);
+		g.setAntiAlias(false);
+		background.drawCentered(880, Display.getHeight()/2);
 		g.setColor(Color.white);
-		magigity.drawCentered(Display.getWidth()/2, magigity.getHeight()/2+10);
+		magigity.drawCentered(880, magigity.getHeight()/2+10);
 		//start.render(g);
 		name.render(gc, g);
 		pw.render(gc, g);
 		submit.render(g);
+		quit.render(g);
 		g.setBackground(new Color(230,0,0));
 		if(isText > 0) {
 			g.setColor(Color.white);
@@ -106,10 +118,23 @@ public class Menu extends BasicGameState{
 			
 		}
 		int wheelDetect = Mouse.getDWheel();
-		int y = 100;
+
 		if(wheelDetect!=0) {
 			
-			y = wheelDetect * 10;
+			y += wheelDetect/2;
+			if(y < 100) {
+				
+				y = 100;
+				
+			}
+			if(y > 620) {
+				
+				y = 620;
+				
+			}
+			
+				
+			
 			text.drawCentered(100, y);
 			
 		}
