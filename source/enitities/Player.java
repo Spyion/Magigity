@@ -45,7 +45,7 @@ public class Player extends SimulatedCharacter {
 		booleanUpdateTime += delta;
 		positionUpdateTime += delta;
 		
-		if(booleanUpdateTime>booleanUpdateTime){
+		/*if(booleanUpdateTime>booleanUpdateTime){
 			booleanUpdateTime-=booleanUpdateRate;
 			mysqlconn.setData(ID, "upBool" , Toolbox.booleanToString(isMovingUp));
 			mysqlconn.setData(ID, "downBool" , Toolbox.booleanToString(isMovingDown));
@@ -58,7 +58,7 @@ public class Player extends SimulatedCharacter {
 			positionUpdateTime -= positionUpdateRate;
 			mysqlconn.setData(ID, "posX", Float.toString(position.x));
 			mysqlconn.setData(ID, "posY", Float.toString(position.y));
-		}
+		}*/
 		
 		
 		

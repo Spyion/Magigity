@@ -1,5 +1,6 @@
 package gameStates;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -25,7 +26,8 @@ public class Menu extends BasicGameState{
 	TextField name;
 	TextField pw;
 	Button submit;
-	Boolean pwtrue = true;
+	int isText = 0;
+	Image text;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -46,7 +48,11 @@ public class Menu extends BasicGameState{
         pw.setMaskEnabled(true);
         submit = new Button("Submit", loader.loadImage("basicbutton_pressed"), loader.loadImage("basicbutton_released"),
         					Display.getWidth()/2-100,Display.getHeight()/2+50,200,100);
-		
+        String path = "/resources/images/magigityIcon16x16.png"; 
+        gc.setIcon(path);
+        
+        text = loader.loadImage("Magigity", "png", 358, 105);
+
 	}
 	
 	@Override
@@ -68,13 +74,20 @@ public class Menu extends BasicGameState{
 			else {
 				
 				System.out.println("Wrong Combination, Dude");
-				pwtrue = false;
+				isText = 2000;
 				
 			}
 			
 		}
 		
 		background.rotate(0.01f*delta);
+		
+		if(isText > 0) {
+			
+			isText--;
+			
+		}
+		
 	}
 	
 	@Override
@@ -87,11 +100,25 @@ public class Menu extends BasicGameState{
 		pw.render(gc, g);
 		submit.render(g);
 		g.setBackground(new Color(230,0,0));
-		if(pwtrue == false) {
+		if(isText > 0) {
 			g.setColor(Color.white);
 			g.drawString("Wrong Combination, Dude!",Display.getWidth()/2-100 , Display.getHeight()/2+200);
 			
 		}
+		int wheelDetect = Mouse.getDWheel();
+		int y = 100;
+		if(wheelDetect!=0) {
+			
+			y = wheelDetect * 10;
+			text.drawCentered(100, y);
+			
+		}
+		else {
+			
+			text.drawCentered(100, y);
+			
+		}
+		
 	}
 
 	@Override
