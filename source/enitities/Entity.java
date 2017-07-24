@@ -54,7 +54,7 @@ public class Entity extends CollidableObject{
 	}
 	public static synchronized void remove(){
 		for(Entity entity:toRemove){
-			entities.add(entity);
+			entities.remove(entity);
 		}
 		toRemove.clear();
 	}

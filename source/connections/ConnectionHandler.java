@@ -36,8 +36,8 @@ public class ConnectionHandler implements Runnable{
 
 	@Override
 	public void run() {
-//		writer.println("Spyion, "+"marcoderspion");
-		writer.println("Info, "+"info");
+		writer.println("Spyion, "+"marcoderspion");
+//		writer.println("Info, "+"info");
 		writer.flush();
 		try {
 			Thread.sleep(50);
