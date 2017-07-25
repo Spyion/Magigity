@@ -21,10 +21,11 @@ public class OnlineCharacter extends SimulatedCharacter{
 	
 	public final Vector2f targetPosition = new Vector2f();
 	public void update(int delta){
-		Vector2f distance = Toolbox.getDistanceVector(position, targetPosition);
-		
-		position.add(distance.scale(delta/Running.boolRate));
-		speed.set(distance.scale(1000/delta));
+//		Vector2f distance = Toolbox.getDistanceVector(position, targetPosition);
+//		
+//		position.add(distance.scale(delta/Running.boolRate));
+//		speed.set(distance.scale(1000/delta));
+		Toolbox.approachVector(position, targetPosition, delta);
 		super.update(delta);
 	}
 	public void setAttacking(boolean attacking){
