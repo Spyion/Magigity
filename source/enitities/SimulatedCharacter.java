@@ -24,6 +24,7 @@ public class SimulatedCharacter extends Character{
 
 		
 	public void update(int delta){
+		if(clientSided){
 		Vector2f movingDirection = new Vector2f(0,0);
 		if(isSprinting){
 			moveSpeed = Toolbox.approachValue(moveSpeed, 5*M, delta);
@@ -47,6 +48,7 @@ public class SimulatedCharacter extends Character{
 		movingDirection.sub(Math.toDegrees(cameraRotation));
 		if(Math.abs(movingDirection.x) > 0 || Math.abs(movingDirection.y) > 0){
 			Toolbox.approachVector(speed, new Vector2f(moveSpeed*movingDirection.x, moveSpeed*movingDirection.y), delta);
+		}
 		}
 		super.update(delta);
 	}

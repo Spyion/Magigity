@@ -24,7 +24,9 @@ public class OnlineCharacter extends SimulatedCharacter{
 		Vector2f distance = Toolbox.getDistanceVector(position, targetPosition);
 //		
 //		position.add(distance.scale(delta/Running.boolRate));
-		speed.set(distance.scale(50/delta/Running.boolRate));
+		speed.set(distance.scale(-25/(float)delta/(float)Running.boolRate));
+		System.out.println(25/(float)delta/(float)Running.boolRate);
+		System.out.println(speed.copy().scale(0.2f).sub(getRotationDegrees()));
 		Toolbox.approachVector(position, targetPosition, delta);
 		super.update(delta);
 	}
