@@ -58,5 +58,8 @@ public class Entity extends CollidableObject{
 		}
 		toRemove.clear();
 	}
+	public static void remove(Entity e){
+		toRemove.add(e);
+	}
 	
 }

@@ -17,6 +17,8 @@ public class CollidableObject extends DrawableObject{
 
 	protected boolean turnable;
 	
+	private boolean clientSided = true;
+	
 	public final Vector2f speed = new Vector2f(0, 0);
 	
 	public CollidableObject(Image image, Vector2f position,Vector2f size, Shape hitbox, float rotation, float weight, boolean movable, boolean turnable, boolean isTrigger){
@@ -34,7 +36,7 @@ public class CollidableObject extends DrawableObject{
 	}
 	
 	public void update(int delta){
-		if(movable && (speed.x != 0 || speed.y != 0)){
+		if(clientSided && movable && (speed.x != 0 || speed.y != 0)){
 			position.add(speed.copy().scale(delta/1000f));
 			speed.scale((float)Math.pow(0.99, delta));
 			if(Math.abs(speed.x) < 0.0001f){

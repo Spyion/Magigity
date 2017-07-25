@@ -1,7 +1,6 @@
 package tools;
 
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.font.effects.ConfigurableEffect;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;

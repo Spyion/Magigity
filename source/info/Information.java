@@ -14,6 +14,8 @@ public class Information {
 	public static Camera currentCamera;
 	public static final int METER = 512;
 	public static final float CENTIMETER = METER/100f;
+	public static boolean loggedIn = false;
+	public static byte PlayerID;
 	public static Vector2f getMouse() {
 		return new Vector2f(Mouse.getX(), Display.getHeight()-Mouse.getY());
 	}

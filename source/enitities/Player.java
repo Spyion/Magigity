@@ -4,14 +4,15 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
-import connections.mysqlconn;
 import info.Information;
+import packets.CharacterBooleans;
+import packets.CharacterShorts;
 import tools.Toolbox;
 
 public class Player extends SimulatedCharacter {
 
-	public final String ID;
-	public Player(String ID,Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
+	public final byte ID;
+	public Player(byte ID,Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
 		super(hitbox, hitbox2, size, rotation, weight);
 		this.ID = ID;
 	}
@@ -41,5 +42,11 @@ public class Player extends SimulatedCharacter {
 		targetRotation = (float)(Toolbox.getAngle(position, Information.currentCamera.getScreenToWorldPoint(Information.getMouse()))+Math.PI/2);
 		super.update(delta);
 		
+	}
+	public CharacterBooleans getBools(){
+		return new CharacterBooleans(ID, isMovingUp, isMovingDown, isMovingLeft, isMovingRight, isSprinting, isBlocking, isAttacking);
+	}
+	public CharacterShorts getShorts(){
+		return new CharacterShorts(ID, (short)Math.toDegrees(targetRotation), (short)position.x, (short)position.y);
 	}
 }

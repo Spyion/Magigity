@@ -9,11 +9,8 @@ import org.newdawn.slick.geom.Vector2f;
 
 import animations.ValueAnimation;
 import components.CollidableObject;
-import components.Collider;
 import components.DrawableObject;
-import debug.Debug;
 import info.Information;
-import textures.HandImagePack;
 import tools.Toolbox;
 
 public class Weapon extends CollidableObject{

@@ -5,7 +5,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
 import components.DrawableObject;
-import tools.Toolbox;
 
 public class HandImagePack extends DrawableObject{
 	public Image		 	handDown,

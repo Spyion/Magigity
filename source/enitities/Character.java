@@ -53,7 +53,8 @@ public class Character extends Entity{
 	@Override
 	public void update(int delta){
 		
-		pack.weapon.update(delta, this);
+		pack.weapon.update(delta,
+				this);
 		CollidableObject object = Collision.getCollidedObject(pack.weapon);
 		if(object != null){
 			System.out.println("hit");

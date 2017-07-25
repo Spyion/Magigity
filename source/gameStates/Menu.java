@@ -12,8 +12,10 @@ import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import connections.ConnectionHandler;
 import connections.mysqlconn;
 import gui.Button;
+import info.Information;
 import tools.Loader;
 import tools.States;
 
@@ -22,7 +24,6 @@ public class Menu extends BasicGameState{
 	Button start;
 	Image background;
 	Image magigity;
-	Loader loader = new Loader();
 	TextField name;
 	TextField pw;
 	Button submit;
@@ -30,48 +31,84 @@ public class Menu extends BasicGameState{
 	Image text;
 	int y = 100;
 	Button quit;
+	ConnectionHandler connectionHandler;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
-		Button.defaultPressSound = loader.loadSound("clap");
-		Button.defaultReleaseSound = loader.loadSound("knock");
+		States.menuState = this;
+		
+		
+		connectionHandler = new ConnectionHandler("localhost", 25643);
+		
+		Button.defaultPressSound = Loader.loadSound("clap");
+		Button.defaultReleaseSound = Loader.loadSound("knock");
 
 		input = new Input(Input.ANY_CONTROLLER);
-		start = new Button("Start", loader.loadImage("btnstart"),
+		start = new Button("Start", Loader.loadImage("btnstart"),
 							Display.getWidth()/2-100,Display.getHeight()/2-50,200,100);
-		magigity = loader.loadImage("Magigity","png",358,105);
-		background = loader.loadImage("MenuBackground");
+		magigity = Loader.loadImage("Magigity","png",358,105);
+		background = Loader.loadImage("MenuBackground");
 		
         name = new TextField(gc, gc.getDefaultFont(), 880-50, Display.getHeight()/2-40, 100, 30);
         pw = new TextField(gc, gc.getDefaultFont(), 880-50, Display.getHeight()/2, 100, 30);
-        name.setText("Gamename");
+        name.setText("Username");
         pw.setText("Password");
         pw.setMaskEnabled(true);
-        submit = new Button(loader.loadImage("btnstart"),
+        submit = new Button(Loader.loadImage("btnstart"),
         					880-100,Display.getHeight()/2+50,200,50);
         String path = "/resources/images/magigityIcon16x16.png"; 
         gc.setIcon(path);
         
-        text = loader.loadImage("Magigity", "png", 358, 105);
+        text = Loader.loadImage("Magigity", "png", 358, 105);
         	
-        quit = new Button(loader.loadImage("btnquit"),780,480,200,50);
+        quit = new Button(Loader.loadImage("btnquit"),780,480,200,50);
         
 	}
 	
+	boolean pwHadFocus;
+	boolean nameHadFocus;
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {	
 		//start.update(input);
 		//if(start.isPressedAndReleased())
 			//sbg.enterState(States.running);
-		
+		if(!pwHadFocus && pw.hasFocus()){
+			pwHadFocus = true;
+			pw.setText("");
+			Button.defaultReleaseSound.play();
+		}else if(!nameHadFocus && name.hasFocus()){
+			nameHadFocus = true;
+			name.setText("");
+			Button.defaultReleaseSound.play();
+		}else if(nameHadFocus && !name.hasFocus()&&name.getText().equals("")){
+			nameHadFocus = false;
+			name.setText("Username");
+		}else if(pwHadFocus && !pw.hasFocus()&&pw.getText().equals("")){
+			pwHadFocus = false;
+			pw.setText("Password");
+		}
 		quit.update(input);
 		submit.update(input);
 		if(submit.isPressedAndReleased()) {
 			
-			String pass = mysqlconn.checkPw(name.getText(),pw.getText());
-			if(pass.equals("true")) {
+			connectionHandler.tryToLogin(name.getText(),pw.getText());
+			int count = 0;
+			while(true){
+				System.out.println(connectionHandler.networkListener.answered);
+				if(connectionHandler.networkListener.answered){
+					break;
+				}
+				System.out.println(count);
+				if(count++ > 1000000){
+					System.err.println("SERVER IS OFFLINE");
+					break;
+				}
+			}
+			connectionHandler.networkListener.answered = false;
+			if(Information.loggedIn) {
 				
+				States.runningState.customInit();
 				sbg.enterState(States.running);
 				
 			}
@@ -151,5 +188,4 @@ public class Menu extends BasicGameState{
 		// TODO Auto-generated method stub
 		return States.menu;
 	}
-
 }

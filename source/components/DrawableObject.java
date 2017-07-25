@@ -12,7 +12,7 @@ public class DrawableObject {
 	public Image image;
 	protected float rotation;
 	protected final int M = Information.METER;
-	protected final float CM = Information.CENTIMETER;
+	protected final static float CM = Information.CENTIMETER;
 	public DrawableObject(Image image, Vector2f position, Vector2f size, float rotation) {
 		super();
 		this.image = image;

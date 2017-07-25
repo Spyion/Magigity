@@ -1,10 +1,8 @@
 package enitities;
 
-import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
-import info.Information;
 import tools.Toolbox;
 
 public class SimulatedCharacter extends Character{

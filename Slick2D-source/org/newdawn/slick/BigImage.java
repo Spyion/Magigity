@@ -9,8 +9,8 @@ import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.ImageDataFactory;
 import org.newdawn.slick.opengl.LoadableImageData;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.OperationNotSupportedException;
 import org.newdawn.slick.util.ResourceLoader;
 

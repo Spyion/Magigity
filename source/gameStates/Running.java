@@ -22,6 +22,7 @@ import enitities.Entity;
 import enitities.OnlineCharacter;
 import enitities.Player;
 import info.Information;
+import structs.OnlineCharacterCreationVars;
 import terrain.Building;
 //import shaders.EntityShader;
 import tools.Loader;
@@ -35,30 +36,45 @@ public class Running extends BasicGameState{
 	ArrayList<Building> buildings = Building.buildings;
 	Player player;
 	OnlineCharacter test;
+	ConnectionHandler connectionHandler;
 	Camera camera = new Camera();
 	//EntityShader entityShader = new EntityShader();
 	private final int M = Information.METER;
 	private final float CM = Information.CENTIMETER;
 	
 	@Override
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		//Debug
+		States.runningState = this;
+		
+	
+		
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
-		player = new Player("Spyion",new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
-		player.position.add(new Vector2f(-100, 100));
+				
+	}
+	public void customInit(){
+		connectionHandler = ConnectionHandler.instance;
+		connectionHandler.getCharacters();
+		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
 		for(int i = 1; i < 10; i++){
 			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 		}
 		new ParticleEffect("torch",player, 1000000);
-		
-
-		new Thread(new ConnectionHandler(player, "localhost", 6564)).start();
-
 	}
+	
+	int boolCount = 0;
+	int intCount = 0;
+	final int boolRate = 10;
+	final int intRate = 1000;
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		boolCount+=delta;
+		intCount +=delta;
+		
 		Entity.add();
 		Entity.remove();
+		OnlineCharacterCreationVars.createCharacters();
 		
 		for(int i = 0; i < entities.size()-1; i++)
 		{
@@ -72,7 +88,6 @@ public class Running extends BasicGameState{
 		}
 		
 		player.update(input, camera, delta);
-//		test.update(delta);
 		for(Entity entity:entities){
 			entity.update(delta);
 		}
@@ -91,7 +106,12 @@ public class Running extends BasicGameState{
 		camera.setRotationRadians(Toolbox.approachValue(camera.getRotationRadians(), camera.getTargetRotationRadians(), delta));
 		Information.update(delta);
 		
+		if(boolCount > boolRate){
+			boolCount -= boolRate;
+//			connectionHandler.uploadBools(player);
+			connectionHandler.uploadShorts(player);
 		}
+	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
