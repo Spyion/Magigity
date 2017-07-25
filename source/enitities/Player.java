@@ -19,9 +19,7 @@ public class Player extends SimulatedCharacter {
 		this.input = input;
 		this.camera = camera;
 	}
-	public void update(int delta){
-		System.out.println("Player: "+speed);
-		
+	public void update(int delta){		
 		if(input.isKeyDown(Input.KEY_W))
 			isMovingUp = true;
 		else
