@@ -3,6 +3,7 @@ package enitities;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
+import debug.Debug;
 import gameStates.Running;
 import packets.CharacterBooleans;
 import packets.CharacterShorts;
@@ -22,7 +23,7 @@ public class OnlineCharacter extends SimulatedCharacter{
 	public final Vector2f targetPosition = new Vector2f();
 	public void update(int delta){
 		Vector2f distance = Toolbox.getDistanceVector(targetPosition, position);
-		speed.set(distance.scale(10/(float)delta/(float)Running.boolRate));
+		Toolbox.approachVector(speed,distance.scale(50/(float)delta/(float)Running.boolRate),0.95f, delta);
 		Toolbox.approachVector(position, targetPosition, delta);
 		super.update(delta);
 	}
@@ -47,5 +48,14 @@ public class OnlineCharacter extends SimulatedCharacter{
 		targetPosition.x = (float) s.positionX;
 		targetPosition.y = (float) s.positionY;
 	}
+	
+	
+	
+	boolean leftFoot = true;
+	boolean leftFootIn = true;
+	boolean rightFootIn = true;
+	int footTime = 0;
+	Vector2f footPosition = new Vector2f(0, 0);
+	private final float LEGLENGTH = 40*CM;
 	
 }

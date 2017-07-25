@@ -245,7 +245,7 @@ public class Character extends Entity{
 	int footTime = 0;
 	Vector2f footPosition = new Vector2f(0, 0);
 	private final float LEGLENGTH = 40*CM;
-	private void animateFeet(int delta){
+	protected void animateFeet(int delta){
 		
 		footTime += delta*speed.length()/(150f*CM)+1;
 		
@@ -261,7 +261,7 @@ public class Character extends Entity{
 		}
 		
 		Vector2f target = speed.copy().scale(0.2f).sub(getRotationDegrees());
-		
+		Debug.debugPoints.add(target);
 		if(leftFoot){
 			Toolbox.approachVector(pack.leftShoe.position, target, delta);
 			pack.rightShoe.position.set(Toolbox.getWorldToParentPosition(footPosition, this));
@@ -287,6 +287,7 @@ public class Character extends Entity{
 			Character c = (Character) object;
 			collider.collide(c.collider);
 			collider.collide(c.pack.weapon);
+			c.collider.collide(this);
 			pack.weapon.collide(c.collider);
 			
 		}
