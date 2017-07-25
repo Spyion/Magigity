@@ -17,7 +17,7 @@ public class CollidableObject extends DrawableObject{
 
 	protected boolean turnable;
 	
-	private boolean clientSided = true;
+	protected boolean clientSided = true;
 	
 	public final Vector2f speed = new Vector2f(0, 0);
 	
