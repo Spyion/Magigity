@@ -71,8 +71,8 @@ public class Running extends BasicGameState{
 	
 	int boolCount = 0;
 	int intCount = 0;
-	final int boolRate = 10;
-	final int intRate = 1000;
+	public static final int boolRate = 10;
+	public static final int intRate = 1000;
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		boolCount+=delta;
