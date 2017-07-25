@@ -2,6 +2,7 @@ package enitities;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opencl.CL;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -282,6 +283,13 @@ public class Character extends Entity{
 		super.collide(object);
 		collider.collide(object);
 		pack.weapon.collide(object);
+		if(object instanceof Character){
+			Character c = (Character) object;
+			collider.collide(c.collider);
+			collider.collide(c.pack.weapon);
+			pack.weapon.collide(c.collider);
+			
+		}
 	}
 	public void addToTargetRotationDegrees(float rotation){
 		targetRotation += Math.toRadians(rotation);
