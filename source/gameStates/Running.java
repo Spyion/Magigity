@@ -98,8 +98,6 @@ public class Running extends BasicGameState{
 		
 		for(Entity entity:entities){
 			entity.update(delta);
-			if(entity instanceof OnlineCharacter)
-				entity.update(delta);
 		}
 		
 		
