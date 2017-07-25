@@ -14,7 +14,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import connections.ConnectionHandler;
+//import connections.ConnectionHandler;
 import debug.Debug;
 import effects.ParticleEffect;
 import enitities.Camera;
@@ -56,7 +56,7 @@ public class Running extends BasicGameState{
 		
 		
 		
-		new Thread(new ConnectionHandler(player, "localhost", 6564)).start();
+		//new Thread(new ConnectionHandler(player, "localhost", 6564)).start();
 
 	}
 	@Override

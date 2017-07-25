@@ -92,9 +92,10 @@ public class Button {
 				}
 				
 			}
-			else
+			else {
 				imageToDraw.draw(position.x, position.y, size.getWidth(), size.getHeight());
 				isPlaying = false;
+			}
 		}
 
 			

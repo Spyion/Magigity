@@ -9,6 +9,8 @@ package org.newdawn.slick.gui;
 
  
 import org.lwjgl.Sys;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
@@ -219,6 +221,20 @@ public class TextField extends AbstractComponent {
      *      org.newdawn.slick.Graphics)
      */
     public void render(GUIContext container, Graphics g) {
+    	
+        int mouseY = Display.getHeight()-Mouse.getY();
+    	if(Mouse.getX()>this.getX()&&Mouse.getX()<this.getX()+this.getWidth()&&
+    			mouseY >this.getY()&&mouseY<this.getY()+this.getHeight())
+    	{
+    		if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
+    			
+    			this.value = "";
+    			this.setText("");
+    			this.textChanged();
+    			
+    		}
+    	}
+    
         if (lastKey != -1) {
             if (input.isKeyDown(lastKey)) {
                 if (repeatTimer < System.currentTimeMillis()) {
@@ -267,7 +283,7 @@ public class TextField extends AbstractComponent {
         g.setFont(temp);
         g.setClip(oldClip);
     }
-   
+    
     /**
      * Get the value in the text field
      *
@@ -489,4 +505,8 @@ public class TextField extends AbstractComponent {
        
         super.setFocus(focus);
     }
+    
+
+    
+    
 }
