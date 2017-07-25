@@ -47,6 +47,6 @@ public class Player extends SimulatedCharacter {
 		return new CharacterBooleans(ID, isMovingUp, isMovingDown, isMovingLeft, isMovingRight, isSprinting, isBlocking, isAttacking);
 	}
 	public CharacterShorts getShorts(){
-		return new CharacterShorts(ID, (short)Math.toDegrees(targetRotation), (short)position.x, (short)position.y);
+		return new CharacterShorts(ID, (short)Math.toDegrees(targetRotation), (int)position.x, (int)position.y);
 	}
 }
