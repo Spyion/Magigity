@@ -23,18 +23,20 @@ public class ConnectionHandler{
 	
 	public final String IP;
 	public final int PORT;
+	public final int PORT2;
 	public NetworkListener networkListener;
-	public ConnectionHandler(String IP, int PORT) {
+	public ConnectionHandler(String IP, int PORT, int PORT2) {
 		super();
 		this.IP = IP;
 		this.PORT = PORT;
+		this.PORT2 = PORT2;
 		instance = this;
 		client = new Client();
 		registerPackets();
 
 		try {
 			client.start();
-			client.connect(50000, IP, PORT, PORT);
+			client.connect(50000, IP, PORT, PORT2);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
