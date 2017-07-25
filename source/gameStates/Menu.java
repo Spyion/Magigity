@@ -70,9 +70,6 @@ public class Menu extends BasicGameState{
 	boolean nameHadFocus;
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {	
-		//start.update(input);
-		//if(start.isPressedAndReleased())
-			//sbg.enterState(States.running);
 		if(!pwHadFocus && pw.hasFocus()){
 			pwHadFocus = true;
 			pw.setText("");

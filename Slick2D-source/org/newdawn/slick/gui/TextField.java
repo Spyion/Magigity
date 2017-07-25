@@ -219,19 +219,6 @@ public class TextField extends AbstractComponent {
      */
     public void render(GUIContext container, Graphics g) {
     	
-        int mouseY = Display.getHeight()-Mouse.getY();
-    	if(Mouse.getX()>this.getX()&&Mouse.getX()<this.getX()+this.getWidth()&&
-    			mouseY >this.getY()&&mouseY<this.getY()+this.getHeight())
-    	{
-    		if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
-    			
-    			this.value = "";
-    			this.setText("");
-    			this.textChanged();
-    			
-    		}
-    	}
-    
         if (lastKey != -1) {
             if (input.isKeyDown(lastKey)) {
                 if (repeatTimer < System.currentTimeMillis()) {
