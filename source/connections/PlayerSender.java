@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 
 import enitities.Player;
 import info.Information;
+import tools.Toolbox;
 
 public class PlayerSender implements Runnable{
 
@@ -24,33 +25,33 @@ public class PlayerSender implements Runnable{
 			while(true){
 			String toWrite = "";
 				
-			toWrite+=player.isMovingUp;
-			toWrite+=player.isMovingDown;
-			toWrite+=player.isMovingLeft;
-			toWrite+=player.isMovingRight;
-			toWrite+=player.isSprinting;
-			toWrite+=player.isAttacking();
-			toWrite+=player.isBlocking();
+			toWrite+=Toolbox.booleanToString(player.isMovingUp);
+			toWrite+=Toolbox.booleanToString(player.isMovingDown);
+			toWrite+=Toolbox.booleanToString(player.isMovingLeft);
+			toWrite+=Toolbox.booleanToString(player.isMovingRight);
+			toWrite+=Toolbox.booleanToString(player.isSprinting);
+			toWrite+=Toolbox.booleanToString(player.isAttacking());
+			toWrite+=Toolbox.booleanToString(player.isBlocking());
 			toWrite+=", ";
-			toWrite+=Float.toString(player.getRotationRadians())+",";
-			toWrite+=Float.toString(Information.currentCamera.getRotationRadians())+", ";
-			if(count > 1000){
-				count-=1000;
+			toWrite+=Float.toString(player.getRotationRadians())+", ";
+			toWrite+=Float.toString(Information.currentCamera.getRotationRadians());
+			if(count > 100){
+				count-=100;
 				
-				toWrite+=Float.toString(player.position.x)+",";
-				toWrite+=Float.toString(player.position.y)+",";
-				
+				toWrite+=", "+Float.toString(player.position.x)+", ";
+				toWrite+=Float.toString(player.position.y);
 			}
-			
-			
+			if(toWrite.contains("NaN")){
+				System.out.println(toWrite);
+			}
 			
 			
 			
 			writer.println(toWrite);
 			writer.flush();
 			
-			Thread.sleep(100);
-			count+=100;
+			Thread.sleep(10);
+			count+=10;
 			}
 		}catch(Exception e){
 			e.printStackTrace();

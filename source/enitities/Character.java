@@ -19,7 +19,7 @@ import tools.Toolbox;
 public class Character extends Entity{
 	
 	public CharacterImagePack pack;
-	private float targetRotation = 0;
+	protected float targetRotation = 0;
 	public final Collider collider;
 	
 	public Character(CharacterImagePack pack, Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
@@ -33,9 +33,9 @@ public class Character extends Entity{
 			idleAnimation = animations.get(0);
 			blockAnimation = animations.get(1);
 			setAnimationPingPong(idleAnimation);
+			play = true;
 		}
-		else 
-			play = false;
+
 	}
 	public Character(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
 		this(new CharacterImagePack(), hitbox, hitbox2, size, rotation, weight);
@@ -58,10 +58,8 @@ public class Character extends Entity{
 		if(object != null){
 			System.out.println("hit");
 		}
-		
-		setRotationRadians(Toolbox.approachValue(getRotationRadians(), targetRotation, delta)); 
-		targetRotation = (float) (Toolbox.getAngle(position, Information.currentCamera.getScreenToWorldPoint(Information.getMouse()))+Math.PI/2);
 		fixTargetRotation();
+		setRotationRadians(Toolbox.approachValue(getRotationRadians(), targetRotation, delta)); 
 		
 		updateAnimations(delta);
 		super.update(delta);
@@ -98,7 +96,7 @@ public class Character extends Entity{
 	ArrayList<ArrayList<ValueAnimation>> animations;
 	ArrayList<ValueAnimation> idleAnimation;
 	ArrayList<ValueAnimation> blockAnimation;
-	boolean play = true;
+	boolean play = false;
 	// initialized above
 	
 	protected boolean isAttacking = false;

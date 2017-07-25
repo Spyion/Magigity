@@ -27,10 +27,13 @@ public class OnlineCharacterReader implements Runnable{
 		try{
 		String s = "";
 		while((s = reader.readLine()) != null){
+			if(s.equals("f"))
+				break;
 			String[] strs = s.split(",");
 			for(int i = 0; i < strs.length; i++){
 				strs[i] = strs[i].trim();
 			}
+			System.out.println(s);
 			new OnlineCharacter(strs[0],new Circle(Float.parseFloat(strs[1]),Float.parseFloat(strs[2]),25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
 		}
 		while((s = reader.readLine()) != null){
@@ -46,7 +49,7 @@ public class OnlineCharacterReader implements Runnable{
 					if(entity instanceof OnlineCharacter){
 						OnlineCharacter c = (OnlineCharacter) entity;
 						if(c.ID.equals(strs[1]))
-							Entity.entities.remove(c);
+							Entity.toRemove.add(c);
 					}
 				}
 			}else{
@@ -62,15 +65,15 @@ public class OnlineCharacterReader implements Runnable{
 							c.isMovingRight = bools.isMovingRight;
 							c.isSprinting = bools.isSprinting;
 							c.setAttacking(bools.isAttacking);
-							c.setBlocking(bools.isMovingUp);
+							c.setBlocking(bools.isBlocking);
 							
-							if(strs.length>1)
-								c.setRotationRadians(Float.parseFloat(strs[2]));
 							if(strs.length>2)
-								c.cameraRotation = Float.parseFloat(strs[3]);
+								c.setTargetRotationRadians(Float.parseFloat(strs[2]));
 							if(strs.length>3)
-								c.position.x = Float.parseFloat(strs[4]);
+								c.cameraRotation = Float.parseFloat(strs[3]);
 							if(strs.length>4)
+								c.position.x = Float.parseFloat(strs[4]);
+							if(strs.length>5)
 								c.position.y = Float.parseFloat(strs[5]);
 						}
 							

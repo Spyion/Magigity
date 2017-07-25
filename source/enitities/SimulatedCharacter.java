@@ -25,12 +25,12 @@ public class SimulatedCharacter extends Character{
 
 
 		
-	public void update(float cameraRotation ,int delta){
+	public void update(int delta){
 		Vector2f movingDirection = new Vector2f(0,0);
 		if(isSprinting){
-			moveSpeed = Toolbox.approachValue(moveSpeed, 10*M, delta);
-		}else{
 			moveSpeed = Toolbox.approachValue(moveSpeed, 5*M, delta);
+		}else{
+			moveSpeed = Toolbox.approachValue(moveSpeed, 2*M, delta);
 		}
 		
 		if(isMovingUp){

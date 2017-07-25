@@ -15,12 +15,6 @@ public class Player extends SimulatedCharacter {
 		super(hitbox, hitbox2, size, rotation, weight);
 		this.ID = ID;
 	}
-	
-	private int booleanUpdateTime;
-	private int positionUpdateTime;
-	
-	private final int booleanUpdateRate = 100;
-	private final int positionUpdateRate = 1000;
 	public void update(Input input, Camera camera, int delta){
 		if(input.isKeyDown(Input.KEY_W))
 			isMovingUp = true;
@@ -42,30 +36,10 @@ public class Player extends SimulatedCharacter {
 			isSprinting = true;
 		else
 			isSprinting = false;
-		booleanUpdateTime += delta;
-		positionUpdateTime += delta;
 		
-		/*if(booleanUpdateTime>booleanUpdateTime){
-			booleanUpdateTime-=booleanUpdateRate;
-			mysqlconn.setData(ID, "upBool" , Toolbox.booleanToString(isMovingUp));
-			mysqlconn.setData(ID, "downBool" , Toolbox.booleanToString(isMovingDown));
-			mysqlconn.setData(ID, "leftBool" , Toolbox.booleanToString(isMovingLeft));
-			mysqlconn.setData(ID, "rightBool" , Toolbox.booleanToString(isMovingRight));
-			mysqlconn.setData(ID, "isSprinting" , Toolbox.booleanToString(isSprinting));
-			mysqlconn.setData(ID, "cameraRotation" , Float.toString(camera.getRotationRadians()));
-		}
-		if(positionUpdateTime > positionUpdateRate){
-			positionUpdateTime -= positionUpdateRate;
-			mysqlconn.setData(ID, "posX", Float.toString(position.x));
-			mysqlconn.setData(ID, "posY", Float.toString(position.y));
-		}*/
-		
-		
-		
-		
-		
-		
-		super.update(camera.getRotationRadians(), delta);
+		cameraRotation = camera.getRotationRadians();
+		targetRotation = (float)(Toolbox.getAngle(position, Information.currentCamera.getScreenToWorldPoint(Information.getMouse()))+Math.PI/2);
+		super.update(delta);
 		
 	}
 }
