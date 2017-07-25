@@ -60,7 +60,7 @@ public class Running extends BasicGameState{
 	public void customInit(){
 		connectionHandler = ConnectionHandler.instance;
 		connectionHandler.getCharacters();
-		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
+		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1, input, camera);
 		for(int i = 1; i < 10; i++){
 			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 		}
@@ -96,9 +96,10 @@ public class Running extends BasicGameState{
 			}
 		}
 		
-		player.update(input, camera, delta);
 		for(Entity entity:entities){
 			entity.update(delta);
+			if(entity instanceof OnlineCharacter)
+				entity.update(delta);
 		}
 		
 		

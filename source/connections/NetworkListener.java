@@ -43,7 +43,6 @@ public class NetworkListener extends Listener {
 			}
 			else if(object instanceof CharacterShorts){
 				CharacterShorts s = (CharacterShorts) object;
-				System.out.println(s.ID);
 				for(Entity entity : Entity.entities){
 					if(entity instanceof OnlineCharacter){
 						OnlineCharacter c = (OnlineCharacter) entity;

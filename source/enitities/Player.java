@@ -10,13 +10,18 @@ import packets.CharacterShorts;
 import tools.Toolbox;
 
 public class Player extends SimulatedCharacter {
-
+	private final Input input;
+	private final Camera camera;
 	public final byte ID;
-	public Player(byte ID,Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
+	public Player(byte ID,Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight, Input input, Camera camera) {
 		super(hitbox, hitbox2, size, rotation, weight);
 		this.ID = ID;
+		this.input = input;
+		this.camera = camera;
 	}
-	public void update(Input input, Camera camera, int delta){
+	public void update(int delta){
+		System.out.println("Player: "+speed);
+		
 		if(input.isKeyDown(Input.KEY_W))
 			isMovingUp = true;
 		else
