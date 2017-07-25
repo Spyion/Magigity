@@ -14,6 +14,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import connections.ConnectionHandler;
 //import connections.ConnectionHandler;
 import debug.Debug;
 import effects.ParticleEffect;
@@ -21,9 +22,7 @@ import enitities.Camera;
 import enitities.Entity;
 import enitities.OnlineCharacter;
 import enitities.Player;
-import info.Collision;
 import info.Information;
-import structs.OnlineCharacterCreationVars;
 import terrain.Building;
 //import shaders.EntityShader;
 import tools.Loader;
