@@ -2,13 +2,13 @@ package packets;
 
 public class CharacterShorts {
 	public final short rotation;
-	public final short positionX;
-	public final short positionY;
+	public final int positionX;
+	public final int positionY;
 	
 	public final byte ID;
 	
 	
-	public CharacterShorts(byte iD, short rotation, short positionX, short positionY) {
+	public CharacterShorts(byte iD, short rotation, int positionX, int positionY) {
 		super();
 		this.rotation = rotation;
 		this.positionX = positionX;
