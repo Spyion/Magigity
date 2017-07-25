@@ -14,13 +14,14 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import connections.ConnectionHandler;
+//import connections.ConnectionHandler;
 import debug.Debug;
 import effects.ParticleEffect;
 import enitities.Camera;
 import enitities.Entity;
 import enitities.OnlineCharacter;
 import enitities.Player;
+import info.Collision;
 import info.Information;
 import structs.OnlineCharacterCreationVars;
 import terrain.Building;
@@ -43,6 +44,7 @@ public class Running extends BasicGameState{
 	private final float CM = Information.CENTIMETER;
 	
 	@Override
+
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		//Debug
 		States.runningState = this;
@@ -51,16 +53,21 @@ public class Running extends BasicGameState{
 		
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
+
+
 				
 	}
 	public void customInit(){
 		connectionHandler = ConnectionHandler.instance;
 		connectionHandler.getCharacters();
 		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
+//		test = new OnlineCharacter("Spyion",new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
 		for(int i = 1; i < 10; i++){
 			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 		}
 		new ParticleEffect("torch",player, 1000000);
+		
+
 	}
 	
 	int boolCount = 0;
@@ -69,13 +76,6 @@ public class Running extends BasicGameState{
 	final int intRate = 1000;
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		boolCount+=delta;
-		intCount +=delta;
-		
-		Entity.add();
-		Entity.remove();
-		OnlineCharacterCreationVars.createCharacters();
-		
 		for(int i = 0; i < entities.size()-1; i++)
 		{
 			for(int j = i+1; j < entities.size(); j++)

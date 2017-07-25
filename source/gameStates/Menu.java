@@ -131,7 +131,7 @@ public class Menu extends BasicGameState{
 		
 		if(quit.isPressedAndReleased()) {
 			
-			System.exit(0);
+			gc.exit();
 			
 		}
 		

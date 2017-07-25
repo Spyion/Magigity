@@ -84,7 +84,7 @@ public class Button {
 		else {
 			if(entered) {
 				imageToDraw.draw(position.x-20, position.y-5, size.getWidth()+40, size.getHeight()+10);
-				if(!isPlaying) {
+				if(isPlaying == false) {
 					
 					hit.play();
 					isPlaying = true;
@@ -92,7 +92,7 @@ public class Button {
 				}
 				
 			}
-			else{
+			else {
 				imageToDraw.draw(position.x, position.y, size.getWidth(), size.getHeight());
 				isPlaying = false;
 			}
