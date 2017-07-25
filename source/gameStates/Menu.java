@@ -39,7 +39,7 @@ public class Menu extends BasicGameState{
 		States.menuState = this;
 		
 		
-		connectionHandler = new ConnectionHandler("217.230.226.5", 25643, 25646);
+		connectionHandler = new ConnectionHandler("localhost", 25643, 25646);
 		
 		Button.defaultPressSound = Loader.loadSound("clap");
 		Button.defaultReleaseSound = Loader.loadSound("knock");
