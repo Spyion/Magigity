@@ -135,7 +135,6 @@ public class Running extends BasicGameState{
 		g.setColor(Color.green);
 		g.fillRect(0, 0, Display.getWidth(), Display.getHeight());		
 		
-		
 		//ONWORLD
 		Vector2f translation = camera.getWorldToScreenPoint(new Vector2f(0, 0));
 		g.translate(translation.x, translation.y);
