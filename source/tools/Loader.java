@@ -131,16 +131,22 @@ public class Loader {
 			default:  type = Weapon.LONGSWING; 		break;
 		}
 		
-		ArrayList<String> list = getVar("upperhandposition", specs);
-		Vector2f upperHandPosition = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
-		list = getVar("lowerhandposition", specs);
-		Vector2f lowerHandPosition = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
+		ArrayList<String> list = getVar("righthandposition", specs);
+		Vector2f rightHandPosition = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
+		list = getVar("lefthandposition", specs);
+		Vector2f leftHandPosition = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
 		list = getVar("anchor", specs);
 		Vector2f anchor = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
-		list = getVar("upperhandrotation", specs);
-		float upperHandRotation = Float.parseFloat(list.get(1));
-		list = getVar("lowerhandrotation", specs);
-		float lowerHandRotation = Float.parseFloat(list.get(1));
+		list = getVar("righthandrotation", specs);
+		float rightHandRotation = Float.parseFloat(list.get(1));
+		list = getVar("lefthandrotation", specs);
+		float leftHandRotation = Float.parseFloat(list.get(1));
+		list = getVar("righthandflipped", specs);
+		boolean rightHandFlipped = Boolean.parseBoolean(list.get(1));
+		list = getVar("lefthandflipped", specs);
+		boolean leftHandFlipped = Boolean.parseBoolean(list.get(1));
+		list = getVar("doesflip", specs);
+		boolean doesFlip = Boolean.parseBoolean(list.get(1));
 		list = getVar("hitbox", specs);
 		Shape hitbox;
 		if(list.get(1).equals("rectangle")){
@@ -157,7 +163,7 @@ public class Loader {
 		if(type == Weapon.BOW || type == Weapon.STAFF || type == Weapon.THROW){
 			weapon = null;
 		}else{
-			weapon = new Weapon(type, drawn, sheathed, hitbox, anchor, upperHandPosition, lowerHandPosition, upperHandRotation, lowerHandRotation, animations);
+			weapon = new Weapon(type, drawn, sheathed, hitbox, anchor, rightHandPosition, leftHandPosition, rightHandRotation, leftHandRotation, rightHandFlipped, leftHandFlipped, doesFlip,  animations);
 		}
 		weapon.setDrawn();
 		return weapon;
@@ -198,20 +204,6 @@ public class Loader {
 				break;
 		}
 		
-		//produces Duplicates!
-//		File[] folders = new File("data/ValueAnimations/"+ref).listFiles();
-//		for(int i = 0; i < folders.length-1; i++){
-//			for(int j = i; j < folders.length-1; j++){
-//				System.out.println(folders[j].getName().charAt(0));
-//				if(Character.getNumericValue(folders[j].getName().charAt(0))>Character.getNumericValue(folders[j+1].getName().charAt(0))){
-//					File temp = folders[j];
-//					folders[j] = folders[j+1];
-//					folders[j+1] = temp;
-//				}
-//			}
-//		}
-		for(int i = 0; i < folders.size(); i++)
-			System.out.println(folders.get(i).getName());
 		for(File folder : folders){
 			animations.add(new ArrayList<ValueAnimation>());
 			File[] files = folder.listFiles();

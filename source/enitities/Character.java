@@ -36,8 +36,6 @@ public class Character extends Entity{
 			setAnimationPingPong(idleAnimation);
 			play = true;
 		}
-		super.collider.isTrigger = true;
-		collider.isTrigger = true;
 
 	}
 	public Character(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
@@ -123,6 +121,12 @@ public class Character extends Entity{
 	private boolean hasUploaded = false;
 	private boolean weaponDrawn = false;
 	int backcount = 0;
+	Vector2f comboPosition = new Vector2f();
+	float comboRotation;
+	int comboTime;
+	
+	
+	//TODO: fix ComboPosition and Time
 	
 	private void animateWeapon(int delta){
 		if(play && !animations.isEmpty() && weaponDrawn){
@@ -131,8 +135,10 @@ public class Character extends Entity{
 			float targetRotation = 0;
 			float toTurn = 0;
 			float toScale = 0;
-
+			boolean toFlip = true;
+			
 			if(isAttacking){
+				comboTime = 0;
 				currentAnimation = currentAttackAnimation;
 				if(this instanceof Player && !hasUploaded){
 					ConnectionHandler.instance.uploadAttack(currentAnimation);
@@ -141,10 +147,11 @@ public class Character extends Entity{
 				updateAnimation(animations.get(currentAttackAnimation), delta);
 				
 				if(animations.get(currentAttackAnimation).get(0).isCompleted()){
-					setAnimationTime(animations.get(currentAttackAnimation), 0);
 					isAttacking = false;
+					comboTime = 500;
 					if(++currentAttackAnimation>animations.size()-1){
 						currentAttackAnimation = 2;
+						comboTime = -1;
 					}
 					setAnimationTime(idleAnimation, 0);
 					hasUploaded = false;
@@ -166,6 +173,7 @@ public class Character extends Entity{
 			}else{
 				currentAnimation = 0;
 				updateAnimation(idleAnimation, delta);
+//				setAnimationTime(animations.get(currentAttackAnimation), 0);
 
 			}
 			for(ValueAnimation anim : animations.get(currentAnimation)){
@@ -180,14 +188,32 @@ public class Character extends Entity{
 					toScale = anim.getHeight()*CM;
 				}else if(anim.name.contains("ang")){
 					toTurn = anim.getHeight();
+				}else if(anim.name.contains("flip")){
+					toFlip = anim.getHeight() > 0;
 				}
 			}
+			if(pack.weapon.doesFlip)
+				pack.weapon.flipped = toFlip;
+			
 			if(toTurn != 0 && toScale != 0){
 				targetPosition.set(0, toScale);
 				targetPosition.add(toTurn);
 			}
+			if(isAttacking)
+			comboPosition = targetPosition.copy();
+
+			if(comboTime > 0){
+				comboTime-=delta;
+			Toolbox.approachVector(pack.weapon.relativePosition, comboPosition, 0.99f, delta);
+			pack.weapon.relativeRotation = Toolbox.approachValue(pack.weapon.relativeRotation, comboRotation, delta);
+			}
+			else{
+			if(!isAttacking)
+				currentAttackAnimation = 2;
 			Toolbox.approachVector(pack.weapon.relativePosition, targetPosition, 0.99f, delta);
 			pack.weapon.relativeRotation = Toolbox.approachValue(pack.weapon.relativeRotation, targetRotation, delta);
+
+			}
 		}else if(backcount > 0){
 			backcount -= delta;
 			Toolbox.approachVector(pack.weapon.relativePosition, new Vector2f(10*CM, -10*CM), 0.99f, delta);
@@ -240,7 +266,7 @@ public class Character extends Entity{
 		shoulderDistance = breathing.getHeight()*CM;
 		breathing.update(delta);
 		
-		if(breathing.getHeight()==0){
+		if(breathing.getHeight()<24){
 			System.out.println("ERROR");
 		}
 		pack.leftShoulder.position.set(-25*CM, 0);
@@ -317,6 +343,10 @@ public class Character extends Entity{
 	
 	@Override
 	public void collide(CollidableObject object){
+		if(!collisionInited){
+			super.collider.isTrigger = true;
+			collider.isTrigger = true;
+		}
 		super.collide(object);
 		collider.collide(object);
 		pack.weapon.collide(object);

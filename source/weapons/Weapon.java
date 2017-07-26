@@ -22,17 +22,18 @@ public class Weapon extends CollidableObject{
 	
 	public ArrayList<ArrayList<ValueAnimation>> animations;
 	
-	protected boolean doesFlip = true;
-	protected final Vector2f upperHandPosition;
-	protected final Vector2f lowerHandPosition;
+	protected final Vector2f rightHandPosition;
+	protected final Vector2f leftHandPosition;
 	protected final Vector2f hitboxOffset; 
-	public final float upperHandRotation;
-	public final float lowerHandRotation;
+	private final float rightHandRotation;
+	private final float leftHandRotation;
 	public final Vector2f anchor;
-	
+	private final boolean rightHandFlipped;
+	private final boolean leftHandFlipped;
+	public final boolean doesFlip;
 	public final int TYPE;
 	
-	
+	public boolean flipped;
 	
 	public static final int LONGSWING = 0;
 	public static final int SHORTSWING = 1;
@@ -42,26 +43,29 @@ public class Weapon extends CollidableObject{
 	public static final int STAFF = 5;
 	public static final int BOW = 6;
 	
-	public float testr = 0;
 	private final int M = Information.METER;
 	private final float CM = Information.CENTIMETER;
+	private final float PI2 = (float) (2*Math.PI);
 	
-	public Weapon(int type, Image drawn, Image sheathed, Shape hitbox, Vector2f anchor,Vector2f upperHandPosition, Vector2f lowerHandPosition, float upperHandRotation, float lowerHandRotation, ArrayList<ArrayList<ValueAnimation>> animations){
+	public Weapon(int type, Image drawn, Image sheathed, Shape hitbox, Vector2f anchor,Vector2f rightHandPosition, Vector2f leftHandPosition, float rightHandRotation, float leftHandRotation, boolean rightHandFlipped, boolean leftHandFlipped, boolean doesFlip, ArrayList<ArrayList<ValueAnimation>> animations){
 		super(null, new Vector2f(),new Vector2f(1, 1), hitbox, 0, 0, false ,false, true);
 		this.TYPE = type;
-		this.upperHandPosition  = upperHandPosition.sub(anchor);
-		this.lowerHandPosition = lowerHandPosition.sub(anchor);
+		this.rightHandPosition  = rightHandPosition.sub(anchor);
+		this.leftHandPosition = leftHandPosition.sub(anchor);
 		this.animations = animations;
 		this.anchor = anchor;
-		this.upperHandRotation = upperHandRotation;
-		this.lowerHandRotation = lowerHandRotation;
+		this.rightHandRotation = rightHandRotation;
+		this.leftHandRotation = leftHandRotation;
+		this.rightHandFlipped = rightHandFlipped;
+		this.leftHandFlipped = leftHandFlipped;
+		this.doesFlip = doesFlip;
 		this.drawn = drawn;
 		this.sheathed = sheathed;
 		hitboxOffset = hitbox.getLocation();
 	}
 	@Override
 	public void render(Graphics g, Vector2f size){
-		if(isFlipped() && doesFlip)
+		if(flipped)
 			render(g, currentImage.getFlippedCopy(true, false), size, relativeRotation);
 		else
 			render(g, currentImage, size, relativeRotation);
@@ -79,6 +83,7 @@ public class Weapon extends CollidableObject{
 			pos2.add(hitboxOff);
 			Toolbox.rotateVectorAroundPosition(pos2, pos, (float)(180+Math.toDegrees(relativeRotation+parent.getRotationRadians())));
 			position.set(pos2);
+			
 		}else{
 			collider.setEnabled(false);
 		}
@@ -100,18 +105,45 @@ public class Weapon extends CollidableObject{
 		}
 	}
 	
-	
-	public Vector2f getUpperHandPosition() {
-		return upperHandPosition;
+	public boolean isRightHandFlipped(){
+		if(flipped)
+			return rightHandFlipped;
+		else
+			return leftHandFlipped;
 	}
-	public Vector2f getLowerHandPosition() {
-		return lowerHandPosition;
+	public boolean isLeftHandFlipped(){
+		if(flipped)
+			return leftHandFlipped;
+		else
+			return rightHandFlipped;
 	}
-	public float getUpperHandRotation() {
-		return upperHandRotation;
+	public Vector2f getRightHandPosition() {
+		if(flipped)
+			return rightHandPosition.copy();
+		else
+			return leftHandPosition.copy();
+
+
 	}
-	public float getLowerHandRotation() {
-		return lowerHandRotation;
+	public Vector2f getLeftHandPosition() {
+		if(flipped)
+			return leftHandPosition.copy();
+		else
+			return rightHandPosition.copy();
+		
+	}
+	public float getRightHandRotation() {
+		if(flipped)
+			return rightHandRotation;
+		else
+			return leftHandRotation+180;
+	}
+	public float getLeftHandRotation() {
+		if(flipped)
+			return leftHandRotation;
+		else
+			return rightHandRotation+180;
+		
 	}
 	public void setSheathed(){
 		currentImage = sheathed;
@@ -128,7 +160,8 @@ public class Weapon extends CollidableObject{
 	public boolean isDrawn(){
 		return drawn == currentImage;
 	}
-	public boolean isFlipped(){
-		return Math.abs(relativeRotation%(2*Math.PI))<Math.PI && isDrawn();
+	public boolean isFlipped() {
+		return flipped;
 	}
+	
 }

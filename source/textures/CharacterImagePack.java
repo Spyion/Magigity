@@ -72,25 +72,16 @@ public class CharacterImagePack {
 		
 		}else{
 			
-			if(weapon.isFlipped()){
-				leftHand.up = false;
-				rightHand.up = true;
-			}else{
-				rightHand.up = false;
-				leftHand.up = true;
-			}
-				
+			rightHand.up = weapon.isRightHandFlipped();
+			leftHand.up = weapon.isLeftHandFlipped();
 			g.pushTransform();
 			g.translate(weapon.relativePosition.x, weapon.relativePosition.y);
 			g.rotate(0, 0, (float)Math.toDegrees(weapon.relativeRotation));
 			
-			if(rightHand.up){
-				rightHand.renderLower(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getUpperHandRotation());
-				leftHand.renderLower(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getLowerHandRotation());
-			}else{				
-				leftHand.renderLower(g, leftHand.size, weapon.getUpperHandPosition(), weapon.getLowerHandRotation());
-				rightHand.renderLower(g, rightHand.size, weapon.getLowerHandPosition(), weapon.getUpperHandRotation());
-			}
+
+			rightHand.renderLower(g, rightHand.size, weapon.getRightHandPosition(), weapon.getRightHandRotation());
+			leftHand.renderLower(g, leftHand.size, weapon.getLeftHandPosition(), weapon.getLeftHandRotation());
+
 			
 			
 			g.popTransform();
@@ -99,13 +90,8 @@ public class CharacterImagePack {
 			g.pushTransform();
 			g.translate(weapon.relativePosition.x, weapon.relativePosition.y);
 			g.rotate(0, 0, (float)Math.toDegrees(weapon.relativeRotation));
-			if(rightHand.up){
-				rightHand.renderUpper(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getUpperHandRotation());
-				leftHand.renderUpper(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getLowerHandRotation());
-			}else{				
-				leftHand.renderUpper(g, rightHand.size, weapon.getUpperHandPosition(), weapon.getLowerHandRotation());
-				rightHand.renderUpper(g, leftHand.size, weapon.getLowerHandPosition(), weapon.getUpperHandRotation());
-			}
+			rightHand.renderUpper(g, rightHand.size, weapon.getRightHandPosition(), weapon.getRightHandRotation());
+			leftHand.renderUpper(g, leftHand.size, weapon.getLeftHandPosition(), weapon.getLeftHandRotation());
 			g.popTransform();
 
 		}
