@@ -1,0 +1,7 @@
+thrust,
+anchor, 15, 300,
+UpperHandPosition, 15, 200,
+LowerHandPosition, 15, 400,
+UpperHandRotation, 90,
+LowerHandRotation, 90,
+hitbox, rectangle, 0, 0, 30, 80,

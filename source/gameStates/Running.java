@@ -6,11 +6,13 @@ import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.opengl.pbuffer.FBOGraphics;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -23,6 +25,8 @@ import enitities.Entity;
 import enitities.OnlineCharacter;
 import enitities.Player;
 import info.Information;
+import shader.Shader;
+import shaders.Shaders;
 import structs.OnlineCharacterCreationVars;
 import terrain.Building;
 //import shaders.EntityShader;
@@ -31,7 +35,6 @@ import tools.States;
 import tools.Toolbox;
 public class Running extends BasicGameState{
 	
-	Loader loader = new Loader();
 	Input input;
 	ArrayList<Entity> entities = Entity.entities;
 	ArrayList<Building> buildings = Building.buildings;
@@ -125,15 +128,12 @@ public class Running extends BasicGameState{
 	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-
+//		Image fboImage = Loader.loadImage("terrain/grass");
+//		FBOGraphics fbo = new FBOGraphics(fboImage);
 		//ONSCREEN
 //		g.setAntiAlias(false);
 		g.setColor(Color.green);
 		g.fillRect(0, 0, Display.getWidth(), Display.getHeight());		
-		
-		
-		
-		
 		
 		
 		//ONWORLD
@@ -141,15 +141,18 @@ public class Running extends BasicGameState{
 		g.translate(translation.x, translation.y);
 		g.rotate(0, 0, camera.getRotationDegrees());
 		g.scale(camera.size.x, camera.size.y);
-		//entityShader.start();
+		Shaders.entityShader.startShader();
 		for(Entity entity : entities){
 			entity.render(g);
 		}
+		Shader.forceFixedShader();
+		for(Entity entity : entities){
+			entity.renderEffects(g);
+		}
+//		Shader.forceFixedShader();
 		for(Building building : buildings){
 //			building.render(g);
 		}
-		
-		//entityShader.stop();
 
 		//Debug
 		g.setColor(Color.red);
@@ -159,6 +162,11 @@ public class Running extends BasicGameState{
 			}
 		Debug.debugPoints.clear();
 		g.resetTransform();
+		
+		
+		//OnScreen
+//		fboImage.draw(0, 0, Display.getWidth(), Display.getHeight());
+		
 	}
 	private boolean actionPerformed = false;
 	@Override

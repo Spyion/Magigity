@@ -80,8 +80,8 @@ public class Loader {
 	}
 	
 	public static HandImagePack loadHand(String set, String dirType, Vector2f size){
-		set += "/"+dirType+"/";
-		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/"+set+"type");
+		set += "/"+dirType;
+		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/"+set+"/type");
 		for(ArrayList<String> list : specs)
 			for(int i = 0; i < list.size()-1; i++)
 				list.set(i, list.get(i).toLowerCase());
@@ -89,7 +89,7 @@ public class Loader {
 		list = getVar("upanchor", specs);
 		Image ref = null;
 		try {
-			ref = new Image("resources/images/character/"+set+"handUp.png");
+			ref = new Image("resources/images/character/"+set+"/handUp.png");
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -111,8 +111,8 @@ public class Loader {
 		return loadHand(set, dirType, new Vector2f(25*CM, 25*CM));
 	}
 	public static Weapon loadWeapon(String set){
-		set+="/weapon/";
-		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/"+set+"type");
+		set+="/weapon";
+		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/"+set+"/type");
 		for(ArrayList<String> list : specs)
 			for(int i = 0; i < list.size()-1; i++)
 				list.set(i, list.get(i).toLowerCase());

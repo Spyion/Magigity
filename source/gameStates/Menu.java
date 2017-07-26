@@ -52,8 +52,10 @@ public class Menu extends BasicGameState{
 		
         name = new TextField(gc, gc.getDefaultFont(), 880-50, Display.getHeight()/2-40, 100, 30);
         pw = new TextField(gc, gc.getDefaultFont(), 880-50, Display.getHeight()/2, 100, 30);
-        name.setText("Username");
-        pw.setText("Password");
+//        name.setText("Username");
+//        pw.setText("Password");
+        name.setText("Info");
+        pw.setText("info");
         pw.setMaskEnabled(true);
         submit = new Button(Loader.loadImage("btnstart"),
         					880-100,Display.getHeight()/2+50,200,50);
@@ -140,7 +142,7 @@ public class Menu extends BasicGameState{
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		g.setAntiAlias(false);
-		background.drawCentered(880, Display.getHeight()/2);
+		background.drawCentered(Display.getWidth()/2, Display.getHeight()/2);
 		g.setColor(Color.white);
 		magigity.drawCentered(880, magigity.getHeight()/2+10);
 		//start.render(g);

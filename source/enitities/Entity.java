@@ -29,6 +29,8 @@ public class Entity extends CollidableObject{
 	}
 	public void render(Graphics g){
 		super.render(g, size);
+	}
+	public void renderEffects(Graphics g){
 		for(Effect effect : effects){
 			effect.render(g);
 		}

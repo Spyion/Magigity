@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/26/trunk/src/shader
+END
+ShaderManagerImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/12/trunk/src/shader/ShaderManagerImpl.java
+END
+Shader.java
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/26/trunk/src/shader/Shader.java
+END
+ShaderResourceManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/9/trunk/src/shader/ShaderResourceManager.java
+END
+MultiTex.java
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/17/trunk/src/shader/MultiTex.java
+END
+ShaderVariable.java
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/26/trunk/src/shader/ShaderVariable.java
+END
