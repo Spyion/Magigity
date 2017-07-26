@@ -44,7 +44,7 @@ public class CharacterImagePack {
 	public CharacterImagePack(){
 		this("basic",	"basic",
 			 "basic", 	"basic",
-			 "basic",	"basic");
+			 "basic",	"basicLongSword");
 	}
 	
 	
@@ -146,8 +146,8 @@ public class CharacterImagePack {
 		this.rightHand = Loader.loadHand(set, "rightHand");
 		this.leftHand = Loader.loadHand(set, "leftHand");
 	}
-	public void setWeapon(String set){
-		this.weapon = Loader.loadWeapon(set);
+	public void setWeapon(String name){
+		this.weapon = Loader.loadWeapon(name);
 	}
 	
 }

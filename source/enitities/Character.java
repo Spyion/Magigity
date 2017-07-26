@@ -27,7 +27,7 @@ public class Character extends Entity{
 		super(hitbox, size, rotation, weight);
 		collider = new Collider(this, hitbox2);
 		this.pack = pack;
-		this.pack.setWeapon("thrust");
+		this.pack.setWeapon("basicLongSword");
 		this.pack.weapon.setSheathed();
 		if(pack.weapon.animations != null){
 			animations = pack.weapon.animations;

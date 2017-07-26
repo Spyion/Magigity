@@ -110,9 +110,9 @@ public class Loader {
 	public static HandImagePack loadHand(String set, String dirType){
 		return loadHand(set, dirType, new Vector2f(25*CM, 25*CM));
 	}
-	public static Weapon loadWeapon(String set){
-		set+="/weapon";
-		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/"+set+"/type");
+	public static Weapon loadWeapon(String name){
+		String ref = "character/weapons/"+name+"/";
+		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/"+ref+"type");
 		for(ArrayList<String> list : specs)
 			for(int i = 0; i < list.size()-1; i++)
 				list.set(i, list.get(i).toLowerCase());
@@ -152,8 +152,8 @@ public class Loader {
 		}
 		
 		Weapon weapon;
-		Image drawn = loadCharacterImage(set, "drawn", null);
-		Image sheathed = loadCharacterImage(set, "sheathed", null);
+		Image drawn = loadImage(ref+"drawn", null);
+		Image sheathed = loadImage(ref+"sheathed", null);
 		if(type == Weapon.BOW || type == Weapon.STAFF || type == Weapon.THROW){
 			weapon = null;
 		}else{
