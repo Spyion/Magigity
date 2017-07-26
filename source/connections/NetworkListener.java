@@ -73,7 +73,6 @@ public class NetworkListener extends Listener {
 						OnlineCharacter c = (OnlineCharacter) entity;
 						if(a.ID==c.ID){
 							c.drawWeapon(BoolCoder.decode(a.drawn)[0]);
-							System.out.println(a.drawn);
 						}
 					}
 				}

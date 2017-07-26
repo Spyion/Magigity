@@ -2,7 +2,6 @@ package enitities;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opencl.CL;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -37,6 +36,8 @@ public class Character extends Entity{
 			setAnimationPingPong(idleAnimation);
 			play = true;
 		}
+		super.collider.isTrigger = true;
+		collider.isTrigger = true;
 
 	}
 	public Character(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
@@ -133,7 +134,7 @@ public class Character extends Entity{
 
 			if(isAttacking){
 				currentAnimation = currentAttackAnimation;
-				if(!hasUploaded){
+				if(this instanceof Player && !hasUploaded){
 					ConnectionHandler.instance.uploadAttack(currentAnimation);
 					hasUploaded = true;
 				}
@@ -151,7 +152,7 @@ public class Character extends Entity{
 				
 			}else if(isBlocking){
 				currentAnimation = 1;
-				if(!hasUploaded){
+				if(this instanceof Player && !hasUploaded){
 					ConnectionHandler.instance.uploadAttack(currentAnimation);
 					hasUploaded = true;
 				}
@@ -316,10 +317,6 @@ public class Character extends Entity{
 	
 	@Override
 	public void collide(CollidableObject object){
-		if(!collisionInited){
-			super.collider.isTrigger = true;
-			collider.isTrigger = true;
-		}
 		super.collide(object);
 		collider.collide(object);
 		pack.weapon.collide(object);
@@ -330,7 +327,7 @@ public class Character extends Entity{
 			c.collider.collide(this);
 			pack.weapon.collide(c.collider);
 		}
-		if(!collisionInited && Collision.getCollidedObject(this) == null && Collision.getCollidedObject(this) == null){
+		if(!collisionInited && Collision.getCollidedObject(this) == null){
 			collider.isTrigger = false;
 			super.collider.isTrigger = false;
 			collisionInited = true;

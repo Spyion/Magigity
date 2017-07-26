@@ -3,7 +3,7 @@ package packets;
 public class DrawWeapon {
 	public final byte drawn;
 	public final byte ID;
-	public DrawWeapon(byte drawn, byte iD) {
+	public DrawWeapon(byte iD, byte drawn) {
 		super();
 		this.drawn = drawn;
 		ID = iD;

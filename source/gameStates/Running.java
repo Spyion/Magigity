@@ -196,7 +196,7 @@ public class Running extends BasicGameState{
 				
 				
 				
-			connectionHandler.uploadDrawn(b);
+			connectionHandler.uploadDrawn(!b);
 		}
 		super.keyPressed(key, c);
 	}

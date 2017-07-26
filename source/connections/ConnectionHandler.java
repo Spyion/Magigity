@@ -81,6 +81,7 @@ public class ConnectionHandler{
 		new Thread(new Upload(client, new CharactersRequest())).start();
 	}
 	public void uploadDrawn(boolean drawn){
+		System.out.println(Information.PlayerID);
 		new Thread(new Upload(client, new DrawWeapon(Information.PlayerID ,BoolCoder.encode(drawn)))).start();
 	}
 	public void uploadAttack(int animation){
