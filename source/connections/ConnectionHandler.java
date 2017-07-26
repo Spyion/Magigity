@@ -7,14 +7,18 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.minlog.Log;
 
 import enitities.Player;
-import packets.CharacterBooleans;
+import info.Information;
+import packets.Attack;
 import packets.CharacterShorts;
 import packets.CharactersRequest;
+import packets.ChatMessage;
+import packets.DrawWeapon;
 import packets.LoginAnswer;
 import packets.LoginRequest;
 import packets.News;
 import packets.Offline;
 import packets.Online;
+import tools.BoolCoder;
 
 public class ConnectionHandler{
 	
@@ -47,24 +51,27 @@ public class ConnectionHandler{
 
 	private void registerPackets(){
 		Kryo kryo = client.getKryo();
-		kryo.register(CharacterBooleans.class);
 		kryo.register(CharacterShorts.class);
 		kryo.register(LoginAnswer.class);
 		kryo.register(LoginRequest.class);
 		kryo.register(News.class);
 		kryo.register(Online.class);
 		kryo.register(Offline.class);
+		kryo.register(ChatMessage.class);
+		kryo.register(String.class);
 		kryo.register(String[].class);
 		kryo.register(CharactersRequest.class);
+		kryo.register(Attack.class);
+		kryo.register(DrawWeapon.class);
 	}
 	public void tryToLogin(String username, String password){
 		if(client!=null)
 			client.sendTCP(new LoginRequest(username, password));
 	}
-	public void uploadBools(Player player){
-		if(client!=null)
-			new Thread(new Upload(client, player.getBools())).start();
-	}
+//	public void uploadBools(Player player){
+//		if(client!=null)
+//			new Thread(new Upload(client, player.getBools())).start();
+//	}
 	
 	public void uploadShorts(Player player){
 		if(client!=null)
@@ -72,6 +79,13 @@ public class ConnectionHandler{
 	}
 	public void getCharacters(){
 		new Thread(new Upload(client, new CharactersRequest())).start();
+	}
+	public void uploadDrawn(boolean drawn){
+		new Thread(new Upload(client, new DrawWeapon(Information.PlayerID ,BoolCoder.encode(drawn)))).start();
+	}
+	public void uploadAttack(int animation){
+		new Thread(new Upload(client, new Attack(Information.PlayerID ,(byte)animation))).start();
+
 	}
 
 }

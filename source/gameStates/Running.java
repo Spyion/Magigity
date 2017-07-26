@@ -57,26 +57,29 @@ public class Running extends BasicGameState{
 
 				
 	}
-	public void customInit(){
+	public boolean customInit(){
 		connectionHandler = ConnectionHandler.instance;
-		connectionHandler.getCharacters();
 		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1, input, camera);
-		for(int i = 1; i < 10; i++){
-			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
-		}
+//		for(int i = 1; i < 10; i++){
+//			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
+//		}
 		new ParticleEffect("torch",player, 1000000);
 		
+		connectionHandler.getCharacters();
 
+		
+		return true;
 	}
 	
 	int boolCount = 0;
 	int intCount = 0;
-	public static final int boolRate = 10;
+	public static final int boolRate = 100;
 	public static final int intRate = 1000;
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		boolCount+=delta;
 		intCount+=delta;
+		
 		
 		Entity.add();
 		Entity.remove();
@@ -122,7 +125,7 @@ public class Running extends BasicGameState{
 	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		
+
 		//ONSCREEN
 //		g.setAntiAlias(false);
 		g.setColor(Color.green);
@@ -184,7 +187,16 @@ public class Running extends BasicGameState{
 		if(key == Input.KEY_RIGHT)
 			camera.addToTargetRotationDegrees(90);
 		if(key == Input.KEY_R){
-			player.pack.weapon.toggleDrawn();
+			boolean b = player.pack.weapon.isDrawn();
+			if(b){
+				player.sheatheWeapon();
+			}else{
+				player.drawWeapon();
+			}
+				
+				
+				
+			connectionHandler.uploadDrawn(b);
 		}
 		super.keyPressed(key, c);
 	}

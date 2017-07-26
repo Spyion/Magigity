@@ -20,7 +20,7 @@ public class Collider {
 	public final Vector2f position;
 	private Shape hitbox;
 	private boolean enabled = true;
-	private boolean isTrigger;
+	public boolean isTrigger;
 	private boolean dynamicCollision = Debug.dynamicCollision;
 	public Collider(CollidableObject object, Shape hitbox, boolean isTrigger){
 		this.object = object;
@@ -50,7 +50,7 @@ public class Collider {
 					double collidingDistance = objectCircle.radius+myObjectCircle.radius;
 					
 					if(currentDistance<collidingDistance){
-						if(!isTrigger)
+						if(!isTrigger && !collider.isTrigger)
 							this.collideCircleCircle(collider, currentDistance, collidingDistance, objectCircle, myObjectCircle);
 						collided = true;
 						}
@@ -123,18 +123,18 @@ public class Collider {
 						
 						if(objectNearestVertex != null && myObjectIntersectingPoint1 != null && myObjectIntersectingPoint2 != null && myObjectNearestVertex != null&&objectIntersectingPoint1 != null && objectIntersectingPoint2 != null)
 						{
-							if(!isTrigger)
+							if(!isTrigger && !collider.isTrigger)
 								collideRectRect(collider, myObjectNearestVertex, objectNearestVertex, myObjectIntersectingPoint1, myObjectIntersectingPoint2, objectIntersectingPoint1, objectIntersectingPoint2);
 							collided = true;
 						}
 						else{
 						    if(objectNearestVertex != null && myObjectIntersectingPoint1 != null && myObjectIntersectingPoint2 != null){
-								if(!isTrigger)
+								if(!isTrigger && !collider.isTrigger)
 									collider.collideRectRect(this, objectNearestVertex, myObjectIntersectingPoint1, myObjectIntersectingPoint2, myObjectVertex, objectVertex);	
 								collided = true;
 						    }
 						    if(myObjectNearestVertex != null&&objectIntersectingPoint1 != null && objectIntersectingPoint2 != null){
-								if(!isTrigger)
+								if(!isTrigger && !collider.isTrigger)
 									collideRectRect(collider, myObjectNearestVertex, objectIntersectingPoint1, objectIntersectingPoint2, objectVertex, myObjectVertex);
 								collided = true;
 						    }
@@ -183,12 +183,12 @@ public class Collider {
 						
 						if(intersectingPoint != null){
 							if(getHitboxType() instanceof Circle){
-								if(!isTrigger)
+								if(!isTrigger && !collider.isTrigger)
 									collider.collideRectangleCircle(this, intersectingPoint, circle);
 								collided = true;
 							}
 							else{							
-								if(!isTrigger)
+								if(!isTrigger && !collider.isTrigger)
 									collideRectangleCircle(collider, intersectingPoint, circle);
 								collided = true;
 							}
@@ -204,12 +204,12 @@ public class Collider {
 							}
 							if(intersectingPoint != null){
 								if(getHitboxType() instanceof Circle){
-									if(!isTrigger)
+									if(!isTrigger && !collider.isTrigger)
 										collider.collideRectangleCircle(this, intersectingPoint, circle);
 									collided = true;
 								}
 								else{
-									if(!isTrigger)
+									if(!isTrigger && !collider.isTrigger)
 										collideRectangleCircle(collider, intersectingPoint, circle);
 									collided = true;
 								}

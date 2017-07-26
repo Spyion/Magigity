@@ -10,6 +10,7 @@ import org.newdawn.slick.geom.Vector2f;
 import animations.ValueAnimation;
 import components.CollidableObject;
 import components.Collider;
+import connections.ConnectionHandler;
 import debug.Debug;
 import info.Collision;
 import info.Information;
@@ -54,14 +55,17 @@ public class Character extends Entity{
 	@Override
 	public void update(int delta){
 		
-		pack.weapon.update(delta,
-				this);
+		pack.weapon.update(delta, this);
 		CollidableObject object = Collision.getCollidedObject(pack.weapon);
 		if(object != null){
 			System.out.println("hit");
 		}
 		fixTargetRotation();
-		setRotationRadians(Toolbox.approachValue(getRotationRadians(), targetRotation, delta)); 
+		if(isAttacking || isBlocking){
+			addToRotationDegrees(Math.signum(targetRotation-getRotationRadians())*delta/20f);
+		}
+		else
+			setRotationRadians(Toolbox.approachValue(getRotationRadians(), targetRotation, delta)); 
 		
 		updateAnimations(delta);
 		super.update(delta);
@@ -75,8 +79,8 @@ public class Character extends Entity{
 
 		if(!pack.weapon.isDrawn())
 			animateHands(delta);
-		
-		animateWeapon(delta);
+		else
+			animateWeapon(delta);
 	}
 	
 	private void animateHands(int delta){
@@ -104,20 +108,23 @@ public class Character extends Entity{
 	protected boolean isAttacking = false;
 	protected boolean isBlocking = false;
 	public void setAttacking(){
-		if(!isBlocking){
+		if(!isBlocking && weaponDrawn){
 			isAttacking =true;
 		}
 	}
 	public void setBlocking(){
-		if(!isAttacking){
+		if(!isAttacking && weaponDrawn){
 			isBlocking =true;
 		}
 	}
 	int currentAttackAnimation = 2;
 	int currentAnimation;
+	private boolean hasUploaded = false;
+	private boolean weaponDrawn = false;
+	int backcount = 0;
 	
 	private void animateWeapon(int delta){
-		if(play && !animations.isEmpty()){
+		if(play && !animations.isEmpty() && weaponDrawn){
 			
 			Vector2f targetPosition = new Vector2f();
 			float targetRotation = 0;
@@ -126,6 +133,10 @@ public class Character extends Entity{
 
 			if(isAttacking){
 				currentAnimation = currentAttackAnimation;
+				if(!hasUploaded){
+					ConnectionHandler.instance.uploadAttack(currentAnimation);
+					hasUploaded = true;
+				}
 				updateAnimation(animations.get(currentAttackAnimation), delta);
 				
 				if(animations.get(currentAttackAnimation).get(0).isCompleted()){
@@ -135,17 +146,21 @@ public class Character extends Entity{
 						currentAttackAnimation = 2;
 					}
 					setAnimationTime(idleAnimation, 0);
-	
+					hasUploaded = false;
 					}
 				
 			}else if(isBlocking){
 				currentAnimation = 1;
+				if(!hasUploaded){
+					ConnectionHandler.instance.uploadAttack(currentAnimation);
+					hasUploaded = true;
+				}
 				updateAnimation(blockAnimation, delta);
 				if(blockAnimation.get(0).isCompleted()){
 					setAnimationTime(blockAnimation, 0);
 					isBlocking = false;
 					setAnimationTime(idleAnimation, 0);
-	
+					hasUploaded = false;
 					}
 			}else{
 				currentAnimation = 0;
@@ -172,8 +187,32 @@ public class Character extends Entity{
 			}
 			Toolbox.approachVector(pack.weapon.relativePosition, targetPosition, 0.99f, delta);
 			pack.weapon.relativeRotation = Toolbox.approachValue(pack.weapon.relativeRotation, targetRotation, delta);
+		}else if(backcount > 0){
+			backcount -= delta;
+			Toolbox.approachVector(pack.weapon.relativePosition, new Vector2f(10*CM, -10*CM), 0.99f, delta);
+			pack.weapon.relativeRotation = Toolbox.approachValue(pack.weapon.relativeRotation, (float) (Math.PI/2), delta);
+		}else{
+			pack.weapon.setSheathed();
+			pack.weapon.relativePosition.set(0, 15*CM);
+			pack.weapon.relativePosition.add(pack.rightShoulder.getRotationDegrees());
+			pack.weapon.relativeRotation = pack.rightShoulder.getRotationRadians();
 		}
 	}
+	public void drawWeapon(){
+		weaponDrawn = true;
+		pack.weapon.setDrawn();
+		pack.weapon.relativePosition.set(10*CM, -10*CM);
+		pack.weapon.relativeRotation =(float)Math.PI/2;
+	}
+	public void sheatheWeapon(){
+		if(!isAttacking && !isBlocking){
+		weaponDrawn = false;
+		backcount = 400;
+		}
+	}
+	
+	
+	
 	private void updateAnimation(ArrayList<ValueAnimation> anim, int delta){
 		for(ValueAnimation ani : anim){
 			ani.update(delta);
@@ -214,12 +253,6 @@ public class Character extends Entity{
 		pack.rightShoulder.setRotationRadians((float) Toolbox.getAngle(pack.rightShoulder.position));
 		pack.leftShoulder.setRotationRadians((float) Toolbox.getAngle(pack.leftShoulder.position.copy().scale(-1)));
 	
-		
-		if(!pack.weapon.isDrawn()){
-			pack.weapon.relativePosition.set(0, 15*CM);
-			pack.weapon.relativePosition.add(pack.rightShoulder.getRotationDegrees());
-			pack.weapon.relativeRotation = pack.rightShoulder.getRotationRadians();
-		}
 	}
 	
 	
@@ -242,12 +275,14 @@ public class Character extends Entity{
 	boolean leftFoot = true;
 	boolean leftFootIn = true;
 	boolean rightFootIn = true;
-	int footTime = 0;
+	float footTime = 0;
 	Vector2f footPosition = new Vector2f(0, 0);
 	private final float LEGLENGTH = 40*CM;
 	protected void animateFeet(int delta){
 		
-		footTime += delta*speed.length()/(150f*CM)+1;
+		float timeAdd = (float) (delta*(Math.sqrt(speed.length())/(4*CM)));
+		if(timeAdd < 1) timeAdd = 1;
+		footTime += timeAdd;
 		
 		if(footTime > 500){
 			
@@ -261,7 +296,6 @@ public class Character extends Entity{
 		}
 		
 		Vector2f target = speed.copy().scale(0.2f).sub(getRotationDegrees());
-		Debug.debugPoints.add(target);
 		if(leftFoot){
 			Toolbox.approachVector(pack.leftShoe.position, target, delta);
 			pack.rightShoe.position.set(Toolbox.getWorldToParentPosition(footPosition, this));
@@ -278,8 +312,14 @@ public class Character extends Entity{
 		}
 	}
 	
+	private boolean collisionInited = false;
+	
 	@Override
 	public void collide(CollidableObject object){
+		if(!collisionInited){
+			super.collider.isTrigger = true;
+			collider.isTrigger = true;
+		}
 		super.collide(object);
 		collider.collide(object);
 		pack.weapon.collide(object);
@@ -289,7 +329,11 @@ public class Character extends Entity{
 			collider.collide(c.pack.weapon);
 			c.collider.collide(this);
 			pack.weapon.collide(c.collider);
-			
+		}
+		if(!collisionInited && Collision.getCollidedObject(this) == null && Collision.getCollidedObject(this) == null){
+			collider.isTrigger = false;
+			super.collider.isTrigger = false;
+			collisionInited = true;
 		}
 	}
 	public void addToTargetRotationDegrees(float rotation){

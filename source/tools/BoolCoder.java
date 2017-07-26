@@ -1,13 +1,8 @@
-package packets;
+package tools;
 
-public class CharacterBooleans {
+public class BoolCoder {
 	
-	public final byte booleans;
-	
-	public final byte ID;
-	
-	public CharacterBooleans(byte ID, boolean...bs){
-		this.ID = ID;
+	public static byte encode(boolean...bs){
 		byte b = 0;
 		for(int i = 0; i < bs.length; i++){
 			if(bs[i]){
@@ -18,10 +13,10 @@ public class CharacterBooleans {
 				b += f;
 			}
 		}
-		booleans = b;
+		return b;
 	}
 	
-	public boolean[] decode(){
+	public static boolean[] decode(byte bt){
 		boolean[] b = new boolean[8];
 		for(int i = 0; i < 8; i++){
 			byte f = 1;
@@ -29,15 +24,10 @@ public class CharacterBooleans {
 				f*=2;
 			}
 			
-			if((booleans & f)==f){
+			if((bt & f)==f){
 				b[i] = true;
 			}
 		}
 		return b;
-	}
-	
-	public CharacterBooleans(){
-		this.ID = 0;
-		booleans = 0;
 	}
 }

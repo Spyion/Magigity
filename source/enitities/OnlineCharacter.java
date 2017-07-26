@@ -3,9 +3,7 @@ package enitities;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
-import debug.Debug;
 import gameStates.Running;
-import packets.CharacterBooleans;
 import packets.CharacterShorts;
 import tools.Toolbox;
 
@@ -22,8 +20,6 @@ public class OnlineCharacter extends SimulatedCharacter{
 	
 	public final Vector2f targetPosition = new Vector2f();
 	public void update(int delta){
-		Vector2f distance = Toolbox.getDistanceVector(targetPosition, position);
-		Toolbox.approachVector(speed,distance.scale(50/(float)delta/(float)Running.boolRate),0.95f, delta);
 		Toolbox.approachVector(position, targetPosition, delta);
 		super.update(delta);
 	}
@@ -33,29 +29,34 @@ public class OnlineCharacter extends SimulatedCharacter{
 	public void setBlocking(boolean blocking){
 		super.isBlocking = blocking;
 	}
-	public void set(CharacterBooleans b){
-		boolean[] d = b.decode();
-		isMovingUp = d[0];
-		isMovingDown = d[1];
-		isMovingLeft = d[2];
-		isMovingRight = d[3];
-		isSprinting = d[4];
-		isBlocking = d[5];
-		isAttacking = d[6];
-	}
+//	public void set(CharacterBooleans b){
+//		boolean[] d = b.decode();
+//		isMovingUp = d[0];
+//		isMovingDown = d[1];
+//		isMovingLeft = d[2];
+//		isMovingRight = d[3];
+//		isSprinting = d[4];
+//		isBlocking = d[5];
+//		isAttacking = d[6];
+//	}
 	public void set(CharacterShorts s){
+		//TODO HERE SPEED CHANGE!
 		super.setTargetRotationDegrees(s.rotation);
 		targetPosition.x = (float) s.positionX;
 		targetPosition.y = (float) s.positionY;
+		Vector2f distance = Toolbox.getDistanceVector(targetPosition, position);
+		Toolbox.approachVector(speed,distance.scale((float)Running.boolRate/20f),0.95f, 10);
+	}
+	public void setAttackAnimation(byte animation){
+		currentAttackAnimation = (int) animation;
+	}
+	public void drawWeapon(boolean drawn){
+		if(drawn)
+			drawWeapon();
+		else
+			sheatheWeapon();
 	}
 	
 	
-	
-	boolean leftFoot = true;
-	boolean leftFootIn = true;
-	boolean rightFootIn = true;
-	int footTime = 0;
-	Vector2f footPosition = new Vector2f(0, 0);
-	private final float LEGLENGTH = 40*CM;
 	
 }

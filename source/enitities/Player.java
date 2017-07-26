@@ -5,7 +5,6 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import info.Information;
-import packets.CharacterBooleans;
 import packets.CharacterShorts;
 import tools.Toolbox;
 
@@ -46,9 +45,9 @@ public class Player extends SimulatedCharacter {
 		super.update(delta);
 		
 	}
-	public CharacterBooleans getBools(){
-		return new CharacterBooleans(ID, isMovingUp, isMovingDown, isMovingLeft, isMovingRight, isSprinting, isBlocking, isAttacking);
-	}
+//	public CharacterBooleans getBools(){
+//		return new CharacterBooleans(ID, isMovingUp, isMovingDown, isMovingLeft, isMovingRight, isSprinting, isBlocking, isAttacking);
+//	}
 	public CharacterShorts getShorts(){
 		return new CharacterShorts(ID, (short)Math.toDegrees(targetRotation), (int)position.x, (int)position.y);
 	}

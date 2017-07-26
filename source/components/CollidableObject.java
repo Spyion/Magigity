@@ -37,8 +37,10 @@ public class CollidableObject extends DrawableObject{
 	
 	public void update(int delta){
 		if(clientSided && movable && (speed.x != 0 || speed.y != 0)){
-			position.add(speed.copy().scale(delta/1000f));
-			speed.scale((float)Math.pow(0.99, delta));
+			for(int i = 0; i < delta; i++){
+				position.add(speed.copy().scale(1/1000f));
+				speed.scale(0.99f);
+			}
 			if(Math.abs(speed.x) < 0.0001f){
 				speed.x = 0;
 			}

@@ -92,20 +92,23 @@ public class Menu extends BasicGameState{
 			connectionHandler.tryToLogin(name.getText(),pw.getText());
 			int count = 0;
 			while(true){
-				System.out.println(connectionHandler.networkListener.answered);
-				if(connectionHandler.networkListener.answered){
+				if(connectionHandler.networkListener.getAnswered()){
 					break;
 				}
-				System.out.println(count);
-				if(count++ > 1000000){
+				if(count++ > 10000){
 					System.err.println("SERVER IS OFFLINE");
 					break;
+				}
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 			connectionHandler.networkListener.answered = false;
 			if(Information.loggedIn) {
 				
-				States.runningState.customInit();
+				if(States.runningState.customInit());
 				sbg.enterState(States.running);
 				
 			}

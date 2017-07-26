@@ -19,6 +19,7 @@ public class Game extends StateBasedGame{
 			app = new AppGameContainer(new Game("Magigity"));
 			app.setDisplayMode(1080, 720, false);
 			app.setAlwaysRender(true);
+//			app.setTargetFrameRate(30);
 			app.setIcons(new String[] { "/resources/images/magigityIcon16x16.png","/resources/images/magigityIcon32x32.png" });
 			app.start();
 		} catch (SlickException e) {
