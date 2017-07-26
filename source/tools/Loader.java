@@ -187,7 +187,31 @@ public class Loader {
 	private static ArrayList<ArrayList<ValueAnimation>> loadAnimations(String ref){
 		ref = "weapon/"+ref;
 		ArrayList<ArrayList<ValueAnimation>> animations = new ArrayList<ArrayList<ValueAnimation>>();
-		File[] folders = new File("data/ValueAnimations/"+ref).listFiles();
+		
+		ArrayList<File> folders = new ArrayList<File>();
+		
+		for(int i = 0; true; i++){
+			File folder = new File("data/ValueAnimations/"+ref+"/"+Integer.toString(i));
+			if(folder.exists())
+				folders.add(folder);
+			else
+				break;
+		}
+		
+		//produces Duplicates!
+//		File[] folders = new File("data/ValueAnimations/"+ref).listFiles();
+//		for(int i = 0; i < folders.length-1; i++){
+//			for(int j = i; j < folders.length-1; j++){
+//				System.out.println(folders[j].getName().charAt(0));
+//				if(Character.getNumericValue(folders[j].getName().charAt(0))>Character.getNumericValue(folders[j+1].getName().charAt(0))){
+//					File temp = folders[j];
+//					folders[j] = folders[j+1];
+//					folders[j+1] = temp;
+//				}
+//			}
+//		}
+		for(int i = 0; i < folders.size(); i++)
+			System.out.println(folders.get(i).getName());
 		for(File folder : folders){
 			animations.add(new ArrayList<ValueAnimation>());
 			File[] files = folder.listFiles();
