@@ -35,7 +35,7 @@ public class ValueAnimationCurve {
 		return (float)(a*Math.pow(x, 3)+b*Math.pow(x, 2)+c*x+d);
 	}
 	public boolean isInRange(float x){
-		return point1.position.x<=x&&point2.position.x>x;
+		return point1.position.x<=x&&point2.position.x>=x;
 	}
 
 }

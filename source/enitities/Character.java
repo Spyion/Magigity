@@ -124,6 +124,7 @@ public class Character extends Entity{
 	Vector2f comboPosition = new Vector2f();
 	float comboRotation;
 	int comboTime;
+	float shoulderAngle;
 	
 	
 	//TODO: fix ComboPosition and Time
@@ -138,6 +139,12 @@ public class Character extends Entity{
 			boolean toFlip = true;
 			
 			if(isAttacking){
+				
+				
+				
+				
+				
+				
 				comboTime = 0;
 				currentAnimation = currentAttackAnimation;
 				if(this instanceof Player && !hasUploaded){
@@ -147,16 +154,38 @@ public class Character extends Entity{
 				updateAnimation(animations.get(currentAttackAnimation), delta);
 				
 				if(animations.get(currentAttackAnimation).get(0).isCompleted()){
+					//Combo position
+					for(ValueAnimation anim : animations.get(currentAnimation)){
+
+						if(anim.name.contains("x")){
+							comboPosition.x = anim.getHeight(anim.getLength())*CM;
+						}else if(anim.name.contains("y")){
+							comboPosition.y = anim.getHeight(anim.getLength())*CM;
+						}else if(anim.name.contains("rot")){
+							comboRotation = (float) Math.toRadians(anim.getHeight(anim.getLength()));
+						}else if(anim.name.contains("dis")||anim.name.contains("rad")){
+							toScale = anim.getHeight(anim.getLength())*CM;
+						}else if(anim.name.contains("ang")){
+							toTurn = anim.getHeight(anim.getLength());
+						}
+					}
+					if(toTurn != 0 && toScale != 0){
+						comboPosition.set(0, toScale);
+						comboPosition.add(toTurn);
+					}
+					
+					
+					
 					isAttacking = false;
 					comboTime = 500;
+					setAnimationTime(animations.get(currentAttackAnimation), 0);
 					if(++currentAttackAnimation>animations.size()-1){
 						currentAttackAnimation = 2;
-						comboTime = -1;
+						comboTime = 0;
 					}
 					setAnimationTime(idleAnimation, 0);
 					hasUploaded = false;
-					}
-				
+					}				
 			}else if(isBlocking){
 				currentAnimation = 1;
 				if(this instanceof Player && !hasUploaded){
@@ -173,7 +202,6 @@ public class Character extends Entity{
 			}else{
 				currentAnimation = 0;
 				updateAnimation(idleAnimation, delta);
-//				setAnimationTime(animations.get(currentAttackAnimation), 0);
 
 			}
 			for(ValueAnimation anim : animations.get(currentAnimation)){
@@ -183,7 +211,6 @@ public class Character extends Entity{
 					targetPosition.y = anim.getHeight()*CM;
 				}else if(anim.name.contains("rot")){
 					targetRotation = (float) Math.toRadians(anim.getHeight());
-				
 				}else if(anim.name.contains("dis")||anim.name.contains("rad")){
 					toScale = anim.getHeight()*CM;
 				}else if(anim.name.contains("ang")){
@@ -199,9 +226,29 @@ public class Character extends Entity{
 				targetPosition.set(0, toScale);
 				targetPosition.add(toTurn);
 			}
-			if(isAttacking)
-			comboPosition = targetPosition.copy();
 
+			
+			//animate shoulders
+			float angle;
+			if(currentAnimation == 0){
+				angle = 0;
+			}else{
+			angle = (float) Math.toDegrees(Toolbox.getAngle(pack.weapon.relativePosition));
+			angle += 90;
+			while(angle > 180)
+				angle-=360;
+			}
+			shoulderAngle = Toolbox.approachValue(shoulderAngle, angle, delta);
+			
+			pack.rightShoulder.position.add(shoulderAngle/5f);
+			pack.leftShoulder.position.add(shoulderAngle/5f);
+
+			pack.rightShoulder.setRotationRadians((float) Toolbox.getAngle(pack.rightShoulder.position));
+			pack.leftShoulder.setRotationRadians((float) Toolbox.getAngle(pack.leftShoulder.position.copy().scale(-1)));
+			//animate shoulders
+			
+			
+			
 			if(comboTime > 0){
 				comboTime-=delta;
 			Toolbox.approachVector(pack.weapon.relativePosition, comboPosition, 0.99f, delta);
@@ -214,6 +261,10 @@ public class Character extends Entity{
 			pack.weapon.relativeRotation = Toolbox.approachValue(pack.weapon.relativeRotation, targetRotation, delta);
 
 			}
+			
+			//TODO : prevent sword from passing through body
+			
+			
 		}else if(backcount > 0){
 			backcount -= delta;
 			Toolbox.approachVector(pack.weapon.relativePosition, new Vector2f(10*CM, -10*CM), 0.99f, delta);
@@ -224,6 +275,7 @@ public class Character extends Entity{
 			pack.weapon.relativePosition.add(pack.rightShoulder.getRotationDegrees());
 			pack.weapon.relativeRotation = pack.rightShoulder.getRotationRadians();
 		}
+
 	}
 	public void drawWeapon(){
 		weaponDrawn = true;
