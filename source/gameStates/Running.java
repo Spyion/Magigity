@@ -12,7 +12,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.opengl.pbuffer.FBOGraphics;
+import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -29,8 +29,6 @@ import shader.Shader;
 import shaders.Shaders;
 import structs.OnlineCharacterCreationVars;
 import terrain.Building;
-//import shaders.EntityShader;
-import tools.Loader;
 import tools.States;
 import tools.Toolbox;
 public class Running extends BasicGameState{
@@ -42,6 +40,8 @@ public class Running extends BasicGameState{
 	OnlineCharacter test;
 	ConnectionHandler connectionHandler;
 	Camera camera = new Camera();
+	Image fboImage;
+	Graphics fbo;
 	//EntityShader entityShader = new EntityShader();
 	private final int M = Information.METER;
 	private final float CM = Information.CENTIMETER;
@@ -52,7 +52,8 @@ public class Running extends BasicGameState{
 		//Debug
 		States.runningState = this;
 		
-	
+		fboImage = new Image(Display.getWidth(), Display.getHeight());
+		fbo = GraphicsFactory.getGraphicsForImage(fboImage);
 		
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
@@ -128,25 +129,23 @@ public class Running extends BasicGameState{
 	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-//		Image fboImage = Loader.loadImage("terrain/grass");
-//		FBOGraphics fbo = new FBOGraphics(fboImage);
 		//ONSCREEN
 //		g.setAntiAlias(false);
-		g.setColor(Color.green);
-		g.fillRect(0, 0, Display.getWidth(), Display.getHeight());		
-		
+		fbo.setColor(Color.green);
+		fbo.fillRect(0, 0, Display.getWidth(), Display.getHeight());		
+
 		//ONWORLD
 		Vector2f translation = camera.getWorldToScreenPoint(new Vector2f(0, 0));
-		g.translate(translation.x, translation.y);
-		g.rotate(0, 0, camera.getRotationDegrees());
-		g.scale(camera.size.x, camera.size.y);
+		fbo.translate(translation.x, translation.y);
+		fbo.rotate(0, 0, camera.getRotationDegrees());
+		fbo.scale(camera.size.x, camera.size.y);
 		Shaders.entityShader.startShader();
 		for(Entity entity : entities){
-			entity.render(g);
+			entity.render(fbo);
 		}
 		Shader.forceFixedShader();
 		for(Entity entity : entities){
-			entity.renderEffects(g);
+			entity.renderEffects(fbo);
 		}
 //		Shader.forceFixedShader();
 		for(Building building : buildings){
@@ -162,9 +161,12 @@ public class Running extends BasicGameState{
 		Debug.debugPoints.clear();
 		g.resetTransform();
 		
-		
 		//OnScreen
-//		fboImage.draw(0, 0, Display.getWidth(), Display.getHeight());
+		Shaders.postProcessing.setUniformIntVariable("halfDisplayWidth", Display.getWidth()/2);
+		Shaders.postProcessing.setUniformIntVariable("halfDisplayHeight", Display.getHeight()/2);
+		Shaders.postProcessing.startShader();
+		fboImage.draw(0, 0, Display.getWidth(), Display.getHeight());
+		Shader.forceFixedShader();
 		
 	}
 	private boolean actionPerformed = false;

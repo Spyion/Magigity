@@ -8,12 +8,14 @@ public class Shaders {
 	private static final String root = "data/shaders/";
 	
 	public static Shader entityShader;
-	public static Shader BuildingShader;
+	public static Shader buildingShader;
+	public static Shader postProcessing;
 	
 	
 	static{
 		try {
 			entityShader = makeShader("entityShader");
+			postProcessing = makeShader("postProcessing");
 			
 			
 			
