@@ -10,12 +10,13 @@ public class Shaders {
 	public static Shader entityShader;
 	public static Shader buildingShader;
 	public static Shader postProcessing;
-	
+	public static Shader verticalBlur;
 	
 	static{
 		try {
 			entityShader = makeShader("entityShader");
 			postProcessing = makeShader("postProcessing");
+			verticalBlur = makeShader("verticalBlur");
 			
 			
 			

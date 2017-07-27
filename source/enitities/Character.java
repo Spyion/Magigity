@@ -107,12 +107,12 @@ public class Character extends Entity{
 	protected boolean isAttacking = false;
 	protected boolean isBlocking = false;
 	public void setAttacking(){
-		if(!isBlocking && weaponDrawn){
+		if(!isBlocking && weaponDrawn && (comboTime > 0 || comboTime < -1000)){
 			isAttacking =true;
 		}
 	}
 	public void setBlocking(){
-		if(!isAttacking && weaponDrawn){
+		if(!isAttacking && weaponDrawn && (comboTime > 0 || comboTime < -1000)){
 			isBlocking =true;
 		}
 	}
@@ -125,10 +125,7 @@ public class Character extends Entity{
 	float comboRotation;
 	int comboTime;
 	float shoulderAngle;
-	
-	
-	//TODO: fix ComboPosition and Time
-	
+		
 	private void animateWeapon(int delta){
 		if(play && !animations.isEmpty() && weaponDrawn){
 			
@@ -139,12 +136,6 @@ public class Character extends Entity{
 			boolean toFlip = true;
 			
 			if(isAttacking){
-				
-				
-				
-				
-				
-				
 				comboTime = 0;
 				currentAnimation = currentAttackAnimation;
 				if(this instanceof Player && !hasUploaded){
@@ -249,8 +240,8 @@ public class Character extends Entity{
 			
 			
 			
+			comboTime-=delta;
 			if(comboTime > 0){
-				comboTime-=delta;
 			Toolbox.approachVector(pack.weapon.relativePosition, comboPosition, 0.99f, delta);
 			pack.weapon.relativeRotation = Toolbox.approachValue(pack.weapon.relativeRotation, comboRotation, delta);
 			}
@@ -266,10 +257,12 @@ public class Character extends Entity{
 			
 			
 		}else if(backcount > 0){
+			comboTime = 0;
 			backcount -= delta;
 			Toolbox.approachVector(pack.weapon.relativePosition, new Vector2f(10*CM, -10*CM), 0.99f, delta);
 			pack.weapon.relativeRotation = Toolbox.approachValue(pack.weapon.relativeRotation, (float) (Math.PI/2), delta);
 		}else{
+			comboTime = 0;
 			pack.weapon.setSheathed();
 			pack.weapon.relativePosition.set(0, 15*CM);
 			pack.weapon.relativePosition.add(pack.rightShoulder.getRotationDegrees());
@@ -318,9 +311,6 @@ public class Character extends Entity{
 		shoulderDistance = breathing.getHeight()*CM;
 		breathing.update(delta);
 		
-		if(breathing.getHeight()<24){
-			System.out.println("ERROR");
-		}
 		pack.leftShoulder.position.set(-25*CM, 0);
 		pack.rightShoulder.position.set(25*CM, 0);
 		
@@ -339,6 +329,10 @@ public class Character extends Entity{
 	private void animateHead(int delta){
 		float rotation = targetRotation-getRotationRadians();
 		rotation /= 2;
+		if(rotation > 0.5)
+			rotation = 0.5f;
+		if(rotation < -0.5)
+			rotation = -0.5f;
 		if(Information.isMouseInactive()){
 			lookAround.update(delta);
 			rotation += Math.toRadians(lookAround.getHeight());
