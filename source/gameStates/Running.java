@@ -23,6 +23,7 @@ import enitities.Entity;
 import enitities.OnlineCharacter;
 import enitities.Player;
 import info.Information;
+import packets.CharacterShorts;
 import settings.KeySettings;
 import shader.Shader;
 import shaders.Shaders;
@@ -68,7 +69,7 @@ public class Running extends BasicGameState{
 //			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 //		}
 //		new ParticleEffect("torch",player, 1000000);
-		test = new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1 , 1000f);
+//		test = new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1 , 1000f);
 		connectionHandler.getCharacters();
 
 		
@@ -77,8 +78,10 @@ public class Running extends BasicGameState{
 	
 	int boolCount = 0;
 	int intCount = 0;
-	public static final int boolRate = 100;
+	public static final int boolRate = 10;
 	public static final int intRate = 1000;
+	private Vector2f lastPosition;
+	private float lastRotation;
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		boolCount+=delta;
@@ -105,9 +108,7 @@ public class Running extends BasicGameState{
 		for(Entity entity:entities){
 			entity.update(delta);
 		}
-		
-		System.out.println(test.getHealth());
-		
+				
 		camera.update(input, delta);
 		if(Information.isMouseInactive()){
 			camera.targetPosition.set(player.position);
@@ -122,7 +123,12 @@ public class Running extends BasicGameState{
 		
 		if(boolCount > boolRate){
 			boolCount = 0;
-			connectionHandler.uploadShorts(player);
+			CharacterShorts s = player.getShorts();
+			if(!lastPosition.equals(new Vector2f(s.positionX, s.positionY)) && lastRotation != s.rotation){
+				connectionHandler.upload(s);
+				lastPosition.set(s.positionX, s.positionY);
+				lastRotation = s.rotation;
+			}
 		}
 	}
 	@Override

@@ -54,24 +54,11 @@ public class Character extends Entity{
 		}
 	}
 	
-	ArrayList<CollidableObject> hitObjects = new ArrayList<CollidableObject>();
 	@Override
 	public void update(int delta){
 		
 		pack.weapon.update(delta, this);
 		
-		if(isAttacking){
-			CollidableObject object = Collision.getCollidedObject(pack.weapon);
-			if(object != null && !hitObjects.contains(object)){
-				if(object instanceof Entity){
-					Entity e = (Entity) object;
-					e.loseHealth(pack.weapon.damage);
-					hitObjects.add(e);
-				}
-			}
-		}else{
-			hitObjects.clear();
-		}
 		fixTargetRotation();
 		if(isAttacking || isBlocking){
 			addToRotationDegrees(Math.signum(targetRotation-getRotationRadians())*delta/20f);
@@ -417,7 +404,6 @@ public class Character extends Entity{
 			c.collider.collide(this);
 			pack.weapon.collide(c.collider);
 		}
-		if(Collision.getCollidedObject(this) != null)
 		if(!collisionInited && Collision.getCollidedObject(this) == null){
 			collider.isTrigger = false;
 			super.collider.isTrigger = false;

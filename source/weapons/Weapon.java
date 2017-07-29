@@ -32,7 +32,7 @@ public class Weapon extends CollidableObject{
 	private final boolean leftHandFlipped;
 	public final boolean doesFlip;
 	public final int TYPE;
-	public float damage = 400;
+	public float damage = 1200;
 	
 	
 	public boolean flipped;

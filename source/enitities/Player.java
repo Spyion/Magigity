@@ -1,11 +1,17 @@
 package enitities;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
+import components.CollidableObject;
+import connections.ConnectionHandler;
+import info.Collision;
 import info.Information;
 import packets.CharacterShorts;
+import packets.hasHit;
 import settings.KeySettings;
 import tools.Toolbox;
 
@@ -19,7 +25,23 @@ public class Player extends SimulatedCharacter {
 		this.input = input;
 		this.camera = camera;
 	}
-	public void update(int delta){		
+	ArrayList<CollidableObject> hitObjects = new ArrayList<CollidableObject>();
+
+	public void update(int delta){	
+		
+		if(isAttacking){
+			CollidableObject object = Collision.getCollidedObject(pack.weapon);
+			if(object != null && !hitObjects.contains(object)){
+				if(object instanceof OnlineCharacter){
+					OnlineCharacter e = (OnlineCharacter) object;
+					e.loseHealth(pack.weapon.damage);
+					hitObjects.add(e);
+					ConnectionHandler.instance.upload(new hasHit(ID, e.ID, pack.weapon.damage));
+				}
+			}
+		}else{
+			hitObjects.clear();
+		}
 		if(input.isKeyDown(KeySettings.up))
 			isMovingUp = true;
 		else

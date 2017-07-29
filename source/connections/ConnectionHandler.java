@@ -18,6 +18,7 @@ import packets.LoginRequest;
 import packets.News;
 import packets.Offline;
 import packets.Online;
+import packets.hasHit;
 import tools.BoolCoder;
 
 public class ConnectionHandler{
@@ -63,6 +64,7 @@ public class ConnectionHandler{
 		kryo.register(CharactersRequest.class);
 		kryo.register(Attack.class);
 		kryo.register(DrawWeapon.class);
+		kryo.register(hasHit.class);
 	}
 	public void tryToLogin(String username, String password){
 		if(client!=null)
@@ -73,9 +75,9 @@ public class ConnectionHandler{
 //			new Thread(new Upload(client, player.getBools())).start();
 //	}
 	
-	public void uploadShorts(Player player){
+	public void upload(Object object){
 		if(client!=null)
-			new Thread(new Upload(client, player.getShorts())).start();
+			new Thread(new Upload(client, object)).start();
 	}
 	public void getCharacters(){
 		new Thread(new Upload(client, new CharactersRequest())).start();

@@ -13,6 +13,7 @@ import packets.DrawWeapon;
 import packets.LoginAnswer;
 import packets.Offline;
 import packets.Online;
+import packets.hasHit;
 import structs.OnlineCharacterCreationVars;
 import tools.BoolCoder;
 
@@ -62,6 +63,17 @@ public class NetworkListener extends Listener {
 						if(a.ID==c.ID){
 							c.setAttacking(true);
 							c.setAttackAnimation(a.animation);
+						}
+					}
+				}
+			}
+			else if(object instanceof hasHit){
+				hasHit a = (hasHit) object;
+				for(Entity entity : Entity.entities){
+					if(entity instanceof OnlineCharacter){
+						OnlineCharacter c = (OnlineCharacter) entity;
+						if(a.IDwasHit==c.ID){
+							c.loseHealth(a.damage);
 						}
 					}
 				}

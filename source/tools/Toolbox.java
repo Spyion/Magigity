@@ -189,7 +189,7 @@ public class Toolbox {
 		Vector2f distance = Toolbox.getDistanceVector(target, approaching);
 		distance.scale((float) Math.pow(factor, delta));
 		if(distance.length() > 0.001f)
-			approaching.set(new Vector2f(target.x-distance.x, target.y-distance.y));
+			approaching.set(Toolbox.getDistanceVector(target, distance));
 		else 
 			approaching.set(target);
 	}
