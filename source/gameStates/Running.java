@@ -2,7 +2,7 @@ package gameStates;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -12,19 +12,18 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import connections.ConnectionHandler;
 //import connections.ConnectionHandler;
 import debug.Debug;
-import effects.ParticleEffect;
 import enitities.Camera;
 import enitities.Entity;
 import enitities.OnlineCharacter;
 import enitities.Player;
 import info.Information;
+import settings.KeySettings;
 import shader.Shader;
 import shaders.Shaders;
 import structs.OnlineCharacterCreationVars;
@@ -43,7 +42,8 @@ public class Running extends BasicGameState{
 	Camera camera = new Camera();
 	Image fboImage;
 	Image testBackground;
-	Graphics fbo;
+	Rectangle backgroundRect; 
+	Vector3f sunVector = new Vector3f();
 	//EntityShader entityShader = new EntityShader();
 	private final int M = Information.METER;
 	private final float CM = Information.CENTIMETER;
@@ -54,13 +54,11 @@ public class Running extends BasicGameState{
 		//Debug
 		States.runningState = this;
 		
-		fboImage = new Image(Display.getWidth(), Display.getHeight());
-		fbo = GraphicsFactory.getGraphicsForImage(fboImage);
-		
+		backgroundRect = new Rectangle(-10000,-10000,20000,20000);
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
 
-		testBackground = Loader.loadImage("terrain/grass");
+		testBackground = Loader.loadImage("terrain/stone");
 				
 	}
 	public boolean customInit(){
@@ -70,7 +68,7 @@ public class Running extends BasicGameState{
 //			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 //		}
 //		new ParticleEffect("torch",player, 1000000);
-		
+		new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1);
 		connectionHandler.getCharacters();
 
 		
@@ -85,12 +83,11 @@ public class Running extends BasicGameState{
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		boolCount+=delta;
 		intCount+=delta;
-		
+		sunVector.set(10, 10, -100);
 		
 		Entity.add();
 		Entity.remove();
 		OnlineCharacterCreationVars.createCharacters();
-		
 		
 		
 		
@@ -131,27 +128,28 @@ public class Running extends BasicGameState{
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		//ONSCREEN
-//		g.setAntiAlias(false);
-//		fbo.setColor(Color.green);
-//		fbo.fillRect(0, 0, Display.getWidth(), Display.getHeight());		
-		//ONWORLD
-		fbo.translate(0, 0);
-		testBackground.draw(0,0,Display.getWidth(),Display.getHeight());
+		g.setAntiAlias(false);
 
-		Vector2f translation = camera.getWorldToScreenPoint(new Vector2f(0, 0));
-		fbo.translate(translation.x, translation.y);
-		fbo.rotate(0, 0, camera.getRotationDegrees());
-		fbo.scale(camera.size.x, camera.size.y);
 		
+		//ONWORLD
+		g.setBackground(Color.white);		
+		Vector2f translation = camera.getWorldToScreenPoint(new Vector2f(0, 0));
+		g.translate(translation.x, translation.y);
+		g.rotate(0, 0, camera.getRotationDegrees());
+		g.scale(camera.size.x, camera.size.y);
+		
+		g.texture(backgroundRect,testBackground);
+
 		Shaders.entityShader.startShader();
+		Shaders.entityShader.setUniformFloatVariable("sunVector", sunVector.x, sunVector.y, sunVector.z);
 		for(Entity entity : entities){
-			entity.render(fbo);
+			entity.render(g);
 		}
 		Shader.forceFixedShader();
+		
 		for(Entity entity : entities){
-			entity.renderEffects(fbo);
+			entity.renderEffects(g);
 		}
-//		Shader.forceFixedShader();
 		for(Building building : buildings){
 //			building.render(g);
 		}
@@ -166,17 +164,7 @@ public class Running extends BasicGameState{
 		g.resetTransform();
 		
 		//OnScreen
-//		Shaders.verticalBlur.setUniformFloatVariable("displayWidth", Display.getWidth());
-//		Shaders.verticalBlur.startShader();
-		fboImage.draw(0, 0, Display.getWidth(), Display.getHeight());
-//		Shader.forceFixedShader();
-		
-//		Shaders.postProcessing.setUniformIntVariable("halfDisplayWidth", Display.getWidth()/2);
-//		Shaders.postProcessing.setUniformIntVariable("halfDisplayHeight", Display.getHeight()/2);
-//		Shaders.postProcessing.startShader();
-//		fboImage.draw(0, 0, Display.getWidth(), Display.getHeight());
-//		Shader.forceFixedShader();
-		
+
 	}
 	private boolean actionPerformed = false;
 	@Override
@@ -204,7 +192,7 @@ public class Running extends BasicGameState{
 			camera.addToTargetRotationDegrees(-90);
 		if(key == Input.KEY_RIGHT)
 			camera.addToTargetRotationDegrees(90);
-		if(key == Input.KEY_R){
+		if(key == KeySettings.draw){
 			boolean b = player.pack.weapon.isDrawn();
 			if(b){
 				player.sheatheWeapon();

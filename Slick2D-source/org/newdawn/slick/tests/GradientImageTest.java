@@ -25,6 +25,7 @@ public class GradientImageTest extends BasicGame {
 	private Image image2;
 	/** The gradient paint we'll apply */
 	private GradientFill fill;
+	private GradientFill fill2;
 	/** The shape we'll blend across */
 	private Shape shape;
 	/** The shape we'll blend across */
@@ -52,7 +53,8 @@ public class GradientImageTest extends BasicGame {
 		image1 = new Image("testdata/grass.png");
 		image2 = new Image("testdata/rocks.png");
 		
-		fill = new GradientFill(-64,0,new Color(1,1,1,1f),64,0,new Color(0,0,0,0));
+		fill = new GradientFill(-64,64,new Color(1,1,1,1f),64,0,new Color(0,0,0,0));
+		fill2 = new GradientFill(-64,-64,new Color(1,1,1,1f),64,0,new Color(0,0,0,0));
 		shape = new Rectangle(336,236,128,128);
 	    poly = new Polygon();
 		poly.addPoint(320,220);
@@ -75,6 +77,7 @@ public class GradientImageTest extends BasicGame {
 		g.rotate(400, 300, ang);
 		g.texture(shape, image2);
 		g.texture(shape, image1, fill);
+		g.texture(shape, image2, fill2);
 		g.resetTransform();
 		
 		g.translate(0, 150);

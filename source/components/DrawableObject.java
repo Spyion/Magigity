@@ -5,6 +5,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
 import info.Information;
+import shaders.Shaders;
 
 public class DrawableObject {
 	public final Vector2f position;
@@ -52,7 +53,9 @@ public class DrawableObject {
 	}
 	public void render(Graphics g, Image image, Vector2f size, float rotation){
 		if(image != null){
+						
 			Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
+			Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
 			toDraw.rotate(getRotationDegrees()+rotation);
 			toDraw.drawCentered(position.x, position.y);
 		}

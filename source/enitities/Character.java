@@ -112,7 +112,7 @@ public class Character extends Entity{
 		}
 	}
 	public void setBlocking(){
-		if(!isAttacking && weaponDrawn && (comboTime > 0 || comboTime < -1000)){
+		if(!isAttacking && weaponDrawn && comboTime < -500){
 			isBlocking =true;
 		}
 	}
@@ -389,7 +389,9 @@ public class Character extends Entity{
 	
 	@Override
 	public void collide(CollidableObject object){
+		System.out.println(position);
 		if(!collisionInited){
+			
 			super.collider.isTrigger = true;
 			collider.isTrigger = true;
 		}
@@ -403,6 +405,8 @@ public class Character extends Entity{
 			c.collider.collide(this);
 			pack.weapon.collide(c.collider);
 		}
+		if(Collision.getCollidedObject(this) != null)
+		System.out.println(Collision.getCollidedObject(this).position);
 		if(!collisionInited && Collision.getCollidedObject(this) == null){
 			collider.isTrigger = false;
 			super.collider.isTrigger = false;

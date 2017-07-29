@@ -16,12 +16,21 @@ import connections.ConnectionHandler;
 import connections.mysqlconn;
 import gui.Button;
 import info.Information;
+import settings.KeySettings;
 import tools.Loader;
 import tools.States;
 
 public class Menu extends BasicGameState{
 	Input input;
 	Button start;
+	
+	Button up;
+	Button down;
+	Button sprint;
+	Button left;
+	Button right;
+	Button draw;
+	
 	Image background;
 	Image magigity;
 	TextField name;
@@ -36,6 +45,7 @@ public class Menu extends BasicGameState{
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
+		KeySettings.loadKeySettings();
 		States.menuState = this;
 		
 //		217.230.226.5 -> Marco IPv4
@@ -44,6 +54,19 @@ public class Menu extends BasicGameState{
 		Button.defaultPressSound = Loader.loadSound("clap");
 		Button.defaultReleaseSound = Loader.loadSound("knock");
 
+		up = new Button("Up", Loader.loadImage("BlackCircle"),
+				Display.getWidth()/2,Display.getHeight()/2-150,100,50);
+		down = new Button("Down", Loader.loadImage("BlackCircle"),
+				Display.getWidth()/2,Display.getHeight()/2-100,100,50);
+		right = new Button("Right", Loader.loadImage("BlackCircle"),
+				Display.getWidth()/2,Display.getHeight()/2-50,100,50);
+		left = new Button("Left", Loader.loadImage("BlackCircle"),
+				Display.getWidth()/2,Display.getHeight()/2,100,50);
+		sprint = new Button("Sprint", Loader.loadImage("BlackCircle"),
+				Display.getWidth()/2,Display.getHeight()/2+50,100,50);
+		draw = new Button("Draw", Loader.loadImage("BlackCircle"),
+				Display.getWidth()/2,Display.getHeight()/2+100,100,50);
+		
 		input = new Input(Input.ANY_CONTROLLER);
 		start = new Button("Start", Loader.loadImage("btnstart"),
 							Display.getWidth()/2-100,Display.getHeight()/2-50,200,100);
@@ -71,7 +94,15 @@ public class Menu extends BasicGameState{
 	boolean pwHadFocus;
 	boolean nameHadFocus;
 	@Override
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {	
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		
+		up.update(input);
+		down.update(input);
+		right.update(input);
+		left.update(input);
+		draw.update(input);
+		sprint.update(input);
+		
 		if(!pwHadFocus && pw.hasFocus()){
 			pwHadFocus = true;
 			pw.setText("");
@@ -89,6 +120,28 @@ public class Menu extends BasicGameState{
 		}
 		quit.update(input);
 		submit.update(input);
+		if(up.isPressedAndReleased()){
+			currentButton = up;
+			passed = false;
+		}else if(down.isPressedAndReleased()){
+			currentButton = down;
+			passed = false;
+		}else if(left.isPressedAndReleased()){
+			currentButton = left;
+			passed = false;
+		}else if(right.isPressedAndReleased()){
+			currentButton = right;
+			passed = false;
+		}else if(sprint.isPressedAndReleased()){
+			currentButton = sprint;
+			passed = false;
+		}else if(draw.isPressedAndReleased()){
+			currentButton = draw;
+			passed = false;
+		}
+		
+		
+		
 		if(submit.isPressedAndReleased()) {
 			
 			connectionHandler.tryToLogin(name.getText(),pw.getText());
@@ -111,6 +164,7 @@ public class Menu extends BasicGameState{
 			if(Information.loggedIn) {
 				
 				if(States.runningState.customInit());
+				KeySettings.writeCurrent();
 				sbg.enterState(States.running);
 				
 			}
@@ -150,6 +204,12 @@ public class Menu extends BasicGameState{
 		pw.render(gc, g);
 		submit.render(g);
 		quit.render(g);
+		up.render(g);
+		down.render(g);
+		left.render(g);
+		right.render(g);
+		sprint.render(g);
+		draw.render(g);
 		g.setBackground(new Color(230,0,0));
 		if(isText > 0) {
 			g.setColor(Color.white);
@@ -184,7 +244,29 @@ public class Menu extends BasicGameState{
 		}
 		
 	}
-
+	boolean passed = false;
+	Button currentButton;
+	@Override
+	public void keyPressed(int key, char c) {
+		if(!passed){
+			passed = true;
+			if(currentButton == up){
+				KeySettings.up = key;
+			}else if(currentButton == down){
+				KeySettings.down = key;
+			}else if(currentButton == left){
+				KeySettings.left = key;
+			}else if(currentButton == right){
+				KeySettings.right = key;
+			}else if(currentButton == sprint){
+				KeySettings.sprint = key;
+			}else if(currentButton == draw){
+				KeySettings.draw = key;
+			}
+		
+		}
+		super.keyPressed(key, c);
+	}
 	@Override
 	public int getID() {
 		// TODO Auto-generated method stub

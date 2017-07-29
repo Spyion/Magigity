@@ -10,6 +10,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import components.CollidableObject;
 import effects.Effect;
+import shaders.Shaders;
 
 public class Entity extends CollidableObject{
 	public static final ArrayList<Entity> entities=new ArrayList<Entity>();

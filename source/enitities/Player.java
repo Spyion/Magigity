@@ -6,6 +6,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import info.Information;
 import packets.CharacterShorts;
+import settings.KeySettings;
 import tools.Toolbox;
 
 public class Player extends SimulatedCharacter {
@@ -19,23 +20,23 @@ public class Player extends SimulatedCharacter {
 		this.camera = camera;
 	}
 	public void update(int delta){		
-		if(input.isKeyDown(Input.KEY_W))
+		if(input.isKeyDown(KeySettings.up))
 			isMovingUp = true;
 		else
 			isMovingUp = false;
-		if(input.isKeyDown(Input.KEY_S))
+		if(input.isKeyDown(KeySettings.down))
 			isMovingDown = true;
 		else
 			isMovingDown = false;
-		if(input.isKeyDown(Input.KEY_A))
+		if(input.isKeyDown(KeySettings.left))
 			isMovingLeft = true;
 		else
 			isMovingLeft = false;
-		if(input.isKeyDown(Input.KEY_D))
+		if(input.isKeyDown(KeySettings.right))
 			isMovingRight = true;
 		else
 			isMovingRight = false;
-		if(input.isKeyDown(Input.KEY_LSHIFT))
+		if(input.isKeyDown(KeySettings.sprint))
 			isSprinting = true;
 		else
 			isSprinting = false;

@@ -23,7 +23,7 @@ public class Loader {
 	
 	private static final int M = Information.METER;
 	private static final float CM = Information.CENTIMETER;
-	private static final CSVHandler csv = new CSVHandler();
+	public static final CSVHandler csv = new CSVHandler();
 	
 	public static Image loadImage(String name, String type, Vector2f size){
 		try {
@@ -182,7 +182,7 @@ public class Loader {
 	public static ConfigurableEmitter loadEmitter(String name){
 		return loadEmitter(name,"xml");
 	}
-	private static ArrayList<String> getVar(String name, ArrayList<ArrayList<String>> array){
+	public static ArrayList<String> getVar(String name, ArrayList<ArrayList<String>> array){
 		
 		for(ArrayList<String> list : array){
 			if(list.get(0).equals(name))

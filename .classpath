@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="Slick2D-source"/>
 	<classpathentry kind="src" path="AnimationCurveCreator"/>
 	<classpathentry kind="src" path="Slick2DShader-source"/>
+	<classpathentry kind="src" path="worldBuilder"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Magigity/Slick2D/natives"/>
