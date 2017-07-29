@@ -63,12 +63,12 @@ public class Running extends BasicGameState{
 	}
 	public boolean customInit(){
 		connectionHandler = ConnectionHandler.instance;
-		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1, input, camera);
+		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1,1000, input, camera);
 //		for(int i = 1; i < 10; i++){
 //			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 //		}
 //		new ParticleEffect("torch",player, 1000000);
-		new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1);
+		new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1 , 10000f);
 		connectionHandler.getCharacters();
 
 		
@@ -121,7 +121,7 @@ public class Running extends BasicGameState{
 		Information.update(delta);
 		
 		if(boolCount > boolRate){
-			boolCount -= boolRate;
+			boolCount = 0;
 			connectionHandler.uploadShorts(player);
 		}
 	}

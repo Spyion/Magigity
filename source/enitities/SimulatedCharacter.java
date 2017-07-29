@@ -16,8 +16,8 @@ public class SimulatedCharacter extends Character{
 	
 	public float cameraRotation;
 	
-	public SimulatedCharacter(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
-		super(hitbox, hitbox2, size, rotation, weight);
+	public SimulatedCharacter(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight, float health) {
+		super(hitbox, hitbox2, size, rotation, weight, health);
 		moveSpeed = 5*M;
 	}
 

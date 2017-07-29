@@ -25,7 +25,7 @@ public class OnlineCharacterCreationVars {
 	}
 	public synchronized static void createCharacters(){
 		if(!IDs.isEmpty()){
-		new OnlineCharacter(IDs.remove(0), name.remove(0),new Circle(posX.remove(0), posY.remove(0), 25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1);
+		new OnlineCharacter(IDs.remove(0), name.remove(0),new Circle(posX.remove(0), posY.remove(0), 25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1, 1000);
 		}
 	}
 }

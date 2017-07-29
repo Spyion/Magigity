@@ -126,7 +126,6 @@ public class Button {
 				isPressed = false;
 			}
 			entered = true;
-			System.out.println("entered");
 		}
 		   else {
 			   entered = false;

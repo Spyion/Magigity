@@ -11,8 +11,8 @@ public class OnlineCharacter extends SimulatedCharacter{
 
 	public final byte ID;
 	public final String NAME;
-	public OnlineCharacter(byte ID,String name,Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
-		super(hitbox, hitbox2, size, rotation, weight);
+	public OnlineCharacter(byte ID,String name,Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight, float health) {
+		super(hitbox, hitbox2, size, rotation, weight, health);
 		this.ID = ID;
 		NAME = name;
 		clientSided = false;

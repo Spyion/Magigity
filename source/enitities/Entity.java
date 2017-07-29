@@ -18,15 +18,30 @@ public class Entity extends CollidableObject{
 	public static final ArrayList<Entity> toRemove=new ArrayList<Entity>();
 	public final ArrayList<Effect> effects = new ArrayList<Effect>();
 	
-	public Entity(Image image, Shape hitbox, Vector2f size, float rotation, float weight) {
+	
+	private float maxHealth;
+	private float health;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public Entity(Image image, Shape hitbox, Vector2f size, float rotation, float weight, float health) {
 		super(image ,new Vector2f(hitbox.getCenter()),size, hitbox, (float)Math.toRadians(rotation), weight < 0 ? 0.01f : weight, true, false, false);
+		this.maxHealth = health;
+		this.health = health;
 		toAdd.add(this);
 	}
-	public Entity(Image image, Shape hitbox, float rotation, float weight) {
-		this(image, hitbox, new Vector2f(hitbox.getWidth(), hitbox.getHeight()), rotation, weight);
+	public Entity(Image image, Shape hitbox, float rotation, float weight, float health) {
+		this(image, hitbox, new Vector2f(hitbox.getWidth(), hitbox.getHeight()), rotation, weight, health);
 	}
-	public Entity(Shape hitbox, Vector2f size, float rotation, float weight) {
-		this(null, hitbox, size, rotation, weight);
+	public Entity(Shape hitbox, Vector2f size, float rotation, float weight, float health) {
+		this(null, hitbox, size, rotation, weight, health);
 	}
 	public void render(Graphics g){
 		super.render(g, size);
@@ -36,6 +51,25 @@ public class Entity extends CollidableObject{
 			effect.render(g);
 		}
 	}
+	protected void loseHealth(float health){
+		this.health -= health;
+		if(health < 0)
+			die();
+	}
+	protected void gainHealth(float health){
+		this.health += health;
+		if(health > maxHealth)
+			health = maxHealth;
+	}
+	protected void die(){
+		position.set(0,0);
+		health = maxHealth;
+	}
+	
+	
+	
+	
+	
 	@Override
 	public void update(int delta){
 

@@ -23,8 +23,10 @@ public class Character extends Entity{
 	protected float targetRotation = 0;
 	public final Collider collider;
 	
-	public Character(CharacterImagePack pack, Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
-		super(hitbox, size, rotation, weight);
+	
+	
+	public Character(CharacterImagePack pack, Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight, float health) {
+		super(hitbox, size, rotation, weight, health);
 		collider = new Collider(this, hitbox2);
 		this.pack = pack;
 		this.pack.setWeapon("basicLongSword");
@@ -38,8 +40,8 @@ public class Character extends Entity{
 		}
 
 	}
-	public Character(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight) {
-		this(new CharacterImagePack(), hitbox, hitbox2, size, rotation, weight);
+	public Character(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight, float health) {
+		this(new CharacterImagePack(), hitbox, hitbox2, size, rotation, weight, health);
 	}
 	@Override
 	public void render(Graphics g){
@@ -51,13 +53,23 @@ public class Character extends Entity{
 			pack.weapon.collider.render(g);
 		}
 	}
+	
+	ArrayList<CollidableObject> hitObjects = new ArrayList<CollidableObject>();
 	@Override
 	public void update(int delta){
 		
 		pack.weapon.update(delta, this);
-		CollidableObject object = Collision.getCollidedObject(pack.weapon);
-		if(object != null){
-			System.out.println("hit");
+		
+		if(isAttacking){
+			CollidableObject object = Collision.getCollidedObject(pack.weapon);
+			if(object != null && !hitObjects.contains(object)){
+				if(object instanceof Entity){
+					Entity e = (Entity) object;
+					e.loseHealth(pack.weapon.damage);
+				}
+			}
+		}else{
+			hitObjects.clear();
 		}
 		fixTargetRotation();
 		if(isAttacking || isBlocking){
