@@ -66,6 +66,7 @@ public class Character extends Entity{
 				if(object instanceof Entity){
 					Entity e = (Entity) object;
 					e.loseHealth(pack.weapon.damage);
+					hitObjects.add(e);
 				}
 			}
 		}else{
@@ -401,7 +402,6 @@ public class Character extends Entity{
 	
 	@Override
 	public void collide(CollidableObject object){
-		System.out.println(position);
 		if(!collisionInited){
 			
 			super.collider.isTrigger = true;
@@ -418,7 +418,6 @@ public class Character extends Entity{
 			pack.weapon.collide(c.collider);
 		}
 		if(Collision.getCollidedObject(this) != null)
-		System.out.println(Collision.getCollidedObject(this).position);
 		if(!collisionInited && Collision.getCollidedObject(this) == null){
 			collider.isTrigger = false;
 			super.collider.isTrigger = false;

@@ -37,7 +37,6 @@ public class Running extends BasicGameState{
 	ArrayList<Entity> entities = Entity.entities;
 	ArrayList<Building> buildings = Building.buildings;
 	Player player;
-	OnlineCharacter test;
 	ConnectionHandler connectionHandler;
 	Camera camera = new Camera();
 	Image fboImage;
@@ -47,6 +46,7 @@ public class Running extends BasicGameState{
 	//EntityShader entityShader = new EntityShader();
 	private final int M = Information.METER;
 	private final float CM = Information.CENTIMETER;
+	Entity test;
 	
 	@Override
 
@@ -68,7 +68,7 @@ public class Running extends BasicGameState{
 //			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
 //		}
 //		new ParticleEffect("torch",player, 1000000);
-		new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1 , 10000f);
+		test = new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1 , 1000f);
 		connectionHandler.getCharacters();
 
 		
@@ -106,7 +106,7 @@ public class Running extends BasicGameState{
 			entity.update(delta);
 		}
 		
-		
+		System.out.println(test.getHealth());
 		
 		camera.update(input, delta);
 		if(Information.isMouseInactive()){
