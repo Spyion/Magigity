@@ -11,6 +11,7 @@ import animations.ValueAnimation;
 import components.CollidableObject;
 import components.DrawableObject;
 import info.Information;
+import shaders.Shaders;
 import tools.Toolbox;
 
 public class Weapon extends CollidableObject{
@@ -98,10 +99,12 @@ public class Weapon extends CollidableObject{
 				Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
 				toDraw.setCenterOfRotation(anchor.x, anchor.y);
 				toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
+				Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
 				toDraw.draw(relativePosition.x-anchor.x, relativePosition.y-anchor.y);
 			}else{
 				Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
 				toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
+				Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
 				toDraw.drawCentered(relativePosition.x, relativePosition.y);
 			}
 		}

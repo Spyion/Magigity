@@ -50,7 +50,8 @@ public class Menu extends BasicGameState{
 		
 //		217.230.226.5 -> Marco IPv4
 //		84.190.9.192 -> JohannesIPv4
-		connectionHandler = new ConnectionHandler("84.190.9.192", 25643, 25646);
+		// localhost
+		connectionHandler = new ConnectionHandler("localhost", 25643, 25646);
 		
 		Button.defaultPressSound = Loader.loadSound("clap");
 		Button.defaultReleaseSound = Loader.loadSound("knock");

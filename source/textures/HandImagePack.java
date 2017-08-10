@@ -5,6 +5,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
 import components.DrawableObject;
+import shaders.Shaders;
 
 public class HandImagePack extends DrawableObject{
 	public Image		 	handDown,
@@ -22,7 +23,8 @@ public class HandImagePack extends DrawableObject{
 		this.thumbUp = thumbUp;
 		this.upAnchor = new Vector2f(upAnchor.x*scaling.x, upAnchor.y*scaling.y);
 		this.downAnchor = new Vector2f(downAnchor.x*scaling.x, downAnchor.y*scaling.y);
-		}
+	}
+	
 	@Override
 	public void render(Graphics g, Vector2f size){
 		super.render(g, size);
@@ -46,6 +48,7 @@ public class HandImagePack extends DrawableObject{
 		Image toDraw = image.copy();
 		toDraw.setCenterOfRotation(anchor.x, anchor.y);
 		toDraw.rotate(rotation);
+		Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
 		toDraw.draw(pos.x-anchor.x, pos.y-anchor.y);
 	}
 

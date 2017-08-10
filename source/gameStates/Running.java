@@ -18,6 +18,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import connections.ConnectionHandler;
 //import connections.ConnectionHandler;
 import debug.Debug;
+import effects.ParticleEffect;
 import enitities.Camera;
 import enitities.Entity;
 import enitities.OnlineCharacter;
@@ -44,7 +45,6 @@ public class Running extends BasicGameState{
 	Image testBackground;
 	Rectangle backgroundRect; 
 	Vector3f sunVector = new Vector3f();
-	//EntityShader entityShader = new EntityShader();
 	private final int M = Information.METER;
 	private final float CM = Information.CENTIMETER;
 	Entity test;
@@ -65,11 +65,11 @@ public class Running extends BasicGameState{
 	public boolean customInit(){
 		connectionHandler = ConnectionHandler.instance;
 		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1,1000, input, camera);
-//		for(int i = 1; i < 10; i++){
-//			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1), 1000);
-//		}
-//		new ParticleEffect("torch",player, 1000000);
-//		test = new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1 , 1000f);
+		for(int i = 1; i < 10; i++){
+			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1, 100), 1000);
+		}
+		new ParticleEffect("torch",player, 1000000);
+		test = new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1 , 1000f);
 		connectionHandler.getCharacters();
 
 		
@@ -80,13 +80,13 @@ public class Running extends BasicGameState{
 	int intCount = 0;
 	public static final int boolRate = 10;
 	public static final int intRate = 1000;
-	private Vector2f lastPosition;
+	private Vector2f lastPosition = new Vector2f();
 	private float lastRotation;
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		boolCount+=delta;
 		intCount+=delta;
-		sunVector.set(10, 10, -100);
+		sunVector.set(0, 100, -100);
 		
 		Entity.add();
 		Entity.remove();
@@ -148,6 +148,7 @@ public class Running extends BasicGameState{
 
 		Shaders.entityShader.startShader();
 		Shaders.entityShader.setUniformFloatVariable("sunVector", sunVector.x, sunVector.y, sunVector.z);
+		Shaders.entityShader.setUniformFloatVariable("sunColor" , 1, 1, 1, 1);
 		for(Entity entity : entities){
 			entity.render(g);
 		}
