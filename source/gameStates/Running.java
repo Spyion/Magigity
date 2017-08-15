@@ -1,5 +1,9 @@
 package gameStates;
 
+import static tools.Loader.loadImage;
+import static tools.Loader.loadTerrain;
+import static shaders.Shaders.*;
+
 import java.util.ArrayList;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -21,18 +25,18 @@ import debug.Debug;
 import effects.ParticleEffect;
 import enitities.Camera;
 import enitities.Entity;
-import enitities.OnlineCharacter;
 import enitities.Player;
 import info.Information;
 import packets.CharacterShorts;
 import settings.KeySettings;
 import shader.Shader;
-import shaders.Shaders;
 import structs.OnlineCharacterCreationVars;
 import terrain.Building;
-import tools.Loader;
+import terrain.Terrain;
 import tools.States;
 import tools.Toolbox;
+
+
 public class Running extends BasicGameState{
 	
 	Input input;
@@ -42,7 +46,7 @@ public class Running extends BasicGameState{
 	ConnectionHandler connectionHandler;
 	Camera camera = new Camera();
 	Image fboImage;
-	Image testBackground;
+	Terrain background;
 	Rectangle backgroundRect; 
 	Vector3f sunVector = new Vector3f();
 	private final int M = Information.METER;
@@ -59,19 +63,21 @@ public class Running extends BasicGameState{
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
 
-		testBackground = Loader.loadImage("terrain/stone");
+		background = loadTerrain("map");
 				
 	}
 	public boolean customInit(){
 		connectionHandler = ConnectionHandler.instance;
 		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1,1000, input, camera);
-		for(int i = 1; i < 10; i++){
-			new ParticleEffect("torch", new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1, 100), 1000);
+		for(int i = 1; i < 1; i++){
+			new ParticleEffect("torch", new Entity(loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1, 100), 1000);
 		}
-		new ParticleEffect("torch",player, 1000000);
-		test = new Entity(Loader.loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM,100*CM,25*CM), new Vector2f(1f, 1f), 0, 1 , 1000f);
+//		new ParticleEffect("torch",player, 1000000);
 		connectionHandler.getCharacters();
 
+		terrainShader.startShader();
+		terrainShader.setUniformIntVariable("textureSize", background.textureSize);
+		Shader.forceFixedShader();
 		
 		return true;
 	}
@@ -144,11 +150,18 @@ public class Running extends BasicGameState{
 		g.rotate(0, 0, camera.getRotationDegrees());
 		g.scale(camera.size.x, camera.size.y);
 		
-		g.texture(backgroundRect,testBackground);
+		terrainShader.startShader();
+//		terrainShader.setUniformFloatVariable("asd", (float)background.textureSize);
 
-		Shaders.entityShader.startShader();
-		Shaders.entityShader.setUniformFloatVariable("sunVector", sunVector.x, sunVector.y, sunVector.z);
-		Shaders.entityShader.setUniformFloatVariable("sunColor" , 1, 1, 1, 1);
+		background.render(g);
+
+		Shader.forceFixedShader();
+		
+		Vector2f turnedSunVector = new Vector2f(sunVector.x, sunVector.y).add(camera.getRotationDegrees());
+		
+		entityShader.startShader();
+		entityShader.setUniformFloatVariable("sunVector", turnedSunVector.x, turnedSunVector.y, sunVector.z);
+		entityShader.setUniformFloatVariable("sunColor" , 1, 1, 1, 1);
 		for(Entity entity : entities){
 			entity.render(g);
 		}

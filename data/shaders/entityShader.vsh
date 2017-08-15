@@ -1,6 +1,8 @@
-attribute vec3 aVertexPosition;
+#version 130
 
-out varying vec3 surfaceNormal;
+vec3 aVertexPosition;
+
+out vec3 surfaceNormal;
 
 uniform vec2 center;
 

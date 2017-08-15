@@ -66,6 +66,9 @@ public class DrawableObject {
 	public void render(Graphics g, Vector2f size){
 		render(g, image, size);
 	}
+	public void render(Graphics g){
+		render(g, image, new Vector2f(1,1));
+	}
 	public void render(Graphics g, Vector2f size,float rotation){
 		render(g, image, size, rotation);
 	}

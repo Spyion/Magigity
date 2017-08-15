@@ -51,13 +51,10 @@ public class Entity extends CollidableObject{
 			effect.render(g);
 		}
 	}
-	public void loseHealth(float health){
-		this.health -= health;
+	public void increaseHealth(float health){
+		this.health += health;
 		if(this.health < 0)
 			die();
-	}
-	public void gainHealth(float health){
-		this.health += health;
 		if(health > maxHealth)
 			health = maxHealth;
 	}

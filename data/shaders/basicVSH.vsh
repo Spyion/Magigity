@@ -1,4 +1,4 @@
-attribute vec3 aVertexPosition;
+#version 130
 
 void main(void){
  	gl_TexCoord[0]  = gl_MultiTexCoord0;

@@ -34,7 +34,7 @@ public class Player extends SimulatedCharacter {
 			if(object != null && !hitObjects.contains(object)){
 				if(object instanceof OnlineCharacter){
 					OnlineCharacter e = (OnlineCharacter) object;
-					e.loseHealth(pack.weapon.damage);
+					e.increaseHealth(-pack.weapon.damage);
 					hitObjects.add(e);
 					ConnectionHandler.instance.upload(new hasHit(ID, e.ID, pack.weapon.damage));
 				}

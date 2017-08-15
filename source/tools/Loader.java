@@ -16,6 +16,7 @@ import org.newdawn.slick.particles.ParticleIO;
 
 import animations.ValueAnimation;
 import info.Information;
+import terrain.Terrain;
 import textures.HandImagePack;
 import weapons.Weapon;
 
@@ -54,6 +55,9 @@ public class Loader {
 	}
 	public static Image loadImage(String name){
 		return loadImage(name,"png", new Vector2f(25f*CM, 25*CM));
+	}
+	public static Terrain loadTerrain(String name){
+		return new Terrain(loadImage("terrain/"+name, null));
 	}
 	
 	public static Sound loadSound(String name, String type){

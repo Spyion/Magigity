@@ -73,7 +73,7 @@ public class NetworkListener extends Listener {
 					if(entity instanceof OnlineCharacter){
 						OnlineCharacter c = (OnlineCharacter) entity;
 						if(a.IDwasHit==c.ID){
-							c.loseHealth(a.damage);
+							c.increaseHealth(-a.damage);
 						}
 					}
 				}

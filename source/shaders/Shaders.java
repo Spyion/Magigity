@@ -9,6 +9,7 @@ public class Shaders {
 	
 	public static Shader entityShader;
 	public static Shader buildingShader;
+	public static Shader terrainShader;
 	public static Shader postProcessing;
 	public static Shader verticalBlur;
 	
@@ -17,7 +18,7 @@ public class Shaders {
 			entityShader = makeShader("entityShader");
 			postProcessing = makeShader("postProcessing");
 			verticalBlur = makeShader("verticalBlur");
-			
+			terrainShader = makeShader("terrainShader");
 			
 			
 			
