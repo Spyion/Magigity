@@ -152,8 +152,7 @@ public class Running extends BasicGameState{
 		
 		terrainShader.startShader();
 //		terrainShader.setUniformFloatVariable("asd", (float)background.textureSize);
-
-		background.render(g);
+		background.render(g, new Vector2f(1, 1));
 
 		Shader.forceFixedShader();
 		
