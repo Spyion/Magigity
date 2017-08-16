@@ -26,10 +26,16 @@ public class Loader {
 	private static final float CM = Information.CENTIMETER;
 	public static final CSVHandler csv = new CSVHandler();
 	
-	public static Image loadImage(String name, String type, Vector2f size){
+	public static Image loadImage(String name, String type, Vector2f size, boolean relative){
 		try {
 			if(size != null)
-				return new Image("/resources/images/"+name+"."+type).getScaledCopy((int)size.x, (int)size.y);
+				if(relative){
+				Image image = new Image("/resources/images/"+name+"."+type);
+				return image.getScaledCopy((int)size.x*image.getWidth(), (int)size.y*image.getWidth());
+				}else{
+					return new Image("/resources/images/"+name+"."+type).getScaledCopy((int)size.x, (int)size.y);
+
+				}
 			else
 				return new Image("/resources/images/"+name+"."+type);
 		} catch (SlickException e) {
@@ -51,13 +57,16 @@ public class Loader {
 		return null;
 	}
 	public static Image loadImage(String name, Vector2f size){
-		return loadImage(name,"png", size);
+		return loadImage(name,"png", size, false);
 	}
 	public static Image loadImage(String name){
-		return loadImage(name,"png", new Vector2f(25f*CM, 25*CM));
+		return loadImage(name,"png", new Vector2f(25f*CM, 25*CM), false);
+	}
+	public static Terrain loadTerrain(String name, Vector2f size){
+		return new Terrain(loadImage("terrain/"+name, "png", size, true));
 	}
 	public static Terrain loadTerrain(String name){
-		return new Terrain(loadImage("terrain/"+name, null));
+		return loadTerrain(name, new Vector2f(1,1));
 	}
 	
 	public static Sound loadSound(String name, String type){

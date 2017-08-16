@@ -63,7 +63,7 @@ public class Running extends BasicGameState{
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
 
-		background = loadTerrain("map");
+		background = loadTerrain("map", new Vector2f(20,10));
 				
 	}
 	public boolean customInit(){
@@ -76,7 +76,7 @@ public class Running extends BasicGameState{
 		connectionHandler.getCharacters();
 
 		terrainShader.startShader();
-		terrainShader.setUniformIntVariable("textureSize", background.textureSize);
+		//terrainShader.setUniformIntVariable("textureSize", background.textureSize);
 		Shader.forceFixedShader();
 		
 		return true;
