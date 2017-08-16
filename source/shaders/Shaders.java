@@ -17,9 +17,8 @@ public class Shaders {
 		try {
 			entityShader = makeShader("entityShader");
 			postProcessing = makeShader("postProcessing");
-			verticalBlur = makeShader("verticalBlur");
+			//verticalBlur = makeShader("verticalBlur"); ACCESS VIOLATION
 			terrainShader = makeShader("terrainShader");
-			
 			
 			
 			
