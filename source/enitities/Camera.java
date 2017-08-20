@@ -38,6 +38,9 @@ public class Camera extends DrawableObject{
 	public float getTargetRotationRadians(){
 		return targetRotation;
 	}
+	public float getScroll(){
+		return scroll;
+	}
 	public Vector2f getScreenToWorldPoint(Vector2f point){
 
 		point = new Vector2f((point.x-Display.getWidth()/2)/size.x, (point.y-Display.getHeight()/2)/size.y);

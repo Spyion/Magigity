@@ -1,6 +1,7 @@
 package gameStates;
 
 import static tools.Loader.loadImage;
+import static info.Information.*;
 import static tools.Loader.loadTerrain;
 import static shaders.Shaders.*;
 
@@ -51,8 +52,6 @@ public class Running extends BasicGameState{
 	DirectionalLight moon = new DirectionalLight();
 	Image fboImage;
 	Terrain background;
-	private final int M = Information.METER;
-	private final float CM = Information.CENTIMETER;
 	Entity test;
 	
 	@Override
@@ -64,8 +63,7 @@ public class Running extends BasicGameState{
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
 
-		background = loadTerrain("map", new Vector2f(10,10));
-				
+		background = loadTerrain("map", new Vector2f(50,50));
 	}
 	public boolean customInit(){
 		connectionHandler = ConnectionHandler.instance;
@@ -90,6 +88,10 @@ public class Running extends BasicGameState{
 		terrainShader.setUniformIntVariable("rTex", 2);
 		terrainShader.setUniformIntVariable("gTex", 3);
 		terrainShader.setUniformIntVariable("bTex", 4);
+		terrainShader.setUniformIntVariable("backSize", background.texturePack.backgroundTexture.getWidth(100));
+		terrainShader.setUniformIntVariable("rSize", background.texturePack.rTexture.getWidth(100));
+		terrainShader.setUniformIntVariable("gSize", background.texturePack.gTexture.getWidth(100));
+		terrainShader.setUniformIntVariable("bSize", background.texturePack.bTexture.getWidth(100));
 		Shader.forceFixedShader();
 		
 		return true;
@@ -165,7 +167,7 @@ public class Running extends BasicGameState{
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		//ONSCREEN
-		g.setAntiAlias(false);
+//		g.setAntiAlias(false);
 
 		
 		//ONWORLD
@@ -174,6 +176,7 @@ public class Running extends BasicGameState{
 		g.translate(translation.x, translation.y);
 		g.rotate(0, 0, camera.getRotationDegrees());
 		g.scale(camera.size.x, camera.size.y);
+		int detailLevel = (int)(Math.pow(2,camera.getScroll()+4)-1);
 		
 		Vector2f turnedSunVector = new Vector2f(sun.direction.x, sun.direction.y).add(camera.getRotationDegrees());
 		Color sunColor = sun.getColor();
@@ -186,7 +189,7 @@ public class Running extends BasicGameState{
 		terrainShader.setUniformFloatVariable("moonVector", turnedMoonVector.x, turnedMoonVector.y, moon.direction.z);
 		terrainShader.setUniformFloatVariable("moonColor" , moonColor.r, moonColor.g, moonColor.b, moonColor.a);
 		
-		background.bindTextures();
+		background.bindTextures(detailLevel);
 		background.render(g);
 				
 		entityShader.startShader();

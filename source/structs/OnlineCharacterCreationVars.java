@@ -14,7 +14,7 @@ public class OnlineCharacterCreationVars {
 	static ArrayList<Integer> posY = new ArrayList<Integer>();
 	static ArrayList<Byte> IDs = new ArrayList<Byte>();
 	static ArrayList<String> name = new ArrayList<String>();
-	protected final static float CM = Information.CENTIMETER;
+	protected final static float CM = Information.CM;
 
 	
 	public static void addOnlineCharacter(byte ID, String n,int pX, int pY){

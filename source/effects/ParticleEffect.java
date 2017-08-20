@@ -12,8 +12,8 @@ import tools.Toolbox;
 
 public class ParticleEffect extends Effect{
 	
-	private static final int M = Information.METER;
-	private static final float CM = Information.CENTIMETER;
+	private static final int M = Information.M;
+	private static final float CM = Information.CM;
 	
 	private ParticleSystem system;
 	private ConfigurableEmitter emitter;

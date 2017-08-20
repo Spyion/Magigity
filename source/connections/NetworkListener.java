@@ -18,7 +18,7 @@ import structs.OnlineCharacterCreationVars;
 import tools.BoolCoder;
 
 public class NetworkListener extends Listener {
-	private final float CM = Information.CENTIMETER;
+	private final float CM = Information.CM;
 	public boolean answered = false;
 	@Override
 	public void connected(Connection connection) {

@@ -1,6 +1,7 @@
 package textures;
 
 import org.newdawn.slick.Graphics;
+import static info.Information.*;
 import org.newdawn.slick.geom.Vector2f;
 
 import components.DrawableObject;
@@ -10,9 +11,6 @@ import tools.Toolbox;
 import weapons.Weapon;
 
 public class CharacterImagePack {
-	
-	protected final int M = Information.METER;
-	protected final float CM = Information.CENTIMETER;
 	public DrawableObject	leftShoulder,
 							rightShoulder,
 							head,

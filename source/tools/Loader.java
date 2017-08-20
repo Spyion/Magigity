@@ -1,9 +1,18 @@
 package tools;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import static info.Information.CM;
+import static info.Information.M;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.MipMap;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
@@ -12,33 +21,38 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleIO;
 
 import animations.ValueAnimation;
-import info.Information;
 import terrain.Terrain;
 import textures.HandImagePack;
+import textures.MipMapTexture;
 import weapons.Weapon;
 
 public class Loader {
 	
-	private static final int M = Information.METER;
-	private static final float CM = Information.CENTIMETER;
 	public static final CSVHandler csv = new CSVHandler();
 	
 	public static Image loadImage(String name, String type, Vector2f size, boolean relative){
 		try {
+			Image image;
+			if(type.equals("")){
+				image = new Image("/resources/images/"+name);
+			}
+			image = new Image("/resources/images/"+name+"."+type);
+//			GL30.glGenerateMipmap(image.getTexture().getTextureID());
+//			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
 			if(size != null)
 				if(relative){
-				Image image = new Image("/resources/images/"+name+"."+type);
 				return image.getScaledCopy((int)size.x*image.getWidth(), (int)size.y*image.getWidth());
 				}else{
-					return new Image("/resources/images/"+name+"."+type).getScaledCopy((int)size.x, (int)size.y);
+					return image.getScaledCopy((int)size.x, (int)size.y);
 
 				}
 			else
-				return new Image("/resources/images/"+name+"."+type);
+				return image;
 		} catch (SlickException e) {
 			System.out.println("Could not load Image");
 			e.printStackTrace();
@@ -67,12 +81,65 @@ public class Loader {
 		return new Terrain(name, size);
 	}
 	public static Terrain loadTerrain(String name){
-		return loadTerrain(name, new Vector2f(1,1));
+		return loadTerrain("terrain/"+name, new Vector2f(1,1));
 	}
-	public static Texture loadTexture(String name){
-		return loadImage(name).getTexture();
+	public static Texture loadTexture(String name, String type){
+		return loadImage(name,type, new Vector2f(1,1), false).getTexture();
+		
+//		Texture tex = null;
+//		try {
+//			tex = TextureLoader.getTexture("PNG", new FileInputStream("/resources/images/"+name+".png"));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		tex.bind();
+//		 
+//		int width = (int)tex.getImageWidth();
+//		int height = (int)tex.getImageHeight();
+//		 
+//		byte[] texbytes = tex.getTextureData();
+//		int components = texbytes.length / (width*height);
+//		 
+//		ByteBuffer texdata = ByteBuffer.allocate(texbytes.length);
+//		texdata.put(texbytes);
+//		texdata.rewind();
+//		
+//		MipMap.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D, components, width, height, components==3 ? GL11.GL_RGB : GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,texdata);
+//		 
+//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+//		
+//		return tex;
 	}
-	
+	public static MipMapTexture loadMipMapTexture(String name){
+		ArrayList<Texture> tex = new ArrayList<Texture>();
+		File[] files = new File("resources/images/"+name).listFiles();
+		for(int i = files.length-1; i>=0; i--){
+			tex.add(loadTexture(files[i].getPath().replace("resources\\images\\", ""), ""));
+		}
+		for(int i = 0; i < tex.size()-1; i++){
+			float lowest = tex.get(i).getImageHeight();
+			int lowestIndex = i;
+			for(int j = i+1; j < tex.size(); j++){
+				if(lowest > tex.get(j).getImageHeight()){
+					lowest = tex.get(j).getImageHeight();
+					lowestIndex = j;
+				}
+			}
+			Collections.swap(tex, i, lowestIndex);	
+		}
+		
+		Texture[] texA = new Texture[tex.size()];
+		for (int i = 0; i < tex.size(); i++) {
+			texA[i] = tex.get(i);
+		}
+		for (int i = 0; i < texA.length; i++) {
+			System.out.println(texA[i].getImageWidth()+name);
+		}
+		return new MipMapTexture(texA);
+	}
 	
 	public static Sound loadSound(String name, String type){
 		try {

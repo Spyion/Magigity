@@ -46,8 +46,8 @@ public class Weapon extends CollidableObject{
 	public static final int STAFF = 5;
 	public static final int BOW = 6;
 	
-	private final int M = Information.METER;
-	private final float CM = Information.CENTIMETER;
+	private final int M = Information.M;
+	private final float CM = Information.CM;
 	private final float PI2 = (float) (2*Math.PI);
 	
 	public Weapon(int type, Image drawn, Image sheathed, Shape hitbox, Vector2f anchor,Vector2f rightHandPosition, Vector2f leftHandPosition, float rightHandRotation, float leftHandRotation, boolean rightHandFlipped, boolean leftHandFlipped, boolean doesFlip, ArrayList<ArrayList<ValueAnimation>> animations){
