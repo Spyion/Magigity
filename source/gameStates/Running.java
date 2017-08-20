@@ -6,6 +6,7 @@ import static shaders.Shaders.*;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -24,6 +25,7 @@ import connections.ConnectionHandler;
 import debug.Debug;
 import effects.ParticleEffect;
 import enitities.Camera;
+import enitities.DirectionalLight;
 import enitities.Entity;
 import enitities.Player;
 import info.Information;
@@ -45,10 +47,10 @@ public class Running extends BasicGameState{
 	Player player;
 	ConnectionHandler connectionHandler;
 	Camera camera = new Camera();
+	DirectionalLight sun = new DirectionalLight();
+	DirectionalLight moon = new DirectionalLight();
 	Image fboImage;
 	Terrain background;
-	Rectangle backgroundRect; 
-	Vector3f sunVector = new Vector3f();
 	private final int M = Information.METER;
 	private final float CM = Information.CENTIMETER;
 	Entity test;
@@ -59,16 +61,21 @@ public class Running extends BasicGameState{
 		//Debug
 		States.runningState = this;
 		
-		backgroundRect = new Rectangle(-10000,-10000,20000,20000);
 		Information.currentCamera = camera;
 		input = new Input(Input.ANY_CONTROLLER);
 
-		background = loadTerrain("map", new Vector2f(20,10));
+		background = loadTerrain("map", new Vector2f(10,10));
 				
 	}
 	public boolean customInit(){
 		connectionHandler = ConnectionHandler.instance;
 		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1,1000, input, camera);
+		
+		//INCREASE SPEED
+		//player.sprintingSpeed = 50;
+		
+		
+		
 		for(int i = 1; i < 1; i++){
 			new ParticleEffect("torch", new Entity(loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1, 100), 1000);
 		}
@@ -76,7 +83,13 @@ public class Running extends BasicGameState{
 		connectionHandler.getCharacters();
 
 		terrainShader.startShader();
-		//terrainShader.setUniformIntVariable("textureSize", background.textureSize);
+//		terrainShader.setUniformFloatVariable("size", background.textureSize);
+//		terrainShader.setUniformFloatVariable("totalWidth", background.image.getWidth());
+//		terrainShader.setUniformFloatVariable("totalHeight", background.image.getHeight());
+		terrainShader.setUniformIntVariable("backTex", 1);
+		terrainShader.setUniformIntVariable("rTex", 2);
+		terrainShader.setUniformIntVariable("gTex", 3);
+		terrainShader.setUniformIntVariable("bTex", 4);
 		Shader.forceFixedShader();
 		
 		return true;
@@ -92,12 +105,19 @@ public class Running extends BasicGameState{
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		boolCount+=delta;
 		intCount+=delta;
-		sunVector.set(0, 100, -100);
 		
 		Entity.add();
 		Entity.remove();
 		OnlineCharacterCreationVars.createCharacters();
 		
+		
+		//rotate sun
+		Vector2f sunXZ = new Vector2f(sun.direction.x, sun.direction.z).add(delta/100f);
+		sun.direction.set(sunXZ.x, sun.direction.y, sunXZ.y);
+		
+		moon.direction.set(sun.direction.x*-1, sun.direction.y*-1, sun.direction.z*-1);
+		
+		moon.setColor(25,50,200);
 		
 		
 		for(int i = 0; i < entities.size()-1; i++)
@@ -136,6 +156,11 @@ public class Running extends BasicGameState{
 				lastRotation = s.rotation;
 			}
 		}
+		
+		
+		
+		
+		
 	}
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
@@ -144,23 +169,31 @@ public class Running extends BasicGameState{
 
 		
 		//ONWORLD
-		g.setBackground(Color.white);		
+		g.setBackground(Color.red);		
 		Vector2f translation = camera.getWorldToScreenPoint(new Vector2f(0, 0));
 		g.translate(translation.x, translation.y);
 		g.rotate(0, 0, camera.getRotationDegrees());
 		g.scale(camera.size.x, camera.size.y);
 		
+		Vector2f turnedSunVector = new Vector2f(sun.direction.x, sun.direction.y).add(camera.getRotationDegrees());
+		Color sunColor = sun.getColor();
+		Vector2f turnedMoonVector = new Vector2f(moon.direction.x, moon.direction.y).add(camera.getRotationDegrees());
+		Color moonColor = moon.getColor();
+		
 		terrainShader.startShader();
-//		terrainShader.setUniformFloatVariable("asd", (float)background.textureSize);
-		background.render(g, new Vector2f(1, 1));
-
-		Shader.forceFixedShader();
+		terrainShader.setUniformFloatVariable("sunVector", turnedSunVector.x, turnedSunVector.y, sun.direction.z);
+		terrainShader.setUniformFloatVariable("sunColor" , sunColor.r, sunColor.g, sunColor.b, sunColor.a);
+		terrainShader.setUniformFloatVariable("moonVector", turnedMoonVector.x, turnedMoonVector.y, moon.direction.z);
+		terrainShader.setUniformFloatVariable("moonColor" , moonColor.r, moonColor.g, moonColor.b, moonColor.a);
 		
-		Vector2f turnedSunVector = new Vector2f(sunVector.x, sunVector.y).add(camera.getRotationDegrees());
-		
+		background.bindTextures();
+		background.render(g);
+				
 		entityShader.startShader();
-		entityShader.setUniformFloatVariable("sunVector", turnedSunVector.x, turnedSunVector.y, sunVector.z);
-		entityShader.setUniformFloatVariable("sunColor" , 1, 1, 1, 1);
+		entityShader.setUniformFloatVariable("sunVector", turnedSunVector.x, turnedSunVector.y, sun.direction.z);
+		entityShader.setUniformFloatVariable("sunColor" , sunColor.r, sunColor.g, sunColor.b, sunColor.a);
+		entityShader.setUniformFloatVariable("moonVector", turnedMoonVector.x, turnedMoonVector.y, moon.direction.z);
+		entityShader.setUniformFloatVariable("moonColor" , moonColor.r, moonColor.g, moonColor.b, moonColor.a);
 		for(Entity entity : entities){
 			entity.render(g);
 		}

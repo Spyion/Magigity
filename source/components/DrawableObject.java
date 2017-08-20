@@ -1,5 +1,7 @@
 package components;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
@@ -57,6 +59,8 @@ public class DrawableObject {
 			Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
 			Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
 			toDraw.rotate(getRotationDegrees()+rotation);
+			bindTexture(image);
+			//Shaders.entityShader.setUniformIntVariable("tex", 0);
 			toDraw.drawCentered(position.x, position.y);
 		}
 	}
@@ -72,6 +76,9 @@ public class DrawableObject {
 	public void render(Graphics g, Vector2f size,float rotation){
 		render(g, image, size, rotation);
 	}
-
+	private void bindTexture(Image image){
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, image.getTexture().getTextureID());
+	}
 	
 }

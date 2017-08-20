@@ -11,6 +11,7 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleIO;
 
@@ -63,11 +64,15 @@ public class Loader {
 		return loadImage(name,"png", new Vector2f(25f*CM, 25*CM), false);
 	}
 	public static Terrain loadTerrain(String name, Vector2f size){
-		return new Terrain(loadImage("terrain/"+name, "png", size, true));
+		return new Terrain(name, size);
 	}
 	public static Terrain loadTerrain(String name){
 		return loadTerrain(name, new Vector2f(1,1));
 	}
+	public static Texture loadTexture(String name){
+		return loadImage(name).getTexture();
+	}
+	
 	
 	public static Sound loadSound(String name, String type){
 		try {
@@ -81,6 +86,7 @@ public class Loader {
 	public static Sound loadSound(String name){
 		return loadSound(name,"ogg");
 	}
+	
 	
 	public static ConfigurableEmitter loadEmitter(String name, String type){
 		try {

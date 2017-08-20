@@ -11,5 +11,5 @@ void main(void){
   	gl_Position = ftransform();
 
 	surfaceNormal = normalize(vec3(gl_ModelViewMatrix*vec4(gl_Vertex.x-center.x, gl_Vertex.y-center.y, 0 ,0)));
-	surfaceNormal = vec3(surfaceNormal.xy,0.5);
+	surfaceNormal = vec3(surfaceNormal.xy,1);
 }

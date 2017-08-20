@@ -1,10 +1,14 @@
 #version 130
 
-float size = 512;
-float totalWidth = 2048;
+uniform float size;
+uniform float totalWidth;
+uniform float totalHeight;
+
+out vec3 surfaceNormal;
 
 void main(void){
  	gl_TexCoord[0]  = gl_MultiTexCoord0;
-	vec4 vertex = vec4(gl_Vertex.x*(totalWidth-2*size)/totalWidth, gl_Vertex.yzw);
-  	gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * vertex;
+  	gl_Position = ftransform();
+
+	surfaceNormal = vec3(0,0,1);
 }

@@ -14,6 +14,9 @@ public class SimulatedCharacter extends Character{
 	public boolean isMovingRight = false;
 	public boolean isSprinting = false;
 	
+	public float sprintingSpeed = 5;
+	public float walkingSpeed = 2;
+	
 	public float cameraRotation;
 	
 	public SimulatedCharacter(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight, float health) {
@@ -27,9 +30,9 @@ public class SimulatedCharacter extends Character{
 		if(clientSided){
 		Vector2f movingDirection = new Vector2f(0,0);
 		if(isSprinting){
-			moveSpeed = Toolbox.approachValue(moveSpeed, 5*M, delta);
+			moveSpeed = Toolbox.approachValue(moveSpeed, sprintingSpeed*M, delta);
 		}else{
-			moveSpeed = Toolbox.approachValue(moveSpeed, 2*M, delta);
+			moveSpeed = Toolbox.approachValue(moveSpeed, walkingSpeed*M, delta);
 		}
 		
 		if(isMovingUp){
