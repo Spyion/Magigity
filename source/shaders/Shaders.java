@@ -7,7 +7,8 @@ import shader.Shader;
 public class Shaders {
 	private static final String root = "data/shaders/";
 	
-	public static Shader entityShader;
+	public static EntityShader entityShader = new EntityShader();
+
 	public static Shader buildingShader;
 	public static Shader terrainShader;
 	public static Shader postProcessing;
@@ -15,7 +16,7 @@ public class Shaders {
 	
 	static{
 		try {
-			entityShader = makeShader("entityShader");
+			//entityShader = makeShader("entityShader");
 			postProcessing = makeShader("postProcessing");
 			//verticalBlur = makeShader("verticalBlur"); ACCESS VIOLATION
 			terrainShader = makeShader("terrainShader");

@@ -2,23 +2,30 @@ package components;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
 import info.Information;
+import shaders.EntityShader;
+import shaders.ShaderProgram;
 import shaders.Shaders;
+import tools.TexturedModel;
+import tools.Toolbox;
 
 public class DrawableObject {
 	public final Vector2f position;
 	public final Vector2f size;
-	public Image image;
+	public final TexturedModel model;
 	protected float rotation;
 	protected final int M = Information.M;
 	protected final static float CM = Information.CM;
-	public DrawableObject(Image image, Vector2f position, Vector2f size, float rotation) {
+	protected ShaderProgram shader = Shaders.entityShader;
+	public DrawableObject(TexturedModel model, Vector2f position, Vector2f size, float rotation) {
 		super();
-		this.image = image;
+		this.model = model;
 		this.position = position;
 		this.size = size;
 		setRotationDegrees(rotation);
@@ -29,7 +36,7 @@ public class DrawableObject {
 	public DrawableObject(){
 		this(new Vector2f(0, 0), new Vector2f(1,1),0);
 	}
-	public DrawableObject(Image image){
+	public DrawableObject(TexturedModel image){
 		this(image, new Vector2f(0, 0), new Vector2f(1,1),0);
 	}
 	public float getRotationDegrees() {
@@ -50,35 +57,45 @@ public class DrawableObject {
 	public void addToRotationRadians(float rotation) {
 		this.rotation += rotation;
 	}
-	public Image getImage() {
-		return image;
-	}
-	public void render(Graphics g, Image image, Vector2f size, float rotation){
-		if(image != null){
-						
-			Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
-			Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
-			toDraw.rotate(getRotationDegrees()+rotation);
-			bindTexture(image);
+	public void render(Graphics g, TexturedModel model, Vector2f size, float rotation){
+		if(model != null){
+			
+			GL30.glBindVertexArray(model.model.getVaoID());
+			GL20.glEnableVertexAttribArray(0);
+			GL20.glEnableVertexAttribArray(1);
+			GL20.glEnableVertexAttribArray(2);
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.texture.textureID);
+			shader.start();
+			loadShaderVars();
+			GL11.glDrawElements(GL11.GL_TRIANGLES, model.model.getVertexCount(),
+					GL11.GL_UNSIGNED_INT, 0);
+			
+			shader.stop();
+			
+			GL20.glDisableVertexAttribArray(0);
+			GL20.glDisableVertexAttribArray(1);
+			GL20.glDisableVertexAttribArray(2);
+			GL30.glBindVertexArray(0);
 			//Shaders.entityShader.setUniformIntVariable("tex", 0);
-			toDraw.drawCentered(position.x, position.y);
 		}
 	}
-	public void render(Graphics g, Image image, Vector2f size){
-		render(g, image, size, 0);
+	protected void loadShaderVars(){
+		if(shader instanceof EntityShader){
+			Shaders.entityShader.loadTransformationMatrix(Toolbox.createTransformationMatrix(position, size, getRotationRadians()));
+		}
+	}
+	public void render(Graphics g, TexturedModel model, Vector2f size){
+		render(g, model, size, 0);
 	}
 	public void render(Graphics g, Vector2f size){
-		render(g, image, size);
+		render(g, model, size);
 	}
 	public void render(Graphics g){
-		render(g, image, new Vector2f(1,1));
+		render(g, model, new Vector2f(1,1));
 	}
 	public void render(Graphics g, Vector2f size,float rotation){
-		render(g, image, size, rotation);
-	}
-	private void bindTexture(Image image){
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, image.getTexture().getTextureID());
+		render(g, model, size, rotation);
 	}
 	
 }

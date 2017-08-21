@@ -4,15 +4,10 @@ import static info.Information.CM;
 import static info.Information.M;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Collections;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.MipMap;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
@@ -20,21 +15,31 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleIO;
 
 import animations.ValueAnimation;
 import terrain.Terrain;
 import textures.HandImagePack;
-import textures.MipMapTexture;
+import textures.Texture;
 import weapons.Weapon;
 
 public class Loader {
 	
 	public static final CSVHandler csv = new CSVHandler();
-	
+	public static final RawModel quad; 
+	static{
+		float[] p = {-1,-1,0,-1,1,0,1,-1,0,1,1,0};
+		float[] t = {0,0,1,0,0,1,1,1};
+		Vector3f n1 = new Vector3f(1,1,1);
+		n1.normalise();
+		float[] n = {-n1.x,-n1.y,n1.z,n1.x,-n1.y,n1.z,-n1.x,n1.y,n1.z,n1.x,n1.y,n1.z};
+		int[] i = {0,1,2,3,1,2};
+		quad = VaoLoader.loadToVAO(p, t, n, i);
+	}
+	public static TexturedModel loadImage(String name, String not){
+		return new TexturedModel(quad, loadTexture("/resources/images/"+name+".png"));
+	}
 	public static Image loadImage(String name, String type, Vector2f size, boolean relative){
 		try {
 			Image image;
@@ -83,8 +88,9 @@ public class Loader {
 	public static Terrain loadTerrain(String name){
 		return loadTerrain("terrain/"+name, new Vector2f(1,1));
 	}
-	public static Texture loadTexture(String name, String type){
-		return loadImage(name,type, new Vector2f(1,1), false).getTexture();
+	public static Texture loadTexture(String name){
+		return new Texture(VaoLoader.loadTexture(name));
+		
 		
 //		Texture tex = null;
 //		try {
@@ -112,33 +118,6 @@ public class Loader {
 //		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 //		
 //		return tex;
-	}
-	public static MipMapTexture loadMipMapTexture(String name){
-		ArrayList<Texture> tex = new ArrayList<Texture>();
-		File[] files = new File("resources/images/"+name).listFiles();
-		for(int i = files.length-1; i>=0; i--){
-			tex.add(loadTexture(files[i].getPath().replace("resources\\images\\", ""), ""));
-		}
-		for(int i = 0; i < tex.size()-1; i++){
-			float lowest = tex.get(i).getImageHeight();
-			int lowestIndex = i;
-			for(int j = i+1; j < tex.size(); j++){
-				if(lowest > tex.get(j).getImageHeight()){
-					lowest = tex.get(j).getImageHeight();
-					lowestIndex = j;
-				}
-			}
-			Collections.swap(tex, i, lowestIndex);	
-		}
-		
-		Texture[] texA = new Texture[tex.size()];
-		for (int i = 0; i < tex.size(); i++) {
-			texA[i] = tex.get(i);
-		}
-		for (int i = 0; i < texA.length; i++) {
-			System.out.println(texA[i].getImageWidth()+name);
-		}
-		return new MipMapTexture(texA);
 	}
 	
 	public static Sound loadSound(String name, String type){

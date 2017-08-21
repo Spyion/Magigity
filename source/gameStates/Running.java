@@ -183,20 +183,32 @@ public class Running extends BasicGameState{
 		Vector2f turnedMoonVector = new Vector2f(moon.direction.x, moon.direction.y).add(camera.getRotationDegrees());
 		Color moonColor = moon.getColor();
 		
+		float[] dirLight = {turnedSunVector.x, turnedSunVector.y, sun.direction.z, turnedMoonVector.x, turnedMoonVector.y, moon.direction.z};
+		float[] dirColor = {sunColor.r, sunColor.g, sunColor.b, sunColor.a, moonColor.r, moonColor.g, moonColor.b, moonColor.a};
+		float[] pLight = {0,0,0,
+						  0,0,0,
+						  0,0,0,
+						  0,0,0};
+		float[] pColor = {1,1,1,1,
+				  		  0,0,0,1,
+				  		  0,0,0,1,
+				  		  0,0,0,1};
+		
+		
 		terrainShader.startShader();
-		terrainShader.setUniformFloatVariable("sunVector", turnedSunVector.x, turnedSunVector.y, sun.direction.z);
-		terrainShader.setUniformFloatVariable("sunColor" , sunColor.r, sunColor.g, sunColor.b, sunColor.a);
-		terrainShader.setUniformFloatVariable("moonVector", turnedMoonVector.x, turnedMoonVector.y, moon.direction.z);
-		terrainShader.setUniformFloatVariable("moonColor" , moonColor.r, moonColor.g, moonColor.b, moonColor.a);
+//		terrainShader.setUniformFloatVariable("dirLight", dirLight);
+//		terrainShader.setUniformFloatVariable("dirColor" , dirColor);
 		
 		background.bindTextures(detailLevel);
 		background.render(g);
-				
+			
+		
+		
 		entityShader.startShader();
-		entityShader.setUniformFloatVariable("sunVector", turnedSunVector.x, turnedSunVector.y, sun.direction.z);
-		entityShader.setUniformFloatVariable("sunColor" , sunColor.r, sunColor.g, sunColor.b, sunColor.a);
-		entityShader.setUniformFloatVariable("moonVector", turnedMoonVector.x, turnedMoonVector.y, moon.direction.z);
-		entityShader.setUniformFloatVariable("moonColor" , moonColor.r, moonColor.g, moonColor.b, moonColor.a);
+		entityShader.setUniformFloatVariable("dirLight", dirLight);
+		entityShader.setUniformFloatVariable("dirColor" , dirColor);
+		entityShader.setUniformFloatVariable("pLight", pLight);
+		entityShader.setUniformFloatVariable("pColor" , pColor);
 		for(Entity entity : entities){
 			entity.render(g);
 		}

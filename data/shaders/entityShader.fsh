@@ -7,36 +7,36 @@ precision highp float;
 uniform sampler2D tex;
 
 in vec3 surfaceNormal;
-uniform vec3 sunVector;
-uniform vec4 sunColor;
-uniform vec3 moonVector;
-uniform vec4 moonColor;
+
+in vec3 light[6];
+in vec4 lightColor[6];
 
 void main(){
 
+	float shineDamper = 10;
+	float reflectivity = 0.3;
 
-	vec3 sun = vec3(sunVector.x*-1,sunVector.y*-1,sunVector.z*-1);
- 	float sunDotProduct = dot(normalize(surfaceNormal), normalize(sun));
-	float sunBrightness = max(sunDotProduct, 0.2);
-	vec3 moon = vec3(moonVector.x*-1,moonVector.y*-1,moonVector.z*-1);
- 	float moonDotProduct = dot(normalize(surfaceNormal), normalize(moon));
-	float moonBrightness = max(moonDotProduct, 0.2);
-
-
-	vec3 sunDiffuse = vec3(sunBrightness*sunColor);
-	vec3 moonDiffuse = vec3(moonBrightness*moonColor);
-	
-	//vec3 toCamera = vec3(0,0,1);
-	//vec3 reflectedLight = reflect(sunVector, surfaceNormal);
-
-	//float specularFactor = dot(reflectedLight, toCamera);
-	//float dampedFactor = pow(specularFactor, shineDamper);
-	//vec3 finalSpecular = sunColor * reflectivity;	
+	vec3 normal = normalize(surfaceNormal);
 
  	vec2 loc = gl_TexCoord[0].st;
-  	vec4 onlySun = vec4(sunDiffuse,1) * texture2D(tex,loc.xy);
-  	vec4 onlyMoon = vec4(moonDiffuse,1) * texture2D(tex,loc.xy);
-  	gl_FragColor = vec4((onlySun.r+onlyMoon.r), (onlySun.g+onlyMoon.g),
-						(onlySun.b+onlyMoon.b), (onlySun.a+onlyMoon.a)/2);
-	//gl_FragColor = onlySun;
+	vec4 pixel = texture2D(tex,loc.xy);
+	vec4 finalSpecular = vec4(0,0,0,0);
+	vec4 finalDiffuse  = vec4(0,0,0,0);
+
+	for(int i = 0; i < light.length; i++){
+ 		float dotProduct = dot(normal, normalize(light[i]*-1));
+		float brightness = max(dotProduct, 0.0);
+		finalDiffuse += brightness*lightColor[i];	
+
+		vec3 reflectedLight = reflect(light[i], normal);
+
+		float specularFactor = max(dot(reflectedLight, vec3(0,0,1)),0);
+		float dampedFactor = pow(specularFactor, shineDamper);
+		finalSpecular += dampedFactor * lightColor[i] * reflectivity;	
+	}
+
+	vec4 color = finalDiffuse*pixel+finalSpecular;
+  	gl_FragColor = vec4(color.rgb, pixel.a);
+  		//gl_FragColor = vec4(normal,1);
+  	
 }

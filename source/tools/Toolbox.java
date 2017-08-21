@@ -1,5 +1,7 @@
 package tools;
 
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Transform;
@@ -250,5 +252,13 @@ public class Toolbox {
 	}
 	public static String booleanToString(boolean bool){
 		return bool == false ? "0" : "1";
+	}
+	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale, float rot) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		Matrix4f.translate(new Vector3f(translation.x, translation.y, 0), matrix, matrix);
+		Matrix4f.rotate(rot, new Vector3f(0,0,1), matrix, matrix);
+		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
+		return matrix;
 	}
 }

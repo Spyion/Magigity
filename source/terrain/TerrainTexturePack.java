@@ -1,13 +1,13 @@
 package terrain;
 
-import textures.MipMapTexture;
+import textures.Texture;
 
 public class TerrainTexturePack {
-	public final MipMapTexture backgroundTexture;
-	public final MipMapTexture rTexture;
-	public final MipMapTexture gTexture;
-	public final MipMapTexture bTexture;
-	public TerrainTexturePack(MipMapTexture backgroundTexture, MipMapTexture rTexture, MipMapTexture gTexture, MipMapTexture bTexture) {
+	public final Texture backgroundTexture;
+	public final Texture rTexture;
+	public final Texture gTexture;
+	public final Texture bTexture;
+	public TerrainTexturePack(Texture backgroundTexture, Texture rTexture, Texture gTexture, Texture bTexture) {
 		super();
 		this.backgroundTexture = backgroundTexture;
 		this.rTexture = rTexture;
