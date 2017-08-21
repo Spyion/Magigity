@@ -15,7 +15,7 @@ public class Camera extends DrawableObject{
 	private float scroll = -1f;
 	private boolean workCamera = false;
 	public Camera(){
-		
+		super();
 	}
 	public Camera(boolean workCamera){
 		this.workCamera = workCamera;

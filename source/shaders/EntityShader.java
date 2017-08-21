@@ -55,6 +55,9 @@ public class EntityShader extends ShaderProgram{
 	public void loadTransformationMatrix(Matrix4f matrix){
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
+	public void loadViewMatrix(Matrix4f matrix){
+		super.loadMatrix(location_transformationMatrix, matrix);
+	}
 	
 //	public void loadLights(List<Light> lights){
 //		for(int i=0;i<MAX_LIGHTS;i++){

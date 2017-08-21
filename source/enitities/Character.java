@@ -57,7 +57,7 @@ public class Character extends Entity{
 	@Override
 	public void update(int delta){
 		
-		pack.weapon.update(delta, this);
+		pack.weapon.update(delta);
 		
 		fixTargetRotation();
 		if(isAttacking || isBlocking){

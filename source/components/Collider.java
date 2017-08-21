@@ -17,7 +17,7 @@ import tools.Toolbox;
 public class Collider {
 
 	public final CollidableObject object;
-	public final Vector2f position;
+	public Vector2f position;
 	private Shape hitbox;
 	private boolean enabled = true;
 	public boolean isTrigger;

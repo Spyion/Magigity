@@ -20,7 +20,8 @@ public class Terrain extends DrawableObject{
 	public final TerrainTexturePack texturePack;
 	
 	public Terrain(String name, Vector2f size){
-		super(loadImage(root+name+"/blendMap", ""));
+		super(loadModel(root+name+"/blendMap"), null);
+		this.size.set(size);
 		texturePack = new TerrainTexturePack(	loadTexture(root+name+"/backgroundTexture"),	
 												loadTexture(root+name+"/rTexture"),
 												loadTexture(root+name+"/gTexture"),
@@ -28,14 +29,14 @@ public class Terrain extends DrawableObject{
 		
 	}
 	
-//	public void bindTextures(int detail){
-//		glActiveTexture(GL_TEXTURE1);
-//		glBindTexture(GL_TEXTURE_2D, texturePack.backgroundTexture.getTextureID(detail));
-//		glActiveTexture(GL_TEXTURE2);
-//		glBindTexture(GL_TEXTURE_2D, texturePack.rTexture.getTextureID(detail));
-//		glActiveTexture(GL_TEXTURE3);
-//		glBindTexture(GL_TEXTURE_2D, texturePack.gTexture.getTextureID(detail));
-//		glActiveTexture(GL_TEXTURE4);
-//		glBindTexture(GL_TEXTURE_2D, texturePack.bTexture.getTextureID(detail));
-//	}
+	public void bindTextures(){
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texturePack.backgroundTexture.textureID);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, texturePack.rTexture.textureID);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, texturePack.gTexture.textureID);
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, texturePack.bTexture.textureID);
+	}
 }

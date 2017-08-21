@@ -2,6 +2,7 @@ package weapons;
 
 import java.util.ArrayList;
 
+import org.lwjgl.util.vector.Matrix4f;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Shape;
@@ -12,12 +13,13 @@ import components.CollidableObject;
 import components.DrawableObject;
 import info.Information;
 import shaders.Shaders;
+import tools.TexturedModel;
 import tools.Toolbox;
 
 public class Weapon extends CollidableObject{
-	public Image sheathed,
+	public TexturedModel sheathed,
 				 drawn;
-	public Image currentImage;
+	public TexturedModel currentImage;
 	public final Vector2f relativePosition = new Vector2f();
 	public float relativeRotation=0;
 	
@@ -50,8 +52,8 @@ public class Weapon extends CollidableObject{
 	private final float CM = Information.CM;
 	private final float PI2 = (float) (2*Math.PI);
 	
-	public Weapon(int type, Image drawn, Image sheathed, Shape hitbox, Vector2f anchor,Vector2f rightHandPosition, Vector2f leftHandPosition, float rightHandRotation, float leftHandRotation, boolean rightHandFlipped, boolean leftHandFlipped, boolean doesFlip, ArrayList<ArrayList<ValueAnimation>> animations){
-		super(null, new Vector2f(),new Vector2f(1, 1), hitbox, 0, 0, false ,false, true);
+	public Weapon(int type, TexturedModel drawn, TexturedModel sheathed, Shape hitbox,Vector2f anchor,Vector2f rightHandPosition, Vector2f leftHandPosition, float rightHandRotation, float leftHandRotation, boolean rightHandFlipped, boolean leftHandFlipped, boolean doesFlip, ArrayList<ArrayList<ValueAnimation>> animations){
+		super(null, new Vector2f(),new Vector2f(1, 1), hitbox, null, 0, 0, false ,false, true);
 		this.TYPE = type;
 		this.rightHandPosition  = rightHandPosition.sub(anchor);
 		this.leftHandPosition = leftHandPosition.sub(anchor);
@@ -65,15 +67,18 @@ public class Weapon extends CollidableObject{
 		this.drawn = drawn;
 		this.sheathed = sheathed;
 		hitboxOffset = hitbox.getLocation();
+		collider.position = new Vector2f();
+		
+		offset.set(anchor);
 	}
-	@Override
-	public void render(Graphics g, Vector2f size){
-		if(flipped)
-			render(g, currentImage.getFlippedCopy(true, false), size, relativeRotation);
-		else
-			render(g, currentImage, size, relativeRotation);
-	}
-	public void update(int delta, DrawableObject parent){
+//	@Override
+//	public void render(Graphics g, Vector2f size){
+//		if(flipped)
+//			render(g, currentImage.getFlippedCopy(true, false), size, relativeRotation);
+//		else
+//			render(g, currentImage, size, relativeRotation);
+//	}
+	public void update(int delta){
 		if(parent != null && isDrawn()){
 			collider.setEnabled(true);
 			setRotationRadians(parent.getRotationRadians()+relativeRotation);
@@ -85,31 +90,31 @@ public class Weapon extends CollidableObject{
 			Vector2f pos2 = pos.copy().sub(anchor).add(hitboxOffset);
 			pos2.add(hitboxOff);
 			Toolbox.rotateVectorAroundPosition(pos2, pos, (float)(180+Math.toDegrees(relativeRotation+parent.getRotationRadians())));
-			position.set(pos2);
+			collider.position.set(pos2);
 			
 		}else{
 			collider.setEnabled(false);
 		}
 		
 	}
-	@Override
-	public void render(Graphics g, Image image, Vector2f size, float rotation){
-		if(image != null){
-			if(isDrawn()){
-				Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
-				toDraw.setCenterOfRotation(anchor.x, anchor.y);
-				toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
-				Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
-				toDraw.draw(relativePosition.x-anchor.x, relativePosition.y-anchor.y);
-			}else{
-				Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
-				toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
-				Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
-				toDraw.drawCentered(relativePosition.x, relativePosition.y);
-			}
-		}
-	}
-	
+//	@Override
+//	public void render(Graphics g, Image image, Vector2f size, float rotation){
+//		if(image != null){
+//			if(isDrawn()){
+//				Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
+//				toDraw.setCenterOfRotation(anchor.x, anchor.y);
+//				toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
+//				Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
+//				toDraw.draw(relativePosition.x-anchor.x, relativePosition.y-anchor.y);
+//			}else{
+//				Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
+//				toDraw.rotate((float) (rotation+Math.toDegrees(relativeRotation)));
+//				Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
+//				toDraw.drawCentered(relativePosition.x, relativePosition.y);
+//			}
+//		}
+//	}
+//	
 	public boolean isRightHandFlipped(){
 		if(flipped)
 			return rightHandFlipped;

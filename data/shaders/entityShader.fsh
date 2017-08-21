@@ -6,17 +6,19 @@ precision highp float;
 
 uniform sampler2D tex;
 
-in vec3 surfaceNormal;
+in vec3 pass_normal;
+in vec2 pass_textureCoordinates;
 
 in vec3 light[6];
 in vec4 lightColor[6];
 
 void main(){
+	
 
 	float shineDamper = 10;
 	float reflectivity = 0.3;
 
-	vec3 normal = normalize(surfaceNormal);
+	vec3 normal = normalize(pass_normal);
 
  	vec2 loc = gl_TexCoord[0].st;
 	vec4 pixel = texture2D(tex,loc.xy);
@@ -38,5 +40,6 @@ void main(){
 	vec4 color = finalDiffuse*pixel+finalSpecular;
   	gl_FragColor = vec4(color.rgb, pixel.a);
   		//gl_FragColor = vec4(normal,1);
+  	gl_FragColor = vec4(1,1,1,1);
   	
 }

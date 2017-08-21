@@ -1,6 +1,6 @@
 package gameStates;
 
-import static tools.Loader.loadImage;
+import static tools.Loader.loadModel;
 import static info.Information.*;
 import static tools.Loader.loadTerrain;
 import static shaders.Shaders.*;
@@ -68,6 +68,7 @@ public class Running extends BasicGameState{
 	public boolean customInit(){
 		connectionHandler = ConnectionHandler.instance;
 		player = new Player(Information.PlayerID,new Circle(0,0,25*CM),new Rectangle(0,0,75*CM, 25*CM), new Vector2f(1,1), 0, 1,1000, input, camera);
+		new Entity(loadModel("BlackCircle"), new Circle(0,0,25*CM), new Vector2f(1f, 1f), 0, 1, 100);
 		
 		//INCREASE SPEED
 		//player.sprintingSpeed = 50;
@@ -75,7 +76,7 @@ public class Running extends BasicGameState{
 		
 		
 		for(int i = 1; i < 1; i++){
-			new ParticleEffect("torch", new Entity(loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1, 100), 1000);
+//			new ParticleEffect("torch", new Entity(loadImage("BlackCircle", new Vector2f(50*CM, 50*CM)), new Circle(100*CM*i,100*CM*i,25*CM), new Vector2f(1f, 1f), 0, 1, 100), 1000);
 		}
 //		new ParticleEffect("torch",player, 1000000);
 		connectionHandler.getCharacters();
@@ -88,10 +89,10 @@ public class Running extends BasicGameState{
 		terrainShader.setUniformIntVariable("rTex", 2);
 		terrainShader.setUniformIntVariable("gTex", 3);
 		terrainShader.setUniformIntVariable("bTex", 4);
-		terrainShader.setUniformIntVariable("backSize", background.texturePack.backgroundTexture.getWidth(100));
-		terrainShader.setUniformIntVariable("rSize", background.texturePack.rTexture.getWidth(100));
-		terrainShader.setUniformIntVariable("gSize", background.texturePack.gTexture.getWidth(100));
-		terrainShader.setUniformIntVariable("bSize", background.texturePack.bTexture.getWidth(100));
+//		terrainShader.setUniformIntVariable("backSize", background.texturePack.backgroundTexture.getWidth());
+//		terrainShader.setUniformIntVariable("rSize", background.texturePack.rTexture.getWidth());
+//		terrainShader.setUniformIntVariable("gSize", background.texturePack.gTexture.getWidth());
+//		terrainShader.setUniformIntVariable("bSize", background.texturePack.bTexture.getWidth());
 		Shader.forceFixedShader();
 		
 		return true;
@@ -195,22 +196,24 @@ public class Running extends BasicGameState{
 				  		  0,0,0,1};
 		
 		
-		terrainShader.startShader();
+//		terrainShader.startShader();
 //		terrainShader.setUniformFloatVariable("dirLight", dirLight);
 //		terrainShader.setUniformFloatVariable("dirColor" , dirColor);
 		
-		background.bindTextures(detailLevel);
-		background.render(g);
+//		background.bindTextures(detailLevel);
+//		background.render(g);
 			
 		
 		
-		entityShader.startShader();
-		entityShader.setUniformFloatVariable("dirLight", dirLight);
-		entityShader.setUniformFloatVariable("dirColor" , dirColor);
-		entityShader.setUniformFloatVariable("pLight", pLight);
-		entityShader.setUniformFloatVariable("pColor" , pColor);
+//		entityShader.startShader();
+//		entityShader.setUniformFloatVariable("dirLight", dirLight);
+//		entityShader.setUniformFloatVariable("dirColor" , dirColor);
+//		entityShader.setUniformFloatVariable("pLight", pLight);
+//		entityShader.setUniformFloatVariable("pColor" , pColor);
 		for(Entity entity : entities){
+			if(!(entity instanceof Player)){
 			entity.render(g);
+			}
 		}
 		Shader.forceFixedShader();
 		

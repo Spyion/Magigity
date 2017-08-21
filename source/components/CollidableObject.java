@@ -7,6 +7,7 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import debug.Debug;
+import tools.TexturedModel;
 
 public class CollidableObject extends DrawableObject{
 	public final Collider collider;
@@ -21,19 +22,19 @@ public class CollidableObject extends DrawableObject{
 	
 	public final Vector2f speed = new Vector2f(0, 0);
 	
-	public CollidableObject(Image image, Vector2f position,Vector2f size, Shape hitbox, float rotation, float weight, boolean movable, boolean turnable, boolean isTrigger){
-		super(image, position, size, rotation);
+	public CollidableObject(TexturedModel image, Vector2f position,Vector2f size, Shape hitbox, DrawableObject parent, float rotation, float weight, boolean movable, boolean turnable, boolean isTrigger){
+		super(image, position, size, rotation, parent);
 		collider = new Collider(this, hitbox, isTrigger);
 		this.weight = weight;
 		this.movable = movable;
 		this.turnable = turnable;
 	}
-	public CollidableObject(Vector2f position,Vector2f size, Shape hitbox, float rotation, float weight, boolean movable, boolean turnable){
-		this(null, position, size, hitbox, rotation, weight, movable, turnable, false);
-	}
-	public CollidableObject(Vector2f position,Vector2f size, Shape hitbox, float rotation, float weight, boolean movable, boolean turnable, boolean isTrigger){
-		this(null, position, size, hitbox, rotation, weight, movable, turnable, isTrigger);
-	}
+//	public CollidableObject(Vector2f position,Vector2f size, Shape hitbox, float rotation, float weight, boolean movable, boolean turnable){
+//		this(null, position, size, hitbox, rotation, weight, movable, turnable, false);
+//	}
+//	public CollidableObject(Vector2f position,Vector2f size, Shape hitbox, float rotation, float weight, boolean movable, boolean turnable, boolean isTrigger){
+//		this(null, position, size, hitbox, rotation, weight, movable, turnable, isTrigger);
+//	}
 	
 	public void update(int delta){
 		if(clientSided && movable && (speed.x != 0 || speed.y != 0)){
@@ -50,11 +51,8 @@ public class CollidableObject extends DrawableObject{
 		}
 	}
 	@Override
-	public void render(Graphics g, Vector2f size){
-		render(g, image, size);
-	}
-	public void render(Graphics g, Image image,Vector2f size){
-		super.render(g, image, size);
+	public void render(Graphics g){
+		super.render(g);
 		g.setColor(Color.red);
 		if(Debug.showHitbox){
 			collider.render(g);

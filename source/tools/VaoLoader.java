@@ -54,7 +54,7 @@ public class VaoLoader {
 	public static int loadTexture(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName
+			texture = TextureLoader.getTexture("PNG", new FileInputStream(fileName
 					+ ".png"));
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER,

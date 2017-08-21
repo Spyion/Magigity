@@ -57,7 +57,7 @@ public class DrawableObjectOLD {
 		if(image != null){
 						
 			Image toDraw = image.getScaledCopy((int)(size.x*image.getWidth()), (int)(size.y*image.getHeight()));
-			Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
+//			Shaders.entityShader.setUniformFloatVariable("center", toDraw.getWidth()/2, toDraw.getHeight()/2);
 			toDraw.rotate(getRotationDegrees()+rotation);
 			bindTexture(image);
 			//Shaders.entityShader.setUniformIntVariable("tex", 0);

@@ -20,7 +20,7 @@ import org.newdawn.slick.particles.ParticleIO;
 
 import animations.ValueAnimation;
 import terrain.Terrain;
-import textures.HandImagePack;
+import textures.HandModelPack;
 import textures.Texture;
 import weapons.Weapon;
 
@@ -37,8 +37,17 @@ public class Loader {
 		int[] i = {0,1,2,3,1,2};
 		quad = VaoLoader.loadToVAO(p, t, n, i);
 	}
-	public static TexturedModel loadImage(String name, String not){
-		return new TexturedModel(quad, loadTexture("/resources/images/"+name+".png"));
+	public static TexturedModel loadModel(String name){
+		return new TexturedModel(quad, loadTexture(name));
+	}
+	public static Terrain loadTerrain(String name, Vector2f size){
+		return new Terrain(name, size);
+	}
+	public static Terrain loadTerrain(String name){
+		return loadTerrain("terrain/"+name, new Vector2f(1,1));
+	}
+	public static Texture loadTexture(String name){
+		return new Texture(VaoLoader.loadTexture("resources/images/"+name));
 	}
 	public static Image loadImage(String name, String type, Vector2f size, boolean relative){
 		try {
@@ -82,43 +91,6 @@ public class Loader {
 	public static Image loadImage(String name){
 		return loadImage(name,"png", new Vector2f(25f*CM, 25*CM), false);
 	}
-	public static Terrain loadTerrain(String name, Vector2f size){
-		return new Terrain(name, size);
-	}
-	public static Terrain loadTerrain(String name){
-		return loadTerrain("terrain/"+name, new Vector2f(1,1));
-	}
-	public static Texture loadTexture(String name){
-		return new Texture(VaoLoader.loadTexture(name));
-		
-		
-//		Texture tex = null;
-//		try {
-//			tex = TextureLoader.getTexture("PNG", new FileInputStream("/resources/images/"+name+".png"));
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		tex.bind();
-//		 
-//		int width = (int)tex.getImageWidth();
-//		int height = (int)tex.getImageHeight();
-//		 
-//		byte[] texbytes = tex.getTextureData();
-//		int components = texbytes.length / (width*height);
-//		 
-//		ByteBuffer texdata = ByteBuffer.allocate(texbytes.length);
-//		texdata.put(texbytes);
-//		texdata.rewind();
-//		
-//		MipMap.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D, components, width, height, components==3 ? GL11.GL_RGB : GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,texdata);
-//		 
-//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-//		
-//		return tex;
-	}
 	
 	public static Sound loadSound(String name, String type){
 		try {
@@ -144,7 +116,7 @@ public class Loader {
 		return null;
 	}
 	
-	public static HandImagePack loadHand(String set, String dirType, Vector2f size){
+	public static HandModelPack loadHand(String set, String dirType, Vector2f size){
 		set += "/"+dirType;
 		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/"+set+"/type");
 		for(ArrayList<String> list : specs)
@@ -161,18 +133,18 @@ public class Loader {
 		Vector2f upAnchor = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
 		list = getVar("downanchor", specs);
 		Vector2f downAnchor = new Vector2f(Float.parseFloat(list.get(1)), Float.parseFloat(list.get(2)));
-		HandImagePack pack = new HandImagePack(	loadCharacterImage(set, "side", size),
-												loadCharacterImage(set, "handDown", size),
-												loadCharacterImage(set, "thumbDown", size),
+		HandModelPack pack = new HandModelPack(	loadCharacterModel(set, "side", size),
+												loadCharacterModel(set, "handDown", size),
+												loadCharacterModel(set, "thumbDown", size),
 												downAnchor,
-												loadCharacterImage(set, "handUp", size),
-												loadCharacterImage(set, "thumbUp", size),
+												loadCharacterModel(set, "handUp", size),
+												loadCharacterModel(set, "thumbUp", size),
 												upAnchor,
 												new Vector2f(size.x / ref.getWidth(), size.y / ref.getHeight()));
 		pack.turnDown();
 		return pack;
 	}
-	public static HandImagePack loadHand(String set, String dirType){
+	public static HandModelPack loadHand(String set, String dirType){
 		return loadHand(set, dirType, new Vector2f(25*CM, 25*CM));
 	}
 	public static Weapon loadWeapon(String name){
@@ -223,8 +195,8 @@ public class Loader {
 		}
 		
 		Weapon weapon;
-		Image drawn = loadImage(ref+"drawn", null);
-		Image sheathed = loadImage(ref+"sheathed", null);
+		TexturedModel drawn = loadModel(ref+"drawn");
+		TexturedModel sheathed = loadModel(ref+"sheathed");
 		if(type == Weapon.BOW || type == Weapon.STAFF || type == Weapon.THROW){
 			weapon = null;
 		}else{
@@ -235,11 +207,11 @@ public class Loader {
 		
 		
 	}
-	public static Image loadCharacterImage(String set, String dirType, Vector2f size){
-		return loadImage("character/"+set+"/"+dirType, size);
+	public static TexturedModel loadCharacterModel(String set, String dirType, Vector2f size){
+		return loadModel("character/"+set+"/"+dirType);
 	}
-	public static Image loadCharacterImage(String set, String dirType){
-		return loadCharacterImage(set, dirType, new Vector2f(0.5f*M, 0.5f*M));
+	public static TexturedModel loadCharacterModel(String set, String dirType){
+		return loadCharacterModel(set, dirType, new Vector2f(0.5f*M, 0.5f*M));
 	}
 	public static ValueAnimation loadValueAnimation(String ref){
 		return new ValueAnimation("data/ValueAnimations/"+ref);

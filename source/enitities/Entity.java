@@ -10,7 +10,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import components.CollidableObject;
 import effects.Effect;
-import shaders.Shaders;
+import tools.TexturedModel;
 
 public class Entity extends CollidableObject{
 	public static final ArrayList<Entity> entities=new ArrayList<Entity>();
@@ -31,20 +31,20 @@ public class Entity extends CollidableObject{
 	
 	
 	
-	public Entity(Image image, Shape hitbox, Vector2f size, float rotation, float weight, float health) {
-		super(image ,new Vector2f(hitbox.getCenter()),size, hitbox, (float)Math.toRadians(rotation), weight < 0 ? 0.01f : weight, true, false, false);
+	public Entity(TexturedModel model, Shape hitbox, Vector2f size, float rotation, float weight, float health) {
+		super(model ,new Vector2f(hitbox.getCenter()),size, hitbox, null,(float)Math.toRadians(rotation), weight < 0 ? 0.01f : weight, true, false, false);
 		this.maxHealth = health;
 		this.health = health;
 		toAdd.add(this);
 	}
-	public Entity(Image image, Shape hitbox, float rotation, float weight, float health) {
-		this(image, hitbox, new Vector2f(hitbox.getWidth(), hitbox.getHeight()), rotation, weight, health);
-	}
+//	public Entity(Image image, Shape hitbox, float rotation, float weight, float health) {
+//		this(image, hitbox, new Vector2f(hitbox.getWidth(), hitbox.getHeight()), rotation, weight, health);
+//	}
 	public Entity(Shape hitbox, Vector2f size, float rotation, float weight, float health) {
 		this(null, hitbox, size, rotation, weight, health);
 	}
 	public void render(Graphics g){
-		super.render(g, size);
+		super.render(g);
 	}
 	public void renderEffects(Graphics g){
 		for(Effect effect : effects){
