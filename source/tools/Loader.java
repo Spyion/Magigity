@@ -19,6 +19,7 @@ import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleIO;
 
 import animations.ValueAnimation;
+import components.DrawableObject;
 import terrain.Terrain;
 import textures.HandModelPack;
 import textures.Texture;
@@ -29,13 +30,29 @@ public class Loader {
 	public static final CSVHandler csv = new CSVHandler();
 	public static final RawModel quad; 
 	static{
-		float[] p = {-1,-1,0,-1,1,0,1,-1,0,1,1,0};
-		float[] t = {0,0,1,0,0,1,1,1};
+		float[] t = {
+				0,0, 	//V0
+				1,0,	//V1
+				1,1,	//V2
+				0,1		//V3
+				};
+		float size = 1f;
+		float[] vertices = {            
+                -size,size,0,   //V0
+                size,size,0,  //V1
+                size,-size,0,   //V2
+                -size,-size,0     //V3
+        };
+         
+        int[] indices = {
+                0,3,2,  //Top left triangle
+                0,1,2   //Bottom right triangle
+        };
 		Vector3f n1 = new Vector3f(1,1,1);
 		n1.normalise();
 		float[] n = {-n1.x,-n1.y,n1.z,n1.x,-n1.y,n1.z,-n1.x,n1.y,n1.z,n1.x,n1.y,n1.z};
 		int[] i = {0,1,2,3,1,2};
-		quad = VaoLoader.loadToVAO(p, t, n, i);
+		quad = VaoLoader.loadToVAO(vertices, t, n, indices);
 	}
 	public static TexturedModel loadModel(String name){
 		return new TexturedModel(quad, loadTexture(name));
@@ -116,7 +133,7 @@ public class Loader {
 		return null;
 	}
 	
-	public static HandModelPack loadHand(String set, String dirType, Vector2f size){
+	public static HandModelPack loadHand(String set, String dirType, Vector2f size, DrawableObject parent){
 		set += "/"+dirType;
 		ArrayList<ArrayList<String>> specs = csv.readCSV("resources/images/character/"+set+"/type");
 		for(ArrayList<String> list : specs)
@@ -142,10 +159,11 @@ public class Loader {
 												upAnchor,
 												new Vector2f(size.x / ref.getWidth(), size.y / ref.getHeight()));
 		pack.turnDown();
+		pack.parent = parent;
 		return pack;
 	}
-	public static HandModelPack loadHand(String set, String dirType){
-		return loadHand(set, dirType, new Vector2f(25*CM, 25*CM));
+	public static HandModelPack loadHand(String set, String dirType, DrawableObject parent){
+		return loadHand(set, dirType, new Vector2f(25*CM, 25*CM), parent);
 	}
 	public static Weapon loadWeapon(String name){
 		String ref = "character/weapons/"+name+"/";

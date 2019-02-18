@@ -244,6 +244,13 @@ public strictfp class Vector2f implements Serializable {
 		
 		return this;
 	}
+	public Vector2f add(float x ,float y)
+	{
+		this.x += x; 
+		this.y += y;
+		
+		return this;
+	}
 	
 	/**
 	 * Subtract a vector from this vector

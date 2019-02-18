@@ -2,6 +2,8 @@ package enitities;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -14,6 +16,7 @@ public class Camera extends DrawableObject{
 	private float targetRotation = 0;
 	private float scroll = -1f;
 	private boolean workCamera = false;
+	public float cameraHeight = 10f;
 	public Camera(){
 		super();
 	}
@@ -51,6 +54,19 @@ public class Camera extends DrawableObject{
 		point = point.copy().sub(position).add(getRotationDegrees());
 		point = new Vector2f(point.x*size.x+Display.getWidth()/2, point.y*size.y+Display.getHeight()/2);
 		return point;
+	}
+	@Override
+	protected Matrix4f getMatrix() {
+		Matrix4f viewMatrix = new Matrix4f();
+		viewMatrix.setIdentity();
+		Vector3f cameraPos = new Vector3f(position.x, position.y, cameraHeight);
+		Vector3f negativeCameraPos = new Vector3f(-cameraPos.x,-cameraPos.y,-cameraPos.z);
+		Matrix4f.rotate(-getRotationRadians(), new Vector3f(0, 0, 1), viewMatrix,viewMatrix);
+		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
+//		Matrix4f.rotate((float)Math.toRadians(89), new Vector3f(1,0,0), viewMatrix, viewMatrix);
+//		Matrix4f.rotate((float)Math.toRadians(-89), new Vector3f(1,0,0), viewMatrix, viewMatrix);
+		
+		return viewMatrix;
 	}
 	public void update(Input input, int delta){
 		

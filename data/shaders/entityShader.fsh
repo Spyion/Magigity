@@ -6,8 +6,11 @@ precision highp float;
 
 uniform sampler2D tex;
 
+
+
 in vec3 pass_normal;
 in vec2 pass_textureCoordinates;
+in vec3 pass_pos;
 
 in vec3 light[6];
 in vec4 lightColor[6];
@@ -20,7 +23,7 @@ void main(){
 
 	vec3 normal = normalize(pass_normal);
 
- 	vec2 loc = gl_TexCoord[0].st;
+ 	vec2 loc = pass_textureCoordinates.st;
 	vec4 pixel = texture2D(tex,loc.xy);
 	vec4 finalSpecular = vec4(0,0,0,0);
 	vec4 finalDiffuse  = vec4(0,0,0,0);
@@ -39,7 +42,8 @@ void main(){
 
 	vec4 color = finalDiffuse*pixel+finalSpecular;
   	gl_FragColor = vec4(color.rgb, pixel.a);
+  	gl_FragColor = pixel;
   		//gl_FragColor = vec4(normal,1);
-  	gl_FragColor = vec4(1,1,1,1);
+  	//gl_FragColor = vec4(pass_pos.x+0.5,pass_pos.z,pass_pos.y+0.5,1);
   	
 }

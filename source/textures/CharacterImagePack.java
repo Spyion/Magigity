@@ -2,6 +2,7 @@ package textures;
 
 import static info.Information.CM;
 
+import org.lwjgl.opengl.Drawable;
 import org.lwjgl.util.vector.Matrix4f;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
@@ -22,19 +23,19 @@ public class CharacterImagePack {
 							leftHand;
 	public Weapon  weapon;
 	
-	public DrawableObject parent;
+	private DrawableObject parent;
 	
-	public CharacterImagePack(  String hat, 		String head,
-								String shoulders, 	String hands, 
-								String shoes, 		String weapon) {
+	/**
+	 * call Initialize Method after this
+	 */
+	public CharacterImagePack() {
 		super();
-//		this.leftShoulder = new DrawableObject();
-//		this.rightShoulder = new DrawableObject();
-//		this.head = new DrawableObject();
-//		this.hat = new DrawableObject();
-//		this.leftShoe = new DrawableObject();
-//		this.rightShoe = new DrawableObject();
-//		
+	}
+	public void initialize(	DrawableObject parent,
+							String hat, 		String head,
+							String shoulders, 	String hands, 
+							String shoes, 		String weapon){
+		this.parent = parent;
 		setHands(hands);
 		setHat(hat);
 		setHead(head);
@@ -42,10 +43,14 @@ public class CharacterImagePack {
 		setShoulders(shoulders);
 		setWeapon(weapon);
 	}
-	public CharacterImagePack(){
-		this("basic",	"basic",
-			 "basic", 	"basic",
-			 "basic",	"basicLongSword");
+	public void initialize (DrawableObject parent){
+		this.parent = parent;
+		setHands("basic");
+		setHat("basic");
+		setHead("basic");
+		setShoes("basic");
+		setShoulders("basic");
+		setWeapon("basicLongSword");
 	}
 	
 	
@@ -54,46 +59,26 @@ public class CharacterImagePack {
 	private final float HAND_DISTANCEY = -10*CM;
 
 	public void render(Graphics g, DrawableObject parent){
-		g.pushTransform();
-		Toolbox.setGraphicsToParent(g, parent);
 		
-		g.translate(-FOOT_DISTANCE, 0);
 		leftShoe.render(g);
-		g.translate(2*FOOT_DISTANCE, 0);
-		rightShoe.render(g);
-		g.translate(-FOOT_DISTANCE, 0);
-		
+		rightShoe.render(g);		
 		if(!weapon.isDrawn()){
 			
-//		g.translate(-HAND_DISTANCE, HAND_DISTANCEY);
 		leftHand.render(g);
-//		g.translate(2*HAND_DISTANCE, 0);
 		rightHand.render(g);
-//		g.translate(-HAND_DISTANCE, -HAND_DISTANCEY);
 		
 		}else{
 			
 			rightHand.up = weapon.isRightHandFlipped();
 			leftHand.up = weapon.isLeftHandFlipped();
-			g.pushTransform();
-			g.translate(weapon.relativePosition.x, weapon.relativePosition.y);
-			g.rotate(0, 0, (float)Math.toDegrees(weapon.relativeRotation));
-			
 
 			rightHand.renderLower(g, weapon.getRightHandPosition(), weapon.getRightHandRotation());
 			leftHand.renderLower(g, weapon.getLeftHandPosition(), weapon.getLeftHandRotation());
-
 			
-			
-			g.popTransform();
 			weapon.render(g);
 			
-			g.pushTransform();
-			g.translate(weapon.relativePosition.x, weapon.relativePosition.y);
-			g.rotate(0, 0, (float)Math.toDegrees(weapon.relativeRotation));
 			rightHand.renderUpper(g, weapon.getRightHandPosition(), weapon.getRightHandRotation());
 			leftHand.renderUpper(g, weapon.getLeftHandPosition(), weapon.getLeftHandRotation());
-			g.popTransform();
 
 		}
 		leftShoulder.render(g);
@@ -103,17 +88,12 @@ public class CharacterImagePack {
 			weapon.render(g);
 		}
 		
-		
 		head.render(g);
 		hat.render(g);
 		
-		g.popTransform();
 	}
 	
 	
-	public DrawableObject getLeftShoulder() {
-		return leftShoulder;
-	}
 	public void setShoulders(String set) {
 		this.leftShoulder = new DrawableObject(Loader.loadCharacterModel(set, "leftShoulder"), parent);
 		this.rightShoulder = new DrawableObject(Loader.loadCharacterModel(set, "rightShoulder"), parent);
@@ -132,9 +112,9 @@ public class CharacterImagePack {
 	}
 
 	public void setHands(String set) {
-		this.rightHand = Loader.loadHand(set, "rightHand");
+		this.rightHand = Loader.loadHand(set, "rightHand", parent);
 		rightHand.offset.set(HAND_DISTANCE, HAND_DISTANCEY);
-		this.leftHand = Loader.loadHand(set, "leftHand");
+		this.leftHand = Loader.loadHand(set, "leftHand", parent);
 		leftHand.offset.set(-HAND_DISTANCE, HAND_DISTANCEY);
 
 	}

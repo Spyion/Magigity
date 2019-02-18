@@ -7,11 +7,13 @@ in vec2 textureCoordinates;
 
 out vec3 pass_normal;
 out vec2 pass_textureCoordinates;
+out vec3 pass_pos;
 
 out vec3 light[6];
 out vec4 lightColor[6];
 
 uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
 uniform vec3 dirLight[2];
@@ -24,11 +26,13 @@ void main(void){
 	//pass
 	pass_normal = normal;
 	pass_textureCoordinates = textureCoordinates;
-
+	pass_pos = position;
 
  	//gl_TexCoord[0]  = gl_MultiTexCoord0;
-	vec4 worldPosition = vec4(position,0) * transformationMatrix;
-  	gl_Position = worldPosition;
+	vec4 worldPosition = transformationMatrix*vec4(position,1);
+  	gl_Position = projectionMatrix * viewMatrix * worldPosition;
+//* gl_ProjectionMatrix
+;
 
 	//surfaceNormal = normalize(vec3(gl_ModelViewMatrix*vec4(gl_Vertex.x-center.x, gl_Vertex.y-center.y, 0 ,0)));
 	//surfaceNormal = vec3(surfaceNormal.xy,1);

@@ -22,15 +22,28 @@ public class Character extends Entity{
 	public CharacterImagePack pack;
 	protected float targetRotation = 0;
 	public final Collider collider;
+	private Character th = this;
 	
 	
-	
-	public Character(CharacterImagePack pack, Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight, float health) {
+	public Character(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight, float health) {
 		super(hitbox, size, rotation, weight, health);
 		collider = new Collider(this, hitbox2);
-		this.pack = pack;
-		this.pack.setWeapon("basicLongSword");
-		this.pack.weapon.setSheathed();
+//		this.pack = new CharacterImagePack();
+//		System.out.println(pack.leftHand.parent);
+//		this.pack.setWeapon("basicLongSword");
+//		this.pack.weapon.setSheathed();
+//		if(pack.weapon.animations != null){
+//			animations = pack.weapon.animations;
+//			idleAnimation = animations.get(0);
+//			blockAnimation = animations.get(1);
+//			setAnimationPingPong(idleAnimation);
+//			play = true;
+//		}
+	}
+	public void initialize(){
+		this.pack = new CharacterImagePack();
+		pack.initialize(this);
+		System.out.println(pack.leftHand.parent);
 		if(pack.weapon.animations != null){
 			animations = pack.weapon.animations;
 			idleAnimation = animations.get(0);
@@ -38,10 +51,6 @@ public class Character extends Entity{
 			setAnimationPingPong(idleAnimation);
 			play = true;
 		}
-
-	}
-	public Character(Shape hitbox, Shape hitbox2, Vector2f size, float rotation, float weight, float health) {
-		this(new CharacterImagePack(), hitbox, hitbox2, size, rotation, weight, health);
 	}
 	@Override
 	public void render(Graphics g){

@@ -80,7 +80,7 @@ public abstract class ShaderProgram {
 		GL20.glUniform4f(location,vector.x,vector.y,vector.z, vector.w);
 	}
 	
-	protected void load2DVector(int location, Vector2f vector){
+	protected void loadVector(int location, Vector2f vector){
 		GL20.glUniform2f(location,vector.x,vector.y);
 	}
 	
@@ -93,6 +93,7 @@ public abstract class ShaderProgram {
 	}
 	
 	protected void loadMatrix(int location, Matrix4f matrix){
+		//matrixBuffer.clear();
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();
 		GL20.glUniformMatrix4(location, false, matrixBuffer);
@@ -120,6 +121,10 @@ public abstract class ShaderProgram {
 			System.exit(-1);
 		}
 		return shaderID;
+	}
+	
+	public int getID(){
+		return programID;
 	}
 
 }

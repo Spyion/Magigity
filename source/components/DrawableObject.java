@@ -31,6 +31,7 @@ public class DrawableObject {
 		this.model = model;
 		this.position = position;
 		this.size = size;
+		this.parent = parent;
 		setRotationDegrees(rotation);
 	}
 //	public DrawableObject( Vector2f position, Vector2f size, float rotation) {
@@ -66,6 +67,8 @@ public class DrawableObject {
 	public void render(Graphics g, TexturedModel model){
 		if(model != null){
 			
+			
+			shader.start();
 			GL30.glBindVertexArray(model.model.getVaoID());
 			GL20.glEnableVertexAttribArray(0);
 			GL20.glEnableVertexAttribArray(1);
@@ -73,18 +76,20 @@ public class DrawableObject {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.texture.textureID);
 			bindTextures();
-			shader.start();
 			loadShaderVars();
+			
+			
 			GL11.glDrawElements(GL11.GL_TRIANGLES, model.model.getVertexCount(),
 					GL11.GL_UNSIGNED_INT, 0);
 			
-			shader.stop();
 			
 			GL20.glDisableVertexAttribArray(0);
 			GL20.glDisableVertexAttribArray(1);
 			GL20.glDisableVertexAttribArray(2);
 			GL30.glBindVertexArray(0);
-			//Shaders.entityShader.setUniformIntVariable("tex", 0);
+			//Shaders.entityShader.setUniformIntVariable("tex", 0);			
+			 shader.stop();
+
 		}
 	}
 	public void render(Graphics g){
@@ -95,6 +100,7 @@ public class DrawableObject {
 			Shaders.entityShader.loadTransformationMatrix(getParentMatrix());
 			Shaders.entityShader.loadShineVariables(10, 1);
 			Shaders.entityShader.loadViewMatrix(Information.currentCamera.getParentMatrix());
+//			System.out.println(GL20.glGetShaderInfoLog(Shaders.entityShader.getID(), 10));
 		}
 	}
 	protected void bindTextures(){}
@@ -104,14 +110,15 @@ public class DrawableObject {
 			return getMatrix();
 		else{
 			Matrix4f matrix = new Matrix4f();
-			Matrix4f.mul(parent.getParentMatrix(), getMatrix(), matrix);
+			Matrix4f m = Toolbox.createTransformationMatrix(new Vector2f(position.x,-position.y), size, -getRotationRadians());
+			Matrix4f.mul(parent.getParentMatrix(), m, matrix);
 			return matrix;
 		}
 	}
 	
 	protected Matrix4f getMatrix(){
 		Matrix4f matrix = Toolbox.createTransformationMatrix(position, size, getRotationRadians());
-		Matrix4f.mul(matrix, Toolbox.createTransformationMatrix(offset, new Vector2f(1,1), 0), matrix);
+//		Matrix4f.mul(matrix, Toolbox.createTransformationMatrix(offset, new Vector2f(1,1), 0), matrix);
 		return matrix;
 	}
 //	public void render(Graphics g, TexturedModel model, Vector2f size){

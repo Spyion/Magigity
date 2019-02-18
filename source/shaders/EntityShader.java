@@ -11,6 +11,7 @@ public class EntityShader extends ShaderProgram{
 	
 	private int location_transformationMatrix;
 	private int location_viewMatrix;
+	private int location_projectionMatrix;
 	private int location_lightPosition[];
 	private int location_lightColour[];
 	private int location_attenuation[];
@@ -32,6 +33,7 @@ public class EntityShader extends ShaderProgram{
 	protected void getAllUniformLocations() {
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
+		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		
@@ -56,7 +58,10 @@ public class EntityShader extends ShaderProgram{
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
 	public void loadViewMatrix(Matrix4f matrix){
-		super.loadMatrix(location_transformationMatrix, matrix);
+		super.loadMatrix(location_viewMatrix, matrix);
+	}
+	public void loadProjectionMatrix(Matrix4f matrix){
+		super.loadMatrix(location_projectionMatrix, matrix);
 	}
 	
 //	public void loadLights(List<Light> lights){

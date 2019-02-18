@@ -12,7 +12,7 @@ public class Information {
 	private static int inactiveTime = 0;
 	private static Vector2f lastMouse;
 	public static Camera currentCamera;
-	public static final int M = 512;
+	public static final int M = 51;
 	public static final float CM = M/100f;
 	public static boolean loggedIn = false;
 	public static byte PlayerID;
